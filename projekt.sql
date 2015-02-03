@@ -6,7 +6,8 @@ DROP TABLE IF EXISTS    guest,
                         staff_room, 
                         staff, 
                         staff_service, 
-                        staff_category;
+                        staff_category,
+                        optional_service;
 
 CREATE TABLE guest (
     id SERIAL PRIMARY KEY,
@@ -63,8 +64,8 @@ CREATE TABLE reservation (
     reservation_group INTEGER NOT NULL,
     room INTEGER REFERENCES room(id) NOT NULL,
     guest INTEGER REFERENCES guest(id) NOT NULL,
-    start DATE NOT NULL,
-    end DATE NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
     arrival DATE,
     departure DATE,
     canceled DATE

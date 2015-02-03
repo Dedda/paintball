@@ -79,7 +79,7 @@
     <column id="COL18" populated="true" UUID="0da58c78-188a-4c70-9828-67e16954d5ee" autoIncrement="true" autoIncrementSequenceName="reservation_id_seq" defaultValue="" name="id" nullable="0" physicalName="id" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
-    <column id="COL19" populated="true" UUID="a9211db3-e4ca-4fb1-943c-17a792b14264" autoIncrement="false" autoIncrementSequenceName="reservation_end_seq" defaultValue="" name="end" nullable="0" physicalName="end" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="91" userDefinedTypeUUID="ee349be3-6af2-46e1-b305-975f5354b009" >
+    <column id="COL19" populated="true" UUID="a9211db3-e4ca-4fb1-943c-17a792b14264" autoIncrement="false" autoIncrementSequenceName="reservation_end_date_seq" defaultValue="" name="end_date" nullable="0" physicalName="end_date" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="91" userDefinedTypeUUID="ee349be3-6af2-46e1-b305-975f5354b009" >
      <remarks></remarks>
     </column>
     <column id="COL20" populated="true" UUID="fd46d8c9-6b01-4b4c-91f7-d5c9028eb1f6" autoIncrement="false" autoIncrementSequenceName="reservation_room_seq" defaultValue="" name="room" nullable="1" physicalName="room" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
@@ -88,7 +88,7 @@
     <column id="COL21" populated="true" UUID="26972683-72f3-4e0d-bcb6-501e2458c845" autoIncrement="false" autoIncrementSequenceName="reservation_guest_seq" defaultValue="" name="guest" nullable="0" physicalName="guest" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
-    <column id="COL22" populated="true" UUID="22a43d1f-6f33-4932-8e32-dfa015ecf143" autoIncrement="false" autoIncrementSequenceName="reservation_start_seq" defaultValue="" name="start" nullable="0" physicalName="start" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="91" userDefinedTypeUUID="ee349be3-6af2-46e1-b305-975f5354b009" >
+    <column id="COL22" populated="true" UUID="22a43d1f-6f33-4932-8e32-dfa015ecf143" autoIncrement="false" autoIncrementSequenceName="reservation_start_date_seq" defaultValue="" name="start_date" nullable="0" physicalName="start_date" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="91" userDefinedTypeUUID="ee349be3-6af2-46e1-b305-975f5354b009" >
      <remarks></remarks>
     </column>
     <column id="COL23" populated="true" UUID="240e4c7f-ef56-4e1f-a738-9593c4a33ae8" autoIncrement="false" autoIncrementSequenceName="reservation_additional_info_seq" defaultValue="" name="additional_info" nullable="1" physicalName="additional_info" precision="20000" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
