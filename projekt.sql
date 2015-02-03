@@ -34,7 +34,9 @@ CREATE TABLE staff (
     id SERIAL PRIMARY KEY,
     name VARCHAR(30) NOT NULL,
     surname VARCHAR(30) NOT NULL,
-    category INTEGER REFERENCES staff_category(id) NOT NULL
+    category INTEGER REFERENCES staff_category(id) NOT NULL,
+    recruitement DATE NOT NULL,
+    firing DATE
 );
 
 CREATE TABLE staff_room (
@@ -61,8 +63,11 @@ CREATE TABLE reservation (
     reservation_group INTEGER NOT NULL,
     room INTEGER REFERENCES room(id) NOT NULL,
     guest INTEGER REFERENCES guest(id) NOT NULL,
-    arrival DATE NOT NULL,
-    departure DATE NOT NULL
+    start DATE NOT NULL,
+    end DATE NOT NULL,
+    arrival DATE,
+    departure DATE,
+    canceled DATE
 );
 
 CREATE TABLE service_reservation (
