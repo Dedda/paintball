@@ -31,3 +31,16 @@ CREATE VIEW current_guest_number AS
 SELECT sum(people) FROM reservation
 WHERE now() BETWEEN reservation.start_date AND reservation.end_date
 AND reservation.canceled IS NULL;
+
+-- rooms with categories
+
+DROP VIEW IF EXISTS rooms_with_category;
+CREATE VIEW rooms_with_category AS
+SELECT 
+    r.id AS room_id, 
+    r.people AS people,
+    cat.id AS category_id,
+    cat.name AS category_name,
+    cat.price AS price FROM room r
+INNER JOIN room_category cat
+ON r.category = cat.id;
