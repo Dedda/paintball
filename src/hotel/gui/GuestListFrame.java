@@ -52,7 +52,7 @@ public class GuestListFrame extends javax.swing.JFrame {
         removeBtn = new javax.swing.JButton();
         openBtn = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jScrollPane1.setViewportView(guestList);
 
