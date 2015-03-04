@@ -36,12 +36,101 @@ public class GuestProvider {
         return guests;
     }
     
-    public Guest getForId(final int id) {
-        return null;
+    public List<Guest> getCurrents() {
+        Connection connection = DBUtil.getConnection();
+        List<Guest> guests = new ArrayList<>();
+        String query = "SELECT * FROM current_guests";
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String surname = resultSet.getString("surname");
+                guests.add(new Guest(id, name, surname));
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return guests;
     }
     
-    public Guest getforName(final String name, final String surname) {
-        return null;
+    public Guest getForId(final int id) {
+        Connection connection = DBUtil.getConnection();
+        Guest guest = null;
+        String query = "SELECT * FROM guest WHERE id=" + id;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                String name = resultSet.getString("name");
+                String surname = resultSet.getString("surname");
+                guest = new Guest(id, name, surname);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return guest;
+    }
+    
+    public Guest getForName(final String name) {
+        Connection connection = DBUtil.getConnection();
+        Guest guest = null;
+        String query = name.contains(" ")
+                ? "SELECT * FROM guest WHERE name=" + name.split(" ")[0]
+                                     + " AND surname=" + name.split(" ")[1]
+                : "SELECT * FROM guest WHERE name=" + name;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String guestName = resultSet.getString("name");
+                String surname = resultSet.getString("surname");
+                guest = new Guest(id, guestName, surname);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return guest;
+    }
+    
+    public Guest getForNameLike(final String name) {
+        Connection connection = DBUtil.getConnection();
+        Guest guest = null;
+        String query = name.contains(" ")
+                ? "SELECT * FROM guest WHERE name LIKE '" + name.split(" ")[0]
+                                     + "%' AND surname LIKE '" + name.split(" ")[1] + "%'"
+                : "SELECT * FROM guest WHERE name LIKE '" + name + "%'";
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String guestName = resultSet.getString("name");
+                String surname = resultSet.getString("surname");
+                guest = new Guest(id, guestName, surname);
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return guest;
     }
     
     public void saveGuest(final Guest guest) {
@@ -54,7 +143,7 @@ public class GuestProvider {
             statement.executeUpdate(query);
             connection.close();
         } catch (SQLException ex) {
-            Logger.getLogger(GuestProvider.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
     
