@@ -5,6 +5,8 @@
  */
 package hotel.main;
 
+import hotel.gui.ReservierungGUI;
+import hotel.gui.LohnabrechnungGUI;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
