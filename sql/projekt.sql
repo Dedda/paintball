@@ -17,11 +17,13 @@ CREATE TABLE guest (
 
 CREATE TABLE room_category (
     id SERIAL PRIMARY KEY,
+    name VARCHAR(30) NOT NULL,
     price INTEGER NOT NULL
 );
 
 CREATE TABLE room (
     id SERIAL PRIMARY KEY,
+    people INTEGER NOT NULL,
     category INTEGER REFERENCES room_category(id) NOT NULL
 );
 
