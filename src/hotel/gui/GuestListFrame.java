@@ -8,9 +8,7 @@ package hotel.gui;
 import hotel.db.provider.GuestProvider;
 import hotel.entity.Guest;
 import hotel.gui.model.GuestListModel;
-import java.util.ArrayList;
 import java.util.List;
-import javax.swing.ListModel;
 
 /**
  *
@@ -27,6 +25,7 @@ public class GuestListFrame extends javax.swing.JFrame {
     public GuestListFrame() {
         initComponents();
         guestProvider = new GuestProvider();
+        loadGuests();
     }
 
     private void loadGuests() {

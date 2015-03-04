@@ -4,7 +4,7 @@ import hotel.entity.Guest;
 import java.util.List;
 import javax.swing.AbstractListModel;
 
-public class GuestListModel extends AbstractListModel<Guest>{
+public class GuestListModel extends AbstractListModel<String>{
 
     private List<Guest> guests;
 
@@ -16,14 +16,18 @@ public class GuestListModel extends AbstractListModel<Guest>{
         this.guests = guests;
     }
     
+    public Guest getGuestInLine(final int index) {
+        return guests.get(index);
+    }
+    
     @Override
     public int getSize() {
         return guests.size();
     }
 
     @Override
-    public Guest getElementAt(int index) {
-        return guests.get(index);
+    public String getElementAt(int index) {
+        return guests.get(index).getName() + " " + guests.get(index).getSurname();
     }
 
 }
