@@ -45,7 +45,17 @@ public class GuestProvider {
     }
     
     public void saveGuest(final Guest guest) {
-        
+        Connection connection = DBUtil.getConnection();
+        String query = "INSERT INTO guest(name, surname) "
+                + "VALUES(" + guest.getName() + "," + guest.getSurname() + ")";
+        Statement statement;
+        try {
+            statement = connection.createStatement();
+            statement.executeUpdate(query);
+            connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(GuestProvider.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }
