@@ -3,8 +3,19 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/home/dedda/git/paintball/src/hotel/gui/ReservierungGUI.java</file>
+            <file>file:/home/dedda/git/paintball/src/hotel/gui/AddGuestFrame.java</file>
+            <file>file:/home/dedda/git/paintball/src/hotel/db/provider/RoomProvider.java</file>
+            <file>file:/home/dedda/git/paintball/src/hotel/gui/GuestListFrame.java</file>
+            <file>file:/home/dedda/git/paintball/src/hotel/gui/GuestFrame.java</file>
+            <file>file:/home/dedda/git/paintball/src/hotel/gui/MainMenuFrame.java</file>
+            <file>file:/home/dedda/git/paintball/src/hotel/entity/Room.java</file>
+            <file>file:/home/dedda/git/paintball/src/hotel/gui/model/GuestListModel.java</file>
+            <file>file:/home/dedda/git/paintball/src/hotel/main/Main.java</file>
             <file>file:/home/dedda/git/paintball/sql/projekt.sql</file>
+            <file>file:/home/dedda/git/paintball/src/hotel/entity/RoomCategory.java</file>
             <file>file:/home/dedda/git/paintball/sql/data.sql</file>
+            <file>file:/home/dedda/git/paintball/src/hotel/db/provider/GuestProvider.java</file>
         </group>
     </open-files>
 </project-private>
