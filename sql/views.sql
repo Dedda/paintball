@@ -44,3 +44,18 @@ SELECT
     cat.price AS price FROM room r
 INNER JOIN room_category cat
 ON r.category = cat.id;
+
+-- staff with category
+ DROP VIEW IF EXISTS staff_with_category;
+CREATE VIEW staff_with_category AS
+SELECT
+    s.id AS staff_id,
+    s.name AS name,
+    s.surname AS surname,
+    s.recruitement AS recruitement,
+    s.firing AS firing,
+    cat.id AS cat_id,
+    cat.salary AS salary,
+    cat.name AS cat_name FROM staff s
+INNER JOIN staff_category cat
+ON s.category = cat.id;

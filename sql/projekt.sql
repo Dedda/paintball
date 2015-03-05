@@ -18,7 +18,7 @@ CREATE TABLE guest (
 
 CREATE TABLE room_category (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(30) NOT NULL,
+    name VARCHAR(30) NOT NULL UNIQUE,
     price INTEGER NOT NULL
 );
 
@@ -31,7 +31,7 @@ CREATE TABLE room (
 CREATE TABLE staff_category (
     id SERIAL PRIMARY KEY,
     salary INTEGER NOT NULL,
-    name VARCHAR(50) NOT NULL
+    name VARCHAR(50) NOT NULL UNIQUE
 );
 
 CREATE TABLE staff (
@@ -51,7 +51,7 @@ CREATE TABLE staff_room (
 
 CREATE TABLE optional_service (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
+    name VARCHAR(50) NOT NULL UNIQUE,
     price INTEGER NOT NULL
 );
 
