@@ -148,6 +148,9 @@ public class GuestProvider {
     }
     
     public void remove(final Guest guest) {
+        if (guest.getId() == 1) {
+            return;
+        }
         Connection connection = DBUtil.getConnection();
         String query = "DELETE FROM guest "
                 + "WHERE id=" + guest.getId();
