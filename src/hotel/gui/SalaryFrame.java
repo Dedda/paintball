@@ -9,12 +9,12 @@ package hotel.gui;
  *
  * @author schaefal
  */
-public class LohnabrechnungGUI extends javax.swing.JFrame {
+public class SalaryFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form LohnabrechnungGUI
      */
-    public LohnabrechnungGUI() {
+    public SalaryFrame() {
         initComponents();
     }
 

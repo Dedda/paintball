@@ -105,7 +105,7 @@ public class MainMenuFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_guestsBtnActionPerformed
 
     private void paymentBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentBtnActionPerformed
-        new LohnabrechnungGUI().setVisible(true);
+        new SalaryFrame().setVisible(true);
     }//GEN-LAST:event_paymentBtnActionPerformed
 
     /**

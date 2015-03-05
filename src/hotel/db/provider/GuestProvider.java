@@ -82,10 +82,10 @@ public class GuestProvider {
     public Guest getForName(final String name) {
         Connection connection = DBUtil.getConnection();
         Guest guest = null;
-        String query = name.contains(" ")
-                ? "SELECT * FROM guest WHERE name=" + name.split(" ")[0]
-                                     + " AND surname=" + name.split(" ")[1]
-                : "SELECT * FROM guest WHERE name=" + name;
+        String query = name.matches(".+\\s.+")
+                ? "SELECT * FROM guest WHERE name='" + name.split(" ")[0]
+                                     + "' AND surname='" + name.split(" ")[1] + "'"
+                : "SELECT * FROM guest WHERE name='" + name + "'";
         Statement statement = null;
         ResultSet resultSet = null;
         try {
@@ -131,10 +131,26 @@ public class GuestProvider {
         return guest;
     }
     
-    public void saveGuest(final Guest guest) {
+    public int saveNew(final Guest guest) {
         Connection connection = DBUtil.getConnection();
         String query = "INSERT INTO guest(name, surname) "
-                + "VALUES(" + guest.getName() + "," + guest.getSurname() + ")";
+                + "VALUES('" + guest.getName() + "','" + guest.getSurname() + "')";
+        Statement statement;
+        try {
+            statement = connection.createStatement();
+            statement.executeUpdate(query);
+            connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        Guest saved = getForName(guest.getName() + " " + guest.getSurname());
+        return saved.getId();
+    }
+    
+    public void remove(final Guest guest) {
+        Connection connection = DBUtil.getConnection();
+        String query = "DELETE FROM guest "
+                + "WHERE id=" + guest.getId();
         Statement statement;
         try {
             statement = connection.createStatement();

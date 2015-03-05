@@ -9,12 +9,12 @@ package hotel.gui;
  *
  * @author schaefal
  */
-public class ReservierungGUI extends javax.swing.JFrame {
+public class ReservationFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form HotelOberfläche
      */
-    public ReservierungGUI() {
+    public ReservationFrame() {
         initComponents();
     }
 

@@ -5,8 +5,8 @@
  */
 package hotel.main;
 
-import hotel.gui.ReservierungGUI;
-import hotel.gui.LohnabrechnungGUI;
+import hotel.gui.ReservationFrame;
+import hotel.gui.SalaryFrame;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -34,11 +34,11 @@ public class Hotel extends JFrame implements ActionListener {
     
     private JButton resB;
     private JButton lohnB;
-    private ReservierungGUI res;
-    private LohnabrechnungGUI lohn;
+    private ReservationFrame res;
+    private SalaryFrame lohn;
     public Hotel() {
-        res = new ReservierungGUI();
-        lohn = new LohnabrechnungGUI();
+        res = new ReservationFrame();
+        lohn = new SalaryFrame();
         
         this.setLayout(new FlowLayout());
         this.setMinimumSize(new Dimension(400, 400));
