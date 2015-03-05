@@ -10,10 +10,22 @@ public class Reservation {
     private Guest guest;
     private Room room;
     private String additionalInfo;
-    private Date arrival;
-    private Date departure;
     private Date payed;
     private Date canceled;
+
+    public Reservation() {
+    }
+
+    public Reservation(int id, Date start, Date end, Guest guest, Room room, String additionalInfo, Date payed, Date canceled) {
+        this.id = id;
+        this.start = start;
+        this.end = end;
+        this.guest = guest;
+        this.room = room;
+        this.additionalInfo = additionalInfo;
+        this.payed = payed;
+        this.canceled = canceled;
+    }
 
     public int getId() {
         return id;
@@ -61,22 +73,6 @@ public class Reservation {
 
     public void setAdditionalInfo(String additionalInfo) {
         this.additionalInfo = additionalInfo;
-    }
-
-    public Date getArrival() {
-        return arrival;
-    }
-
-    public void setArrival(Date arrival) {
-        this.arrival = arrival;
-    }
-
-    public Date getDeparture() {
-        return departure;
-    }
-
-    public void setDeparture(Date departure) {
-        this.departure = departure;
     }
 
     public Date getPayed() {

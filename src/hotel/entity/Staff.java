@@ -1,6 +1,7 @@
 package hotel.entity;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Staff {
 
@@ -12,6 +13,15 @@ public class Staff {
     private Date firing;
 
     public Staff() {
+    }
+
+    public Staff(int id, StaffCategory category, String name, String surname, Date recruitement, Date firing) {
+        this.id = id;
+        this.category = category;
+        this.name = name;
+        this.surname = surname;
+        this.recruitement = recruitement;
+        this.firing = firing;
     }
 
     public int getId() {
@@ -60,6 +70,36 @@ public class Staff {
 
     public void setFiring(Date firing) {
         this.firing = firing;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Staff other = (Staff) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        if (!Objects.equals(this.category, other.category)) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.surname, other.surname)) {
+            return false;
+        }
+        if (!Objects.equals(this.recruitement, other.recruitement)) {
+            return false;
+        }
+        if (!Objects.equals(this.firing, other.firing)) {
+            return false;
+        }
+        return true;
     }
     
 }
