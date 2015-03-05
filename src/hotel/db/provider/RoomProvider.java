@@ -37,5 +37,29 @@ public class RoomProvider {
         }
         return rooms;
     }
+
+    Room getForId(final int roomId) {
+        Connection connection = DBUtil.getConnection();
+        Room room = null;
+        String query = "SELECT * FROM rooms_with_category WHERE room_id=" + roomId;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                int people = resultSet.getInt("people");
+                int categoryId = resultSet.getInt("category_id");
+                String categoryName = resultSet.getString("category_name");
+                int price = resultSet.getInt("price");
+                room = new Room(roomId, people, new RoomCategory(categoryId, categoryName, price));
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return room;
+    }
     
 }
