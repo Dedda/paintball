@@ -46,7 +46,7 @@ INNER JOIN room_category cat
 ON r.category = cat.id;
 
 -- staff with category
- DROP VIEW IF EXISTS staff_with_category;
+DROP VIEW IF EXISTS staff_with_category;
 CREATE VIEW staff_with_category AS
 SELECT
     s.id AS staff_id,

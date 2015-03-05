@@ -30,6 +30,9 @@ VALUES(5, 2);
 
 --Staff Categories
 INSERT INTO staff_category(salary, name)
+VALUES(0, 'Nicht Vorhanden');
+
+INSERT INTO staff_category(salary, name)
 VALUES(20000, 'Bozz');
 
 INSERT INTO staff_category(salary, name)
@@ -37,13 +40,16 @@ VALUES(50, 'Putze');
 
 -- Staff
 INSERT INTO staff(name, surname, category, recruitement)
-VALUES('Herbert', 'Herbertsen', 1, '1961-06-16');
-
-INSERT INTO staff(name, surname, category, recruitement, firing)
-VALUES('Hassan', 'Assi', 2, '1990-01-01', '2010-01-01');
+VALUES('Nicht', 'Vorhanden', 1, '1990-01-01');
 
 INSERT INTO staff(name, surname, category, recruitement)
-VALUES('Mustafa', 'Kanacke', 2, '1990-01-01');
+VALUES('Herbert', 'Herbertsen', 2, '1961-06-16');
+
+INSERT INTO staff(name, surname, category, recruitement, firing)
+VALUES('Hassan', 'Assi', 3, '1990-01-01', '2010-01-01');
+
+INSERT INTO staff(name, surname, category, recruitement)
+VALUES('Mustafa', 'Kanacke', 3, '1990-01-01');
 
 -- Optional Services
 INSERT INTO optional_service(name, price)
