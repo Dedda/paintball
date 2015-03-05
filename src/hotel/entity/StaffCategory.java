@@ -1,5 +1,7 @@
 package hotel.entity;
 
+import java.util.Objects;
+
 public class StaffCategory {
 
     private int id;
@@ -7,6 +9,12 @@ public class StaffCategory {
     private String name;
 
     public StaffCategory() {
+    }
+
+    public StaffCategory(int id, int salary, String name) {
+        this.id = id;
+        this.salary = salary;
+        this.name = name;
     }
 
     public int getId() {
@@ -31,6 +39,21 @@ public class StaffCategory {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final StaffCategory other = (StaffCategory) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        return true;
     }
     
 }

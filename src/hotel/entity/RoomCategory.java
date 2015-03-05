@@ -49,13 +49,7 @@ public class RoomCategory {
             return false;
         }
         RoomCategory other = (RoomCategory)o;
-        if (other.id != this.id) {
-            return false;
-        }
         if (!other.name.equals(this.name)) {
-            return false;
-        }
-        if (other.price != this.price) {
             return false;
         }
         return true;
