@@ -1,5 +1,8 @@
 -- Guests
 INSERT INTO guest(name, surname)
+VALUES('Nicht', 'Vorhanden');
+
+INSERT INTO guest(name, surname)
 VALUES('Hans', 'Zimmer');
 
 INSERT INTO guest(name, surname)
@@ -71,10 +74,10 @@ VALUES(3, 2);
 -- Reservations
 
 INSERT INTO reservation(additional_info, reservation_group, room, guest, people, start_date, end_date)
-VALUES('', 1, 2, 2, 12, '2015-01-01', '2015-12-31');
+VALUES('', 1, 2, 3, 12, '2015-01-01', '2015-12-31');
 
 INSERT INTO reservation(additional_info, reservation_group, room, guest, people, start_date, end_date)
-VALUES('', 2, 1, 1, 3, '2015-03-02', '2015-06-01');
+VALUES('', 2, 1, 2, 3, '2015-03-02', '2015-06-01');
 
 -- Services to Reservations
 
