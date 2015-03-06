@@ -12,6 +12,8 @@ import java.util.List;
 
 public class GuestProvider {
 
+    ReservationProvider reservationProvider = new ReservationProvider();
+    
     public List<Guest> getAll() {
         Connection connection = DBUtil.getConnection();
         List<Guest> guests = new ArrayList<>();
@@ -106,30 +108,32 @@ public class GuestProvider {
         return guest;
     }
     
-    public Guest getForNameLike(final String name) {
+    public List<Guest> getForNameLike(final String name) {
+        List<Guest> guests = new ArrayList<>();
         Connection connection = DBUtil.getConnection();
         Guest guest = null;
         String query = name.contains(" ")
-                ? "SELECT * FROM guest WHERE name LIKE '" + name.split(" ")[0]
-                                     + "%' AND surname LIKE '" + name.split(" ")[1] + "%'"
-                : "SELECT * FROM guest WHERE name LIKE '" + name + "%'";
+                ? "SELECT * FROM guest WHERE name LIKE '%" + name.split(" ")[0]
+                                     + "' AND surname LIKE '" + name.split(" ")[1] + "%'"
+                : "SELECT * FROM guest WHERE name LIKE '%" + name + "%'";
         Statement statement = null;
         ResultSet resultSet = null;
         try {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String guestName = resultSet.getString("name");
                 String surname = resultSet.getString("surname");
                 guest = new Guest(id, guestName, surname);
+                guests.add(guest);
             }
             connection.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
         }
-        return guest;
+        return guests;
     }
     
     public int saveNew(final Guest guest) {
@@ -152,7 +156,6 @@ public class GuestProvider {
         if (guest.getId() == 1) {
             return;
         }
-        ReservationProvider reservationProvider = new ReservationProvider();
         reservationProvider.guestRemoved(guest);
         Connection connection = DBUtil.getConnection();
         String query = "DELETE FROM guest "
@@ -165,6 +168,14 @@ public class GuestProvider {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public ReservationProvider getReservationProvider() {
+        return reservationProvider;
+    }
+
+    public void setReservationProvider(ReservationProvider reservationProvider) {
+        this.reservationProvider = reservationProvider;
     }
     
 }

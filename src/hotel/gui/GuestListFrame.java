@@ -164,6 +164,22 @@ public class GuestListFrame extends javax.swing.JFrame {
         loadGuests();
     }//GEN-LAST:event_removeBtnActionPerformed
 
+    public GuestProvider getGuestProvider() {
+        return guestProvider;
+    }
+
+    public void setGuestProvider(GuestProvider guestProvider) {
+        this.guestProvider = guestProvider;
+    }
+
+    public ReservationProvider getReservationProvider() {
+        return reservationProvider;
+    }
+
+    public void setReservationProvider(ReservationProvider reservationProvider) {
+        this.reservationProvider = reservationProvider;
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addGuestBtn;
     private javax.swing.JList guestList;
