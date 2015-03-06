@@ -2,6 +2,7 @@ package hotel.db.provider;
 
 import hotel.db.DBUtil;
 import hotel.entity.Guest;
+import hotel.entity.Reservation;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -151,6 +152,8 @@ public class GuestProvider {
         if (guest.getId() == 1) {
             return;
         }
+        ReservationProvider reservationProvider = new ReservationProvider();
+        reservationProvider.guestRemoved(guest);
         Connection connection = DBUtil.getConnection();
         String query = "DELETE FROM guest "
                 + "WHERE id=" + guest.getId();

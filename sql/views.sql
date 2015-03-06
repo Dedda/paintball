@@ -14,6 +14,13 @@ WHERE recruitement < now()
 AND firing IS NULL
 OR firing > now();
 
+-- get open reservations
+DROP VIEW IF EXISTS open_reservations;
+CREATE VIEW open_reservations AS
+SELECT * FROM reservation
+WHERE canceled IS NULL
+AND payed IS NULL;
+
 -- all guests responsible for all current bookings
 
 DROP VIEW IF EXISTS current_guests;

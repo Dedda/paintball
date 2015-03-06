@@ -58,7 +58,7 @@ public class ReservationProvider {
             resultSet = statement.executeQuery(query);
             RoomProvider roomProvider = new RoomProvider();
             while (resultSet.next()) {
-                int id = resultSet.getInt("staff_id");
+                int id = resultSet.getInt("id");
                 Date start = resultSet.getDate("start_date");
                 Date end = resultSet.getDate("end_date");
                 int roomId = resultSet.getInt("room");
@@ -74,6 +74,49 @@ public class ReservationProvider {
             return null;
         }
         return reservations;
+    }
+    
+    public List<Reservation> getOpenForGuest(final Guest guest) {
+        List<Reservation> reservations = new ArrayList<>();
+        final int guestId = guest.getId();
+        Connection connection = DBUtil.getConnection();
+        String query = "SELECT * FROM open_reservations WHERE guest=" + guestId;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            RoomProvider roomProvider = new RoomProvider();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                Date start = resultSet.getDate("start_date");
+                Date end = resultSet.getDate("end_date");
+                int roomId = resultSet.getInt("room");
+                Room room = roomProvider.getForId(roomId);
+                String additionalInfo = resultSet.getString("additional_info");
+                Date payed = resultSet.getDate("payed");
+                Date canceled = resultSet.getDate("canceled");
+                reservations.add(new Reservation(id, start, end, guest, room, additionalInfo, payed, canceled));
+            }
+            connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return reservations;
+    }
+    
+    public void guestRemoved(final Guest guest) {
+        List<Reservation> reservations = getForGuest(guest);
+        Connection connection = DBUtil.getConnection();
+        String query = "UPDATE reservation SET guest=1 WHERE guest=" + guest.getId();
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            statement.executeUpdate(query);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
     
 }

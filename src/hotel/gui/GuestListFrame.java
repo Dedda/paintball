@@ -6,9 +6,12 @@
 package hotel.gui;
 
 import hotel.db.provider.GuestProvider;
+import hotel.db.provider.ReservationProvider;
 import hotel.entity.Guest;
+import hotel.entity.Reservation;
 import hotel.gui.model.GuestListModel;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,6 +21,7 @@ public class GuestListFrame extends javax.swing.JFrame {
 
     private List<Guest> guests;
     private GuestProvider guestProvider;
+    private ReservationProvider reservationProvider;
     
     /**
      * Creates new form GuestFormFrame
@@ -148,7 +152,14 @@ public class GuestListFrame extends javax.swing.JFrame {
             guests[i] = model.getGuestInLine(index[i]);
         }
         for (Guest guest : guests) {
-            guestProvider.remove(guest);
+            List<Reservation> openReservations = reservationProvider.getOpenForGuest(guest);
+            if (openReservations.size() == 0) {
+                guestProvider.remove(guest);    
+            } else {
+                String message = "Gast " + guest.getName() + " " 
+                        + guest.getSurname() + " hat noch nicht bezahlte Reservierungen!";
+                JOptionPane.showMessageDialog(this, message, "Fehler!", JOptionPane.WARNING_MESSAGE);
+            }
         }
         loadGuests();
     }//GEN-LAST:event_removeBtnActionPerformed
