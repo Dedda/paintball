@@ -6,12 +6,8 @@
 package hotel.db.provider;
 
 import hotel.entity.Staff;
-import hotel.entity.StaffCategory;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -38,7 +34,7 @@ public class StaffProviderTest {
         //assert that the default staff exists
         boolean exists = false;
         for (Staff staff : result) {
-            if (staff.getName().equals("Nicht") && staff.getName().equals("Vorhanden")) {
+            if (staff.getName().equals("Nicht") && staff.getSurname().equals("Vorhanden")) {
                 exists = true;
             }
         }
