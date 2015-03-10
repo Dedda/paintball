@@ -16,3 +16,8 @@ Mitarbeiter, deren Gehaltsstufe, den Monatslohn pro Mitarbeiter und die gesamten
 (Ihr hab die Wahl) verändert werden können (Familienname, Adresse etc)
 - bei Programmstart prüft das Programm auf Mitarbeiter die vor mehr als drei Jahren
 entlassen wurden und löscht deren Daten aus der Datenbank
+
+## Kontakt
+
+dedda102@gmail.com
+metalerfreak@web.de
