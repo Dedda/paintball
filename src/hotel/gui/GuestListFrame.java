@@ -29,6 +29,7 @@ public class GuestListFrame extends javax.swing.JFrame {
     public GuestListFrame() {
         initComponents();
         guestProvider = new GuestProvider();
+        reservationProvider = new ReservationProvider();
         loadGuests();
     }
 
