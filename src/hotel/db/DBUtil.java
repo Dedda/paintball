@@ -19,7 +19,7 @@ public abstract class DBUtil {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/projektdb","projekt", "projekt");
+                    "jdbc:postgresql://localhost:5432/dbprojekt","projekt", "geheim");
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;

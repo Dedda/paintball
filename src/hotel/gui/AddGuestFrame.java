@@ -20,13 +20,16 @@ import javax.swing.event.DocumentListener;
 public class AddGuestFrame extends javax.swing.JFrame {
 
     private GuestProvider provider;
+    private GuestListFrame guestListFrame;
     
     /**
      * Creates new form AddGuestFrame
      */
-    public AddGuestFrame() {
+    public AddGuestFrame(final GuestListFrame guestListFrame) {
         initComponents();
+        setTitle("Neuer Gast");
         provider = new GuestProvider();
+        this.guestListFrame = guestListFrame;
         saveBtn.setEnabled(false);
         nameText.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -123,6 +126,7 @@ public class AddGuestFrame extends javax.swing.JFrame {
         guest.setSurname(nameText.getText().split(" ")[1]);
         provider.saveNew(guest);
         setVisible(true);
+        guestListFrame.loadGuests();
         dispose();
     }//GEN-LAST:event_saveBtnActionPerformed
 

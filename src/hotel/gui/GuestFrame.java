@@ -5,17 +5,25 @@
  */
 package hotel.gui;
 
+import hotel.entity.Guest;
+
 /**
  *
  * @author dedda
  */
 public class GuestFrame extends javax.swing.JFrame {
 
+    private Guest guest;
+    
     /**
      * Creates new form GuestFrame
      */
-    public GuestFrame() {
+    public GuestFrame(final Guest guest) {
         initComponents();
+        this.guest = guest;
+        //TODO: name
+        //setTitle("Gast: " + guest.getName() + " " + guest.getSurname());
+        nameLbl.setText(nameLbl.getText() + "/t/t" + guest.getName() + " " + guest.getSurname());
     }
 
     /**
@@ -28,9 +36,7 @@ public class GuestFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         nameLbl = new javax.swing.JLabel();
-        nameText = new javax.swing.JTextField();
         reservationNumberLbl = new javax.swing.JLabel();
-        currentReservationsLbl = new javax.swing.JLabel();
         toPayLbl = new javax.swing.JLabel();
         openReservationsBtn = new javax.swing.JButton();
 
@@ -38,15 +44,7 @@ public class GuestFrame extends javax.swing.JFrame {
 
         nameLbl.setText("Name:");
 
-        nameText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nameTextActionPerformed(evt);
-            }
-        });
-
         reservationNumberLbl.setText("Anzahl Buchungen:");
-
-        currentReservationsLbl.setText("Laufende Buchungen:");
 
         toPayLbl.setText("Offener Betrag:");
 
@@ -65,54 +63,39 @@ public class GuestFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(nameLbl)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 114, Short.MAX_VALUE)
-                        .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(reservationNumberLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(currentReservationsLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(toPayLbl)
                             .addComponent(openReservationsBtn))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(reservationNumberLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(nameLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(nameLbl))
+                .addComponent(nameLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(reservationNumberLbl)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(currentReservationsLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(toPayLbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(openReservationsBtn)
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void nameTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nameTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_nameTextActionPerformed
 
     private void openReservationsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openReservationsBtnActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_openReservationsBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel currentReservationsLbl;
     private javax.swing.JLabel nameLbl;
-    private javax.swing.JTextField nameText;
     private javax.swing.JButton openReservationsBtn;
     private javax.swing.JLabel reservationNumberLbl;
     private javax.swing.JLabel toPayLbl;
