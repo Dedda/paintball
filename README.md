@@ -19,5 +19,5 @@ entlassen wurden und löscht deren Daten aus der Datenbank
 
 ## Kontakt
 
-dedda102@gmail.com
-metalerfreak@web.de
+- dedda102@gmail.com
+- metalerfreak@web.de

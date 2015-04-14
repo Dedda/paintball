@@ -52,6 +52,12 @@ public class AddGuestFrame extends javax.swing.JFrame {
         if (!name.matches(expression)) {
             return false;
         }
+        if (name.split(" ")[0].length() > 30) {
+            return false;
+        }
+        if (name.split(" ")[1].length() > 30) {
+            return false;
+        }
         if (provider.getForName(name) == null) {
             return true;
         }
@@ -71,7 +77,7 @@ public class AddGuestFrame extends javax.swing.JFrame {
         haederLbl = new javax.swing.JLabel();
         saveBtn = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         haederLbl.setText("Neuer Gast");
 
