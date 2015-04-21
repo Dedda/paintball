@@ -5,6 +5,8 @@
  */
 package hotel.gui;
 
+import hotel.db.provider.GuestProvider;
+import hotel.db.provider.ReservationProvider;
 import hotel.entity.Guest;
 
 /**
@@ -21,9 +23,13 @@ public class GuestFrame extends javax.swing.JFrame {
     public GuestFrame(final Guest guest) {
         initComponents();
         this.guest = guest;
-        //TODO: name
         //setTitle("Gast: " + guest.getName() + " " + guest.getSurname());
-        nameLbl.setText(nameLbl.getText() + "/t/t" + guest.getName() + " " + guest.getSurname());
+        nameLbl.setText(nameLbl.getText() + " " + guest.getName() + " " + guest.getSurname());
+        String reservatinoNumberText = reservationNumberLbl.getText()
+                                    + " "
+                                    + new ReservationProvider().getForGuest(guest).size();
+        //TODO: betrag
+        toPayLbl.setText(toPayLbl.getText() + " " + new GuestProvider().toPay(guest));
     }
 
     /**

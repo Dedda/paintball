@@ -1,6 +1,10 @@
 package hotel.entity;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 public class Reservation {
 
@@ -89,6 +93,10 @@ public class Reservation {
 
     public void setCanceled(Date canceled) {
         this.canceled = canceled;
+    }
+    
+    public int getDays() {
+        return Days.daysBetween(new DateTime(start.getTime()), new DateTime(end.getTime())).getDays();
     }
     
 }

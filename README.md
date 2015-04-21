@@ -2,6 +2,7 @@
 
 ## Anforderungen
 
+
 - Hotelgäste können Reservierungen vornehmen
 - Hotelgäste können einchecken, dabei wird, wenn vorhanden, aus einer
 Reservierung eine Buchung. Ansonsten wird das Zimmer direkt ausgewählt und gebucht.

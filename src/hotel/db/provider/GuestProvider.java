@@ -3,6 +3,7 @@ package hotel.db.provider;
 import hotel.db.DBUtil;
 import hotel.entity.Guest;
 import hotel.entity.Reservation;
+import hotel.entity.Service;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -170,6 +171,21 @@ public class GuestProvider {
         }
     }
 
+    public int toPay(final Guest guest) {
+        List<Reservation> openReservations;
+        openReservations = reservationProvider.getOpenForGuest(guest);
+        int toPay = 0;
+        for (Reservation reservation : openReservations) {
+            int roomPrice = reservation.getRoom().getCategory().getPrice();
+            toPay += roomPrice + reservation.getDays();
+            List<Service> services = new ServiceProvider().getForReservation(reservation);
+            for (Service service : services) {
+                toPay += service.getPrice();
+            }
+        }
+        return toPay;
+    }
+    
     public ReservationProvider getReservationProvider() {
         return reservationProvider;
     }

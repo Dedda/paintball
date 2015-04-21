@@ -37,6 +37,7 @@ public class GuestListFrame extends javax.swing.JFrame {
     void loadGuests() {
         this.guests = guestProvider.getAll();
         GuestListModel model = new GuestListModel();
+        guests.remove(new Guest(0, "Nicht", "Vorhanden"));
         model.setGuests(guests);
         guestList.setModel(model);
     }
