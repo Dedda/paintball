@@ -17,6 +17,7 @@ public class AddReservationFrame extends javax.swing.JFrame {
     public AddReservationFrame() {
         initComponents();
         setTitle("Reservierungen");
+        setLocationRelativeTo(null);
     }
 
     /**

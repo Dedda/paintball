@@ -17,6 +17,7 @@ public class SalaryFrame extends javax.swing.JFrame {
     public SalaryFrame() {
         initComponents();
         setTitle("Lohnabrechnung");
+        setLocationRelativeTo(null);
     }
 
     /**

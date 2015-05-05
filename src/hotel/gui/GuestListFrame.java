@@ -32,6 +32,7 @@ public class GuestListFrame extends javax.swing.JFrame {
         guestProvider = new GuestProvider();
         reservationProvider = new ReservationProvider();
         loadGuests();
+        setLocationRelativeTo(null);
     }
 
     void loadGuests() {

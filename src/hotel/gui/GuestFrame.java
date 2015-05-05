@@ -30,6 +30,7 @@ public class GuestFrame extends javax.swing.JFrame {
                                     + new ReservationProvider().getForGuest(guest).size();
         //TODO: betrag
         toPayLbl.setText(toPayLbl.getText() + " " + new GuestProvider().toPay(guest));
+        setLocationRelativeTo(null);
     }
 
     /**

@@ -48,6 +48,7 @@ public class AddGuestFrame extends javax.swing.JFrame {
                 saveBtn.setEnabled(checkName(nameText.getText()));
             }
         });
+        setLocationRelativeTo(null);
     }
 
     public boolean checkName(final String name) {
