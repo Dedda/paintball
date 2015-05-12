@@ -20,13 +20,16 @@ import javax.swing.event.DocumentListener;
 public class AddGuestFrame extends javax.swing.JFrame {
 
     private GuestProvider provider;
+    private GuestListFrame guestListFrame;
     
     /**
      * Creates new form AddGuestFrame
      */
-    public AddGuestFrame() {
+    public AddGuestFrame(final GuestListFrame guestListFrame) {
         initComponents();
+        setTitle("Neuer Gast");
         provider = new GuestProvider();
+        this.guestListFrame = guestListFrame;
         saveBtn.setEnabled(false);
         nameText.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -45,11 +48,18 @@ public class AddGuestFrame extends javax.swing.JFrame {
                 saveBtn.setEnabled(checkName(nameText.getText()));
             }
         });
+        setLocationRelativeTo(null);
     }
 
     public boolean checkName(final String name) {
         final String expression = "[A-Z][a-z]+\\s[A-Z][a-z]+";
         if (!name.matches(expression)) {
+            return false;
+        }
+        if (name.split(" ")[0].length() > 30) {
+            return false;
+        }
+        if (name.split(" ")[1].length() > 30) {
             return false;
         }
         if (provider.getForName(name) == null) {
@@ -71,7 +81,7 @@ public class AddGuestFrame extends javax.swing.JFrame {
         haederLbl = new javax.swing.JLabel();
         saveBtn = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         haederLbl.setText("Neuer Gast");
 
@@ -117,6 +127,7 @@ public class AddGuestFrame extends javax.swing.JFrame {
         guest.setSurname(nameText.getText().split(" ")[1]);
         provider.saveNew(guest);
         setVisible(true);
+        guestListFrame.loadGuests();
         dispose();
     }//GEN-LAST:event_saveBtnActionPerformed
 

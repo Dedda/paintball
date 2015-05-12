@@ -16,6 +16,8 @@ public class MainMenuFrame extends javax.swing.JFrame {
      */
     public MainMenuFrame() {
         initComponents();
+        setTitle("Hauptmenü");
+        setLocationRelativeTo(null);
     }
 
     /**

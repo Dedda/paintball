@@ -66,3 +66,16 @@ SELECT
     cat.name AS cat_name FROM staff s
 INNER JOIN staff_category cat
 ON s.category = cat.id;
+
+-- services for reservations
+DROP VIEW IF EXISTS services_for_reservation;
+CREATE VIEW services_for_reservation AS
+SELECT
+    s.id AS service_id,
+    s.name AS service_name,
+    s.price AS service_price,
+    reservation.id AS reservation_id FROM optional_service s
+INNER JOIN service_reservation
+ON service_reservation.service = s.id
+INNER JOIN reservation
+ON service_reservation.reservation = reservation.id;

@@ -1,5 +1,7 @@
 package hotel.entity;
 
+import java.util.Objects;
+
 public class Guest {
     
     private int id;
@@ -38,6 +40,24 @@ public class Guest {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Guest other = (Guest) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        if (!Objects.equals(this.surname, other.surname)) {
+            return false;
+        }
+        return true;
     }
 
     @Override

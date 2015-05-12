@@ -26,25 +26,19 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="nameLbl" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="114" max="32767" attributes="0"/>
-                      <Component id="nameText" min="-2" pref="200" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-                  </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="reservationNumberLbl" alignment="0" min="-2" pref="154" max="-2" attributes="0"/>
-                          <Component id="currentReservationsLbl" alignment="0" min="-2" pref="202" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="toPayLbl" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="toPayLbl" min="-2" max="-2" attributes="0"/>
                           <Component id="openReservationsBtn" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="reservationNumberLbl" min="-2" pref="154" max="-2" attributes="0"/>
+                          <Component id="nameLbl" min="-2" pref="240" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -54,19 +48,14 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="nameText" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="nameLbl" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
+              <Component id="nameLbl" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="reservationNumberLbl" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="currentReservationsLbl" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="toPayLbl" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="openReservationsBtn" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="165" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -77,19 +66,9 @@
         <Property name="text" type="java.lang.String" value="Name:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="nameText">
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="nameTextActionPerformed"/>
-      </Events>
-    </Component>
     <Component class="javax.swing.JLabel" name="reservationNumberLbl">
       <Properties>
         <Property name="text" type="java.lang.String" value="Anzahl Buchungen:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JLabel" name="currentReservationsLbl">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Laufende Buchungen:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="toPayLbl">

@@ -1,5 +1,7 @@
 package hotel.main;
 
+import hotel.db.provider.ServiceProvider;
+import hotel.entity.Reservation;
 import hotel.gui.MainMenuFrame;
 
 public class Main {
