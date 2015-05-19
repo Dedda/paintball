@@ -5,7 +5,12 @@
  */
 package hotel.gui;
 
+import hotel.db.provider.RoomProvider;
 import hotel.entity.Guest;
+import hotel.entity.Room;
+import java.util.Date;
+import java.util.List;
+import javax.swing.SpinnerDateModel;
 
 /**
  *
@@ -13,6 +18,7 @@ import hotel.entity.Guest;
  */
 public class AddReservationFrame extends javax.swing.JFrame {
 
+    private RoomProvider roomProvider;
     private Guest guest;
     
     /**
@@ -20,9 +26,19 @@ public class AddReservationFrame extends javax.swing.JFrame {
      */
     public AddReservationFrame(final Guest guest) {
         this.guest = guest;
+        roomProvider = new RoomProvider();
         initComponents();
         setTitle("Reservierungen");
         setLocationRelativeTo(null);
+    }
+    
+    private void loadRooms() {
+        SpinnerDateModel arrivalModel = (SpinnerDateModel) arrivalSpinner.getModel();
+        SpinnerDateModel departureModel = (SpinnerDateModel) departureSpinner.getModel();
+        Date arrival = arrivalModel.getDate();
+        Date departure = departureModel.getDate();
+        List<Room> freeRooms = roomProvider.getFree(arrival, departure);
+        
     }
     
     /**
