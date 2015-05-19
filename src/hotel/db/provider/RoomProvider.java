@@ -120,4 +120,25 @@ public class RoomProvider {
         return reservations;
     }
     
+    public List<Room> getForReservation(final int reservationId) {
+        List<Room> rooms = new ArrayList<>();
+        Connection connection = DBUtil.getConnection();
+        String query = "SELECT * FROM reservations_for_room WHERE reservation_id=" + reservationId;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                int roomId = resultSet.getInt("room_id");
+                Room room = getForId(roomId);
+                rooms.add(room);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return rooms;
+    }
+    
 }

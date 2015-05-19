@@ -3,6 +3,7 @@ package hotel.db.provider;
 import hotel.db.DBUtil;
 import hotel.entity.Guest;
 import hotel.entity.Reservation;
+import hotel.entity.Room;
 import hotel.entity.Service;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -14,6 +15,7 @@ import java.util.List;
 public class GuestProvider {
 
     ReservationProvider reservationProvider = new ReservationProvider();
+    RoomProvider roomProvider = new RoomProvider();
     
     public List<Guest> getAll() {
         Connection connection = DBUtil.getConnection();
@@ -176,8 +178,12 @@ public class GuestProvider {
         openReservations = reservationProvider.getOpenForGuest(guest);
         int toPay = 0;
         for (Reservation reservation : openReservations) {
-            int roomPrice = reservation.getRoom().getCategory().getPrice();
-            toPay += roomPrice + reservation.getDays();
+            List<Room> rooms = roomProvider.getForReservation(reservation.getId());
+            int roomPrice = 0;
+            for (Room room : rooms) {
+                roomPrice += room.getCategory().getPrice() * reservation.getDays();
+            }
+            toPay += roomPrice;
             List<Service> services = new ServiceProvider().getForReservation(reservation);
             for (Service service : services) {
                 toPay += service.getPrice();
