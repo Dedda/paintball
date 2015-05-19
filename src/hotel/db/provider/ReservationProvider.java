@@ -14,6 +14,8 @@ import java.util.List;
 
 public class ReservationProvider {
 
+    private GuestProvider guestProvider = new GuestProvider();
+    
     public List<Reservation> getAll() {
         List<Reservation> reservations = new ArrayList<>();
         Connection connection = DBUtil.getConnection();
@@ -23,7 +25,6 @@ public class ReservationProvider {
         try {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
-            RoomProvider roomProvider = new RoomProvider();
             GuestProvider guestProvider = new GuestProvider();
             while (resultSet.next()) {
                 int id = resultSet.getInt("staff_id");
@@ -31,12 +32,10 @@ public class ReservationProvider {
                 Date end = resultSet.getDate("end_date");
                 int guestId = resultSet.getInt("guest");
                 Guest guest = guestProvider.getForId(guestId);
-                int roomId = resultSet.getInt("room");
-                Room room = roomProvider.getForId(roomId);
                 String additionalInfo = resultSet.getString("additional_info");
                 Date payed = resultSet.getDate("payed");
                 Date canceled = resultSet.getDate("canceled");
-                reservations.add(new Reservation(id, start, end, guest, room, additionalInfo, payed, canceled));
+                reservations.add(new Reservation(id, start, end, guest, additionalInfo, payed, canceled));
             }
             connection.close();
         } catch (SQLException ex) {
@@ -44,6 +43,35 @@ public class ReservationProvider {
             return null;
         }
         return reservations;
+    }
+    
+    public Reservation getForId(final int id) {
+        Reservation reservation = null;
+        Connection connection = DBUtil.getConnection();
+        String query = "SELECT * FROM reservation WHERE id=" + id;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            reservation = new Reservation();
+            reservation.setId(id);
+            reservation.setAdditionalInfo(
+                    resultSet.getString("additional_info"));
+            reservation.setCanceled(
+                    resultSet.getDate("canceled"));
+            reservation.setEnd(resultSet.getDate("end_date"));
+            reservation.setGuest(
+                    guestProvider.getForId(
+                        resultSet.getInt("guest")));
+            reservation.setPayed(
+                    resultSet.getDate("payed"));
+            reservation.setStart(resultSet.getDate("start_date"));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return reservation;
     }
     
     public List<Reservation> getForGuest(final Guest guest) {
@@ -56,17 +84,14 @@ public class ReservationProvider {
         try {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
-            RoomProvider roomProvider = new RoomProvider();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 Date start = resultSet.getDate("start_date");
                 Date end = resultSet.getDate("end_date");
-                int roomId = resultSet.getInt("room");
-                Room room = roomProvider.getForId(roomId);
                 String additionalInfo = resultSet.getString("additional_info");
                 Date payed = resultSet.getDate("payed");
                 Date canceled = resultSet.getDate("canceled");
-                reservations.add(new Reservation(id, start, end, guest, room, additionalInfo, payed, canceled));
+                reservations.add(new Reservation(id, start, end, guest, additionalInfo, payed, canceled));
             }
             connection.close();
         } catch (SQLException ex) {
@@ -86,17 +111,14 @@ public class ReservationProvider {
         try {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
-            RoomProvider roomProvider = new RoomProvider();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 Date start = resultSet.getDate("start_date");
                 Date end = resultSet.getDate("end_date");
-                int roomId = resultSet.getInt("room");
-                Room room = roomProvider.getForId(roomId);
                 String additionalInfo = resultSet.getString("additional_info");
                 Date payed = resultSet.getDate("payed");
                 Date canceled = resultSet.getDate("canceled");
-                reservations.add(new Reservation(id, start, end, guest, room, additionalInfo, payed, canceled));
+                reservations.add(new Reservation(id, start, end, guest, additionalInfo, payed, canceled));
             }
             connection.close();
         } catch (SQLException ex) {
