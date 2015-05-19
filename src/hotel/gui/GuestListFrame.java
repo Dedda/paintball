@@ -66,6 +66,7 @@ public class GuestListFrame extends javax.swing.JFrame {
         reservationsLbl = new javax.swing.JLabel();
         toPayLbl = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        reservationBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -116,6 +117,8 @@ public class GuestListFrame extends javax.swing.JFrame {
 
         jButton1.setText("Buchungen anzeigen");
 
+        reservationBtn.setText("Reservieren");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -141,7 +144,9 @@ public class GuestListFrame extends javax.swing.JFrame {
                     .addComponent(reservationsLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(toPayLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(reservationBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 42, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -170,7 +175,9 @@ public class GuestListFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(toPayLbl)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jButton1)))
+                                .addComponent(jButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(reservationBtn)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -221,9 +228,14 @@ public class GuestListFrame extends javax.swing.JFrame {
     private void guestListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_guestListValueChanged
         GuestListModel model = (GuestListModel)guestList.getModel();
         int[] index = guestList.getSelectedIndices();
+        if (index.length != 1) {
+            reservationBtn.setEnabled(false);
+        } else {
+            reservationBtn.setEnabled(true);
+        }
         Guest guests[] = new Guest[index.length];
-        for (int i : index) {
-            guests[i] = model.getGuestInLine(i);
+        for (int i = 0; i < index.length; i++) {
+            guests[i] = model.getGuestInLine(index[i]);
         }
         int reservations = 0;
         int toPay = 0;
@@ -259,6 +271,7 @@ public class GuestListFrame extends javax.swing.JFrame {
     private javax.swing.JButton openBtn;
     private javax.swing.JButton refreshBtn;
     private javax.swing.JButton removeBtn;
+    private javax.swing.JButton reservationBtn;
     private javax.swing.JLabel reservationsLbl;
     private javax.swing.JLabel searchLbl;
     private javax.swing.JTextField searchText;
