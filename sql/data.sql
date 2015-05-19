@@ -79,11 +79,19 @@ VALUES(3, 2);
 
 -- Reservations
 
-INSERT INTO reservation(additional_info, reservation_group, room, guest, people, start_date, end_date)
-VALUES('', 1, 2, 3, 12, '2015-01-01', '2015-12-31');
+INSERT INTO reservation(additional_info, reservation_group, guest, people, start_date, end_date)
+VALUES('', 1, 3, 12, '2015-01-01', '2015-12-31');
 
-INSERT INTO reservation(additional_info, reservation_group, room, guest, people, start_date, end_date)
-VALUES('', 2, 1, 2, 3, '2015-03-02', '2015-06-01');
+INSERT INTO reservation(additional_info, reservation_group, guest, people, start_date, end_date)
+VALUES('', 2, 2, 3, '2015-03-02', '2015-06-01');
+
+-- Rooms to Reservations
+
+INSERT INTO room_reservation(room, reservation)
+VALUES(2, 1);
+
+INSERT INTO room_reservation(room, reservation)
+VALUES(1, 2);
 
 -- Services to Reservations
 

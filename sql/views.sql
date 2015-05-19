@@ -79,3 +79,15 @@ INNER JOIN service_reservation
 ON service_reservation.service = s.id
 INNER JOIN reservation
 ON service_reservation.reservation = reservation.id;
+
+-- reservations for rooms
+DROP VIEW IF EXISTS reservations_for_room;
+CREATE VIEW reservations_for_room AS
+SELECT
+    reservation.id AS reservation_id,
+    room.id AS room_id;
+    FROM reservation
+INNER JOIN room_reservation
+ON room_reservation.reservation = reservation.id
+INNER JOIN room
+ON room_reservation.room = room.id;

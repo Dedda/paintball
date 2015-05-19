@@ -7,7 +7,8 @@ DROP TABLE IF EXISTS    guest,
                         staff, 
                         staff_service, 
                         staff_category,
-                        optional_service
+                        optional_service,
+                        room_reservation
 CASCADE;
 
 CREATE TABLE guest (
@@ -65,13 +66,18 @@ CREATE TABLE reservation (
     id SERIAL PRIMARY KEY,
     additional_info TEXT,
     reservation_group INTEGER NOT NULL,
-    room INTEGER REFERENCES room(id) NOT NULL,
     guest INTEGER REFERENCES guest(id) NOT NULL,
     people INTEGER NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
     canceled DATE,
     payed DATE
+);
+
+CREATE TABLE room_reservation (
+    room INTEGER REFERENCES room(id),
+    reservation INTEGER REFERENCES reservation(id),
+    PRIMARY KEY (room, reservation)
 );
 
 CREATE TABLE service_reservation (
