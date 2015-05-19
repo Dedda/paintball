@@ -73,12 +73,32 @@ public class RoomProvider {
             List<Reservation> reservations = getReservationsForRoom(room.getId());
             if (null == reservations || reservations.size() == 0) {
                 freeRooms.add(room);
+                continue;
+            }
+            boolean isFree = true;
+            for (Reservation reservation : reservations) {
+                if (reservation.getStart().after(startDate) && reservation.getStart().before(endDate)) {
+                    isFree = false;
+                    break;
+                }
+                if (reservation.getEnd().after(startDate) && reservation.getEnd().before(endDate)) {
+                    isFree = false;
+                    break;
+                }
+                if (reservation.getStart().before(startDate) && reservation.getEnd().after(endDate)) {
+                    isFree = false;
+                    break;
+                }
+            }
+            if (isFree) {
+                freeRooms.add(room);
             }
         }
         return freeRooms;
     }
     
-    public List<Reservation> getReservationsForRoom(final int roomId) {
+    public List<Reservation> getReservationsForRoom(
+            final int roomId) {
         Connection connection = DBUtil.getConnection();
         List<Reservation> reservations = new ArrayList<>();
         String query = "SELECT * FROM reservations_for_room WHERE room_id = " + roomId;
