@@ -36,6 +36,7 @@ public class GuestListFrame extends javax.swing.JFrame {
         reservationProvider = new ReservationProvider();
         loadGuests();
         setLocationRelativeTo(null);
+        reservationBtn.setEnabled(false);
     }
 
     void loadGuests() {
@@ -118,6 +119,11 @@ public class GuestListFrame extends javax.swing.JFrame {
         jButton1.setText("Buchungen anzeigen");
 
         reservationBtn.setText("Reservieren");
+        reservationBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reservationBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -247,6 +253,22 @@ public class GuestListFrame extends javax.swing.JFrame {
         toPayLbl.setText(TO_PAY_LBL_TEXT + toPay);
     }//GEN-LAST:event_guestListValueChanged
 
+    private void reservationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationBtnActionPerformed
+        Guest selectedGuest = getSelectedGuests()[0];
+        AddReservationFrame reservationFrame = new AddReservationFrame(selectedGuest);
+        reservationFrame.setVisible(true);
+    }//GEN-LAST:event_reservationBtnActionPerformed
+
+    private Guest[] getSelectedGuests() {
+        GuestListModel model = (GuestListModel)guestList.getModel();
+        int index[] = guestList.getSelectedIndices();
+        Guest guests[] = new Guest[index.length];
+        for (int i = 0; i < index.length; i++) {
+            guests[i] = model.getGuestInLine(index[i]);
+        }
+        return guests;
+    }
+    
     public GuestProvider getGuestProvider() {
         return guestProvider;
     }

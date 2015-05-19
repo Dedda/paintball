@@ -5,16 +5,21 @@
  */
 package hotel.gui;
 
+import hotel.entity.Guest;
+
 /**
  *
- * @author schaefal
+ * @author schaefal, dedda
  */
 public class AddReservationFrame extends javax.swing.JFrame {
 
+    private Guest guest;
+    
     /**
      * Creates new form HotelOberfläche
      */
-    public AddReservationFrame() {
+    public AddReservationFrame(final Guest guest) {
+        this.guest = guest;
         initComponents();
         setTitle("Reservierungen");
         setLocationRelativeTo(null);
