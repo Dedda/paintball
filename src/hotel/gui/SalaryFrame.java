@@ -5,6 +5,14 @@
  */
 package hotel.gui;
 
+import hotel.db.provider.StaffProvider;
+import hotel.entity.Staff;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import javax.swing.table.TableModel;
+import java.util.Date;
+
 /**
  *
  * @author schaefal
@@ -12,10 +20,15 @@ package hotel.gui;
 public class SalaryFrame extends javax.swing.JFrame {
 
     /**
-     * Creates new form LohnabrechnungGUI
+     * Creates new form Lohnabre chnungGUI
      */
     public SalaryFrame() {
         initComponents();
+        cal = Calendar.getInstance();
+        compareCal = Calendar.getInstance();
+        provider = new StaffProvider();
+        staffList = provider.getAll();
+
         setTitle("Lohnabrechnung");
         setLocationRelativeTo(null);
     }
@@ -64,11 +77,12 @@ public class SalaryFrame extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Short.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.Short.class, java.lang.Float.class, java.util.Date.class, java.util.Date.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, false, false, false
             };
+            private List<List<Object>> data = new ArrayList<List<Object>>();
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
@@ -76,6 +90,14 @@ public class SalaryFrame extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+            public Object getValueAt(int row, int col) {
+                return data.get(row).get(col);
+            }
+
+            public void setValueAt(Object value, int row, int col) {
+                data.get(row).set(col, value);
+                fireTableCellUpdated(row, col);
             }
         });
         jScrollPane1.setViewportView(salaryTable);
@@ -92,6 +114,11 @@ public class SalaryFrame extends javax.swing.JFrame {
         });
 
         yearBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1990" }));
+        yearBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                yearBoxActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -134,13 +161,52 @@ public class SalaryFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void monthBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_monthBoxActionPerformed
-        // TODO add your handling code here:
+        TableModel mdl = salaryTable.getModel();
+
+        for(Staff s : staffList) {
+            cal.setTime(s.getRecruitement());
+            compareCal.set(Calendar.YEAR, Integer.parseInt(yearBox.getSelectedItem().toString()));
+            compareCal.set(Calendar.MONTH, monthBox.getSelectedIndex());
+            
+            if(compareCal.compareTo(cal) >= 0) {
+                try {
+                    cal.setTime(s.getFiring());
+                
+                    if(compareCal.compareTo(cal) <= 0) {
+                        //        "Mitarbeiter", "Gehaltsstufe", "Monatslohn", "Vertragsbeginn", "Vertragsende"
+
+                    mdl.setValueAt(s.getName() +" "+ s.getSurname(), mdl.getRowCount(), 0);
+                    mdl.setValueAt(s.getCategory().getId(), mdl.getRowCount(), 1);
+                    mdl.setValueAt(s.getCategory().getSalary(), mdl.getRowCount(), 2);
+                    mdl.setValueAt(s.getRecruitement(), mdl.getRowCount(), 3);
+                    mdl.setValueAt(s.getFiring(), mdl.getRowCount(), 4);
+                        
+                    }
+                }
+                catch (Exception e) {
+                    //e.printStackTrace();
+                }
+            }
+        }
     }//GEN-LAST:event_monthBoxActionPerformed
 
     private void cancelBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelBtnActionPerformed
         dispose();
     }//GEN-LAST:event_cancelBtnActionPerformed
 
+    private void yearBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yearBoxActionPerformed
+        for(Staff s : staffList) {
+            cal.setTime(s.getRecruitement());
+            if(monthBox.getSelectedIndex()== cal.get(Calendar.MONTH) && (int)yearBox.getSelectedItem() == cal.get(Calendar.YEAR)) {
+                
+            }
+        }
+    }//GEN-LAST:event_yearBoxActionPerformed
+
+    private Calendar cal;
+    private Calendar compareCal;
+    private StaffProvider provider;
+    private List<Staff> staffList;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelBtn;
     private javax.swing.JLabel costLbl;
