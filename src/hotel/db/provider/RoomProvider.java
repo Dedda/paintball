@@ -68,31 +68,31 @@ public class RoomProvider {
         List<Room> allRooms = getAll();
         List<Room> freeRooms = new ArrayList<>();
         for (Room room : allRooms) {
-            List<Reservation> reservations = getReservationsForRoom(room.getId());
-            if (null == reservations || reservations.size() == 0) {
-                freeRooms.add(room);
-                continue;
-            }
-            boolean isFree = true;
-            for (Reservation reservation : reservations) {
-                if (reservation.getStart().after(startDate) && reservation.getStart().before(endDate)) {
-                    isFree = false;
-                    break;
-                }
-                if (reservation.getEnd().after(startDate) && reservation.getEnd().before(endDate)) {
-                    isFree = false;
-                    break;
-                }
-                if (reservation.getStart().before(startDate) && reservation.getEnd().after(endDate)) {
-                    isFree = false;
-                    break;
-                }
-            }
-            if (isFree) {
+            if (isFree(room, startDate, endDate)) {
                 freeRooms.add(room);
             }
         }
         return freeRooms;
+    }
+    
+    public boolean isFree(final Room room, final Date startDate, final Date endDate) {
+        boolean free = true;
+        List<Reservation> reservations = getReservationsForRoom(room.getId());
+        for (Reservation reservation : reservations) {
+            if (reservation.getStart().after(startDate) && reservation.getStart().before(endDate)) {
+                free = false;
+                break;
+            }
+            if (reservation.getEnd().after(startDate) && reservation.getEnd().before(endDate)) {
+                free = false;
+                break;
+            }
+            if (reservation.getStart().before(startDate) && reservation.getEnd().after(endDate)) {
+                free = false;
+                break;
+            }
+        }
+        return free;
     }
     
     public List<Reservation> getReservationsForRoom(
