@@ -14,7 +14,6 @@ import java.util.List;
 
 public class GuestProvider {
 
-    ReservationProvider reservationProvider = new ReservationProvider();
     RoomProvider roomProvider = new RoomProvider();
     
     public List<Guest> getAll() {
@@ -159,6 +158,7 @@ public class GuestProvider {
         if (guest.getId() == 1) {
             return;
         }
+        ReservationProvider reservationProvider = new ReservationProvider();
         reservationProvider.guestRemoved(guest);
         Connection connection = DBUtil.getConnection();
         String query = "DELETE FROM guest "
@@ -175,6 +175,7 @@ public class GuestProvider {
 
     public int toPay(final Guest guest) {
         List<Reservation> openReservations;
+        ReservationProvider reservationProvider = new ReservationProvider();
         openReservations = reservationProvider.getOpenForGuest(guest);
         int toPay = 0;
         for (Reservation reservation : openReservations) {
@@ -191,13 +192,4 @@ public class GuestProvider {
         }
         return toPay;
     }
-    
-    public ReservationProvider getReservationProvider() {
-        return reservationProvider;
-    }
-
-    public void setReservationProvider(ReservationProvider reservationProvider) {
-        this.reservationProvider = reservationProvider;
-    }
-    
 }

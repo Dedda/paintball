@@ -15,8 +15,6 @@ import java.util.List;
 
 public class RoomProvider {
 
-    private ReservationProvider reservationProvider = new ReservationProvider();
-    
     public List<Room> getAll() {
         Connection connection = DBUtil.getConnection();
         List<Room> rooms = new ArrayList<>();
@@ -99,6 +97,7 @@ public class RoomProvider {
     
     public List<Reservation> getReservationsForRoom(
             final int roomId) {
+        ReservationProvider reservationProvider = new ReservationProvider();
         Connection connection = DBUtil.getConnection();
         List<Reservation> reservations = new ArrayList<>();
         String query = "SELECT * FROM reservations_for_room WHERE room_id = " + roomId;
