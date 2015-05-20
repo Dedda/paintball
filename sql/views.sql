@@ -85,7 +85,7 @@ DROP VIEW IF EXISTS reservations_for_room;
 CREATE VIEW reservations_for_room AS
 SELECT
     reservation.id AS reservation_id,
-    room.id AS room_id;
+    room.id AS room_id
     FROM reservation
 INNER JOIN room_reservation
 ON room_reservation.reservation = reservation.id
