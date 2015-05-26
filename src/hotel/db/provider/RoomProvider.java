@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RoomProvider {
 
@@ -139,5 +140,4 @@ public class RoomProvider {
         }
         return rooms;
     }
-    
 }

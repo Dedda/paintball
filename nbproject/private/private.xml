@@ -3,12 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/phil/Projekt/paintball/src/hotel/db/provider/StaffProvider.java</file>
-            <file>file:/home/phil/Projekt/paintball/src/hotel/entity/StaffCategory.java</file>
-            <file>file:/home/phil/Projekt/paintball/src/hotel/gui/SalaryFrame.java</file>
-            <file>file:/home/phil/Projekt/paintball/src/hotel/db/provider/GuestProvider.java</file>
-            <file>file:/home/phil/Projekt/paintball/src/hotel/entity/Staff.java</file>
-            <file>file:/home/phil/Projekt/paintball/sql/views.sql</file>
+            <file>file:/home/sgoeppentin/git/paintball/sql/data.sql</file>
+            <file>file:/home/sgoeppentin/git/paintball/sql/views.sql</file>
+            <file>file:/home/sgoeppentin/git/paintball/src/hotel/db/provider/GuestProvider.java</file>
+            <file>file:/home/sgoeppentin/git/paintball/src/hotel/main/Main.java</file>
+            <file>file:/home/sgoeppentin/git/paintball/src/hotel/db/provider/ReservationProvider.java</file>
+            <file>file:/home/sgoeppentin/git/paintball/src/hotel/gui/AddReservationFrame.java</file>
+            <file>file:/home/sgoeppentin/git/paintball/src/hotel/gui/GuestListFrame.java</file>
+            <file>file:/home/sgoeppentin/git/paintball/sql/projekt.sql</file>
+            <file>file:/home/sgoeppentin/git/paintball/src/hotel/gui/model/RoomComboBoxModel.java</file>
+            <file>file:/home/sgoeppentin/git/paintball/src/hotel/entity/Reservation.java</file>
         </group>
     </open-files>
 </project-private>
