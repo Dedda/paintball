@@ -12,6 +12,8 @@ import hotel.entity.Reservation;
 import hotel.gui.model.GuestListModel;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -37,6 +39,17 @@ public class GuestListFrame extends javax.swing.JFrame {
         loadGuests();
         setLocationRelativeTo(null);
         reservationBtn.setEnabled(false);
+        searchText.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                searchTextChanged();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                searchTextChanged();
+            }
+            public void changedUpdate(DocumentEvent e) {
+                searchTextChanged();
+            }
+        });
     }
 
     void loadGuests() {
@@ -45,6 +58,10 @@ public class GuestListFrame extends javax.swing.JFrame {
         guests.remove(new Guest(0, "Nicht", "Vorhanden"));
         model.setGuests(guests);
         guestList.setModel(model);
+    }
+    
+    private void searchTextChanged() {
+        String searchText = this.searchText.getText();
     }
     
     /**
