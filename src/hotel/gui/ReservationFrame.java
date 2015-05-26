@@ -122,8 +122,6 @@ public class ReservationFrame extends javax.swing.JFrame {
 
         stateLbl.setText("Status:");
 
-        stateTextLbl.setText("offen");
-
         priceLbl.setText("Preis:");
 
         saveBtn.setText("Speichern");
@@ -203,7 +201,7 @@ public class ReservationFrame extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(stateLbl)
-                            .addComponent(stateTextLbl))
+                            .addComponent(stateTextLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(priceLbl)
                             .addComponent(priceValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
