@@ -6,9 +6,16 @@
 package hotel.gui;
 
 import hotel.db.provider.ReservationProvider;
+import hotel.db.provider.RoomProvider;
+import hotel.db.provider.ServiceProvider;
 import hotel.entity.Reservation;
+import hotel.entity.Room;
+import hotel.entity.Service;
+import hotel.gui.model.RoomListModel;
+import hotel.gui.model.ServiceListModel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -32,6 +39,14 @@ public class ReservationFrame extends javax.swing.JFrame {
         payedBtn.setEnabled(!reservation.isPayed());
         cancelReservationBtn.setEnabled(!reservation.isCanceled());
         stateTextLbl.setText(reservation.isCanceled() ? "storniert" : (reservation.isPayed() ? "bezahlt" : "offen"));
+        List<Service> services = new ServiceProvider().getForReservation(reservation);
+        ServiceListModel serviceListModel = new ServiceListModel();
+        serviceListModel.setServices(services);
+        servicesList.setModel(serviceListModel);
+        List<Room> rooms = new RoomProvider().getForReservation(reservation.getId());
+        RoomListModel roomListModel = new RoomListModel();
+        roomListModel.setRooms(rooms);
+        roomsList.setModel(roomListModel);
     }
 
     private String format(final Date date) {
