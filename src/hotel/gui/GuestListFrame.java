@@ -10,7 +10,10 @@ import hotel.db.provider.ReservationProvider;
 import hotel.entity.Guest;
 import hotel.entity.Reservation;
 import hotel.gui.model.GuestListModel;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -244,13 +247,11 @@ public class GuestListFrame extends javax.swing.JFrame {
     private void openBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openBtnActionPerformed
         GuestListModel model = (GuestListModel)guestList.getModel();
         int index[] = guestList.getSelectedIndices();
-        Guest guests[] = new Guest[index.length];
+        List<Guest> guests = new ArrayList<>(index.length);
         for (int i = 0; i < index.length; i++) {
-            guests[i] = model.getGuestInLine(index[i]);
+            guests.add(model.getGuestInLine(index[i]));
         }
-        for (Guest guest : guests) {
-            new GuestFrame(guest).setVisible(true);
-        }
+        guests.stream().parallel().forEach(guest -> new GuestFrame(guest).setVisible(true));
     }//GEN-LAST:event_openBtnActionPerformed
 
     private void guestListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_guestListValueChanged
@@ -285,9 +286,7 @@ public class GuestListFrame extends javax.swing.JFrame {
         GuestListModel model = (GuestListModel)guestList.getModel();
         int index[] = guestList.getSelectedIndices();
         Guest guests[] = new Guest[index.length];
-        for (int i = 0; i < index.length; i++) {
-            guests[i] = model.getGuestInLine(index[i]);
-        }
+        IntStream.range(0, index.length).parallel().forEach(i -> guests[i] = model.getGuestInLine(index[i]));
         return guests;
     }
     

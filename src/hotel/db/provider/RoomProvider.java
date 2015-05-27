@@ -68,11 +68,7 @@ public class RoomProvider {
     public List<Room> getFree(final Date startDate, final Date endDate) {
         List<Room> allRooms = getAll();
         List<Room> freeRooms = new ArrayList<>();
-        for (Room room : allRooms) {
-            if (isFree(room, startDate, endDate)) {
-                freeRooms.add(room);
-            }
-        }
+        freeRooms = allRooms.stream().filter(room -> isFree(room, startDate, endDate)).collect(Collectors.toList());
         return freeRooms;
     }
     

@@ -186,18 +186,18 @@ public class GuestProvider {
         ReservationProvider reservationProvider = new ReservationProvider();
         openReservations = reservationProvider.getOpenForGuest(guest);
         int toPay = 0;
-        for (Reservation reservation : openReservations) {
-            List<Room> rooms = roomProvider.getForReservation(reservation.getId());
-            int roomPrice = 0;
-            for (Room room : rooms) {
-                roomPrice += room.getCategory().getPrice() * reservation.getDays();
-            }
-            toPay += roomPrice;
-            List<Service> services = new ServiceProvider().getForReservation(reservation);
-            for (Service service : services) {
-                toPay += service.getPrice();
-            }
-        }
+        toPay += openReservations.stream().mapToInt(
+            reservation -> 
+                roomProvider.getForReservation(reservation.getId())
+                    .stream().mapToInt(
+                        room -> 
+                            room.getCategory().getPrice() * reservation.getDays()).sum()).sum();
+        toPay += openReservations.stream().mapToInt(
+            reservation -> 
+                new ServiceProvider().getForReservation(reservation)
+                    .stream().mapToInt(
+                        service -> 
+                            service.getPrice()).sum()).sum();
         return toPay;
     }
 }
