@@ -42,6 +42,10 @@ public class Room {
         this.category = category;
     }
 
+    public int calculatePrice(final int days) {
+        return category.getPrice() * days;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 7;

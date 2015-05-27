@@ -4,6 +4,7 @@ import hotel.db.DBUtil;
 import hotel.entity.Guest;
 import hotel.entity.Reservation;
 import hotel.entity.Room;
+import hotel.entity.Service;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -238,6 +239,20 @@ public class ReservationProvider {
             return false;
         }
         return true;
+    }
+    
+    public int getTotal(final Reservation reservation) {
+        RoomProvider roomProvider = new RoomProvider();
+        int roomPrice = 
+            roomProvider.getForReservation(
+                reservation.getId()).stream().parallel().mapToInt(
+                    room -> room.calculatePrice(reservation.getDays())).sum();
+        ServiceProvider serviceProvider = new ServiceProvider();
+        int servicePrice = 
+            serviceProvider.getForReservation(
+                reservation).stream().parallel().mapToInt(
+                        Service::getPrice).sum();
+        return roomPrice + servicePrice;
     }
     
     private String format(final Date date) {

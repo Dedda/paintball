@@ -142,6 +142,11 @@ public class GuestListFrame extends javax.swing.JFrame {
         toPayLbl.setText("Offener Betrag:");
 
         jButton1.setText("Buchungen anzeigen");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         reservationBtn.setText("Reservieren");
         reservationBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -281,6 +286,11 @@ public class GuestListFrame extends javax.swing.JFrame {
         AddReservationFrame reservationFrame = new AddReservationFrame(selectedGuest);
         reservationFrame.setVisible(true);
     }//GEN-LAST:event_reservationBtnActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Guest[] selected = getSelectedGuests();
+        Arrays.stream(selected).forEach(guest -> new ReservationListFrame(guest).setVisible(true));
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private Guest[] getSelectedGuests() {
         GuestListModel model = (GuestListModel)guestList.getModel();

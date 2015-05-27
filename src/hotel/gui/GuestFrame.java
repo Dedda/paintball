@@ -98,7 +98,7 @@ public class GuestFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void openReservationsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openReservationsBtnActionPerformed
-        // TODO add your handling code here:
+        new ReservationListFrame(guest).setVisible(true);
     }//GEN-LAST:event_openReservationsBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
