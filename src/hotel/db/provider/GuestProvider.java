@@ -114,10 +114,18 @@ public class GuestProvider {
         List<Guest> guests = new ArrayList<>();
         Connection connection = DBUtil.getConnection();
         Guest guest = null;
-        String query = name.contains(" ")
-                ? "SELECT * FROM guest WHERE name LIKE '%" + name.split(" ")[0]
-                                     + "' AND surname LIKE '" + name.split(" ")[1] + "%'"
-                : "SELECT * FROM guest WHERE name LIKE '%" + name + "%'";
+        String query = "SELECT * FROM guest WHERE name LIKE '%";
+        if (name.contains(" ")) {
+            String[] split = name.split(" ");
+            query += split[0];
+            if (split.length > 1) {
+                query += "' AND surname LIKE '";
+                query += split[1];
+            }
+        } else {
+            query += name;
+        }
+        query += "%'";
         Statement statement = null;
         ResultSet resultSet = null;
         try {

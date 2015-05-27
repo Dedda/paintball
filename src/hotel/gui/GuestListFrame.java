@@ -62,6 +62,11 @@ public class GuestListFrame extends javax.swing.JFrame {
     
     private void searchTextChanged() {
         String searchText = this.searchText.getText();
+        List<Guest> guests = guestProvider.getForNameLike(searchText);
+        guests.remove(new Guest(0, "Nicht", "Vorhanden"));
+        GuestListModel model = new GuestListModel();
+        model.setGuests(guests);
+        guestList.setModel(model);
     }
     
     /**
