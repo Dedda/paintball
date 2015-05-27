@@ -191,7 +191,7 @@ public class GuestProvider {
                 roomProvider.getForReservation(reservation.getId())
                     .stream().mapToInt(
                         room -> 
-                            room.getCategory().getPrice() * reservation.getDays()).sum()).sum();
+                            calculateRoomPrice(room, reservation)).sum()).sum();
         toPay += openReservations.stream().mapToInt(
             reservation -> 
                 new ServiceProvider().getForReservation(reservation)
@@ -200,4 +200,9 @@ public class GuestProvider {
                             service.getPrice()).sum()).sum();
         return toPay;
     }
+    
+    private int calculateRoomPrice(final Room room, final Reservation reservation) {
+        return room.getCategory().getPrice() * reservation.getDays();
+    }
+    
 }
