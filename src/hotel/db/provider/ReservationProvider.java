@@ -1,6 +1,5 @@
 package hotel.db.provider;
 
-import hotel.db.DBUtil;
 import hotel.entity.Guest;
 import hotel.entity.Reservation;
 import hotel.entity.Room;
@@ -14,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static hotel.db.DBUtil.*;
 import static java.util.stream.Collectors.toList;
 
 public class ReservationProvider {
@@ -22,7 +22,7 @@ public class ReservationProvider {
     
     public List<Reservation> getAll() {
         List<Reservation> reservations = new ArrayList<>();
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         String query = "SELECT * FROM reservation";
         Statement statement = null;
         ResultSet resultSet = null;
@@ -44,7 +44,7 @@ public class ReservationProvider {
                 List<Integer> rooms = toIds(roomProvider.getForReservation(id));
                 reservations.add(new Reservation(id, start, end, guest, people, rooms, additionalInfo, payed, canceled));
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -54,7 +54,7 @@ public class ReservationProvider {
     
     public Reservation getForId(final int id) {
         Reservation reservation = null;
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         String query = "SELECT * FROM reservation WHERE id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -73,6 +73,7 @@ public class ReservationProvider {
             reservation.setPayed(
                     resultSet.getDate("payed"));
             reservation.setStart(resultSet.getDate("start_date"));
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -83,7 +84,7 @@ public class ReservationProvider {
     public List<Reservation> getForGuest(final Guest guest) {
         List<Reservation> reservations = new ArrayList<>();
         final int guestId = guest.getId();
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         String query = "SELECT * FROM reservation WHERE guest = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -101,7 +102,7 @@ public class ReservationProvider {
                 List<Integer> rooms = toIds(roomProvider.getForReservation(id));
                 reservations.add(new Reservation(id, start, end, guest, people, rooms, additionalInfo, payed, canceled));
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -112,7 +113,7 @@ public class ReservationProvider {
     public List<Reservation> getOpenForGuest(final Guest guest) {
         List<Reservation> reservations = new ArrayList<>();
         final int guestId = guest.getId();
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         String query = "SELECT * FROM open_reservations WHERE guest = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -130,7 +131,7 @@ public class ReservationProvider {
                 List<Integer> rooms = toIds(roomProvider.getForReservation(id));
                 reservations.add(new Reservation(id, start, end, guest, people, rooms, additionalInfo, payed, canceled));
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -140,19 +141,20 @@ public class ReservationProvider {
     
     public void guestRemoved(final Guest guest) {
         List<Reservation> reservations = getForGuest(guest);
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         String query = "UPDATE reservation SET guest=1 WHERE guest = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, guest.getId());
             statement.executeUpdate();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
     
     public int save(final Reservation reservation) {
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         String query = "INSERT INTO reservation(additional_info, guest, people, start_date, end_date) "
                 + "VALUES(?, ?, ?, ?, ?)";
         try {
@@ -167,7 +169,7 @@ public class ReservationProvider {
             if (generatedKeys.next()) {
                 reservation.setId(generatedKeys.getInt("id"));
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return -1;
@@ -179,7 +181,7 @@ public class ReservationProvider {
     }
     
     public boolean merge(final Reservation reservation) {
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         String query = "UPDATE reservation SET"
                 + " additional_info = ?"
                 + ", guest = ?"
@@ -205,7 +207,7 @@ public class ReservationProvider {
             }
             statement.setInt(++i, reservation.getId());
             statement.executeUpdate();
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
@@ -217,7 +219,7 @@ public class ReservationProvider {
         if (!clearRooms(reservation)) {
             return false;
         }
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         try {
             for (int room : reservation.getRooms()) {
                 String query = "INSERT INTO room_reservation(room, reservation) VALUES(?, ?)";
@@ -226,7 +228,7 @@ public class ReservationProvider {
                 statement.setInt(2, reservation.getId());
                 statement.executeUpdate();
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
@@ -235,13 +237,13 @@ public class ReservationProvider {
     }
     
     private boolean clearRooms(final Reservation reservation) {
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         String query = "DELETE FROM room_reservation WHERE reservation = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, reservation.getId());
             statement.executeUpdate();
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;

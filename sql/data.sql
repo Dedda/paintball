@@ -69,6 +69,9 @@ VALUES(2, 2);
 INSERT INTO staff_room(staff, room)
 VALUES(3, 3);
 
+INSERT INTO staff_room(staff, room)
+VALUES(4, 3);
+
 -- Staff to Services
 
 INSERT INTO staff_service(staff, service)

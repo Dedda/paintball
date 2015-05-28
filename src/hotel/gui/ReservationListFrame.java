@@ -9,7 +9,9 @@ import hotel.db.provider.ReservationProvider;
 import hotel.entity.Guest;
 import hotel.entity.Reservation;
 import hotel.gui.model.ReservationTableModel;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -17,18 +19,34 @@ import java.util.List;
  */
 public class ReservationListFrame extends javax.swing.JFrame {
 
+    private Guest guest;
+    
     /**
      * Creates new form ReservationListFrame
      */
     public ReservationListFrame(final Guest guest) {
         initComponents();
+        this.guest = guest;
+        fillTable();
+        setLocationRelativeTo(null);
+        guestNameLbl.setText(guest.getFullName());
+    }
+
+    private void fillTable() {
         ReservationTableModel model = new ReservationTableModel();
         List<Reservation> reservations = new ReservationProvider().getForGuest(guest);
         model.setReservations(reservations);
         reservationTable.setModel(model);
-        setLocationRelativeTo(null);
     }
-
+    
+    private Reservation[] getSelected() {
+        ReservationTableModel model = (ReservationTableModel) reservationTable.getModel();
+        int[] selectedIndex = reservationTable.getSelectedRows();
+        Reservation[] reservations = new Reservation[selectedIndex.length];
+        IntStream.range(0, selectedIndex.length).forEach(i -> reservations[i] = model.getReservationInLine(selectedIndex[i]));
+        return reservations;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,7 +61,7 @@ public class ReservationListFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         reservationTable = new javax.swing.JTable();
         refreshBtn = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        openBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -51,16 +69,7 @@ public class ReservationListFrame extends javax.swing.JFrame {
 
         reservationTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "ID", "Ankunft", "Abreise", "Preis", "Bezahlt", "Storniert"
@@ -84,8 +93,18 @@ public class ReservationListFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(reservationTable);
 
         refreshBtn.setText("aktualisieren");
+        refreshBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshBtnActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("öffnen");
+        openBtn.setText("öffnen");
+        openBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -101,9 +120,8 @@ public class ReservationListFrame extends javax.swing.JFrame {
                                 .addComponent(guestLbl)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(guestNameLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(refreshBtn, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(openBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(refreshBtn))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -116,21 +134,30 @@ public class ReservationListFrame extends javax.swing.JFrame {
                     .addComponent(guestNameLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(refreshBtn)
+                .addGap(18, 18, 18)
+                .addComponent(openBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addComponent(refreshBtn)
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void openBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openBtnActionPerformed
+        Reservation[] selected = getSelected();
+        Arrays.stream(selected).parallel().forEach(res -> new ReservationFrame(res).setVisible(true));
+    }//GEN-LAST:event_openBtnActionPerformed
+
+    private void refreshBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshBtnActionPerformed
+        fillTable();
+    }//GEN-LAST:event_refreshBtnActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel guestLbl;
     private javax.swing.JLabel guestNameLbl;
-    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton openBtn;
     private javax.swing.JButton refreshBtn;
     private javax.swing.JTable reservationTable;
     // End of variables declaration//GEN-END:variables

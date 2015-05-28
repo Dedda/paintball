@@ -27,7 +27,7 @@ public class RoomListModel extends AbstractListModel<String>{
 
     @Override
     public String getElementAt(int index) {
-        return room.get(index).getId() + "";
+        return "Raum Nr. " + room.get(index).getId();
     }
 
 }

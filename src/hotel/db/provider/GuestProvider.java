@@ -1,6 +1,5 @@
 package hotel.db.provider;
 
-import hotel.db.DBUtil;
 import hotel.entity.Guest;
 import hotel.entity.Reservation;
 import java.sql.Connection;
@@ -11,12 +10,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import static hotel.db.DBUtil.*;
+
 public class GuestProvider {
 
     RoomProvider roomProvider = new RoomProvider();
     
     public List<Guest> getAll() {
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         List<Guest> guests = new ArrayList<>();
         String query = "SELECT * FROM guest";
         Statement statement = null;
@@ -30,7 +31,7 @@ public class GuestProvider {
                 String surname = resultSet.getString("surname");
                 guests.add(new Guest(id, name, surname));
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -39,7 +40,7 @@ public class GuestProvider {
     }
     
     public List<Guest> getCurrents() {
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         List<Guest> guests = new ArrayList<>();
         String query = "SELECT * FROM current_guests";
         Statement statement = null;
@@ -53,7 +54,7 @@ public class GuestProvider {
                 String surname = resultSet.getString("surname");
                 guests.add(new Guest(id, name, surname));
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -62,7 +63,7 @@ public class GuestProvider {
     }
     
     public Guest getForId(final int id) {
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         Guest guest = null;
         String query = "SELECT * FROM guest WHERE id = ?";
         try {
@@ -74,7 +75,7 @@ public class GuestProvider {
                 String surname = resultSet.getString("surname");
                 guest = new Guest(id, name, surname);
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -83,7 +84,7 @@ public class GuestProvider {
     }
     
     public Guest getForName(final String name) {
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         Guest guest = null;
         try {
             PreparedStatement statement = name.matches(".+\\s.+")
@@ -96,7 +97,7 @@ public class GuestProvider {
                 String surname = resultSet.getString("surname");
                 guest = new Guest(id, guestName, surname);
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -121,7 +122,7 @@ public class GuestProvider {
     
     public List<Guest> getForNameLike(final String name) {
         List<Guest> guests = new ArrayList<>();
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         Guest guest = null;
         try {
             PreparedStatement statement = name.split(" ").length > 1
@@ -135,7 +136,7 @@ public class GuestProvider {
                 guest = new Guest(id, guestName, surname);
                 guests.add(guest);
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -159,7 +160,7 @@ public class GuestProvider {
     }
     
     public int saveNew(final Guest guest) {
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         String query = "INSERT INTO guest(name, surname) "
                 + "VALUES( ? , ? )";
         try {
@@ -167,7 +168,7 @@ public class GuestProvider {
             statement.setString(1, guest.getName());
             statement.setString(2, guest.getSurname());
             statement.executeUpdate();
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -181,14 +182,14 @@ public class GuestProvider {
         }
         ReservationProvider reservationProvider = new ReservationProvider();
         reservationProvider.guestRemoved(guest);
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         String query = "DELETE FROM guest "
                 + "WHERE id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, guest.getId());
             statement.executeUpdate();
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }

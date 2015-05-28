@@ -1,6 +1,5 @@
 package hotel.db.provider;
 
-import hotel.db.DBUtil;
 import hotel.entity.Reservation;
 import hotel.entity.Room;
 import hotel.entity.RoomCategory;
@@ -13,12 +12,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static hotel.db.DBUtil.*;
 import static java.util.stream.Collectors.toList;
 
 public class RoomProvider {
 
     public List<Room> getAll() {
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         List<Room> rooms = new ArrayList<>();
         String query = "SELECT * FROM rooms_with_category";
         Statement statement = null;
@@ -34,7 +34,7 @@ public class RoomProvider {
                 int price = resultSet.getInt("price");
                 rooms.add(new Room(roomId, people, new RoomCategory(categoryId, categoryName, price)));
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -43,7 +43,7 @@ public class RoomProvider {
     }
 
     public Room getForId(final int roomId) {
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         Room room = null;
         String query = "SELECT * FROM rooms_with_category WHERE room_id = ?";
         try {
@@ -57,7 +57,7 @@ public class RoomProvider {
                 int price = resultSet.getInt("price");
                 room = new Room(roomId, people, new RoomCategory(categoryId, categoryName, price));
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -95,7 +95,7 @@ public class RoomProvider {
     public List<Reservation> getReservationsForRoom(
             final int roomId) {
         ReservationProvider reservationProvider = new ReservationProvider();
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         List<Reservation> reservations = new ArrayList<>();
         String query = "SELECT * FROM reservations_for_room WHERE room_id = ?";
         try {
@@ -108,6 +108,7 @@ public class RoomProvider {
                         = reservationProvider.getForId(reservationId);
                 reservations.add(reservation);
             }
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -117,7 +118,7 @@ public class RoomProvider {
     
     public List<Room> getForReservation(final int reservationId) {
         List<Room> rooms = new ArrayList<>();
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         String query = "SELECT * FROM reservations_for_room WHERE reservation_id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -128,6 +129,7 @@ public class RoomProvider {
                 Room room = getForId(roomId);
                 rooms.add(room);
             }
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;

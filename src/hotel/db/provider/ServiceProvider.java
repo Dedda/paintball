@@ -1,6 +1,5 @@
 package hotel.db.provider;
 
-import hotel.db.DBUtil;
 import hotel.entity.Reservation;
 import hotel.entity.Service;
 import java.sql.Connection;
@@ -10,12 +9,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static hotel.db.DBUtil.*;
+
 public class ServiceProvider {
 
     public List<Service> getForReservation(final Reservation reservation) {
         List<Service> services = new ArrayList<>();
         final int reservationId = reservation.getId();
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         String query = "SELECT * FROM services_for_reservation WHERE reservation_id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -27,7 +28,7 @@ public class ServiceProvider {
                 int price = resultSet.getInt("service_price");
                 services.add(new Service(id, name, price));
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
