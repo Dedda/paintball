@@ -1,7 +1,6 @@
 package hotel.db.provider;
 
 import hotel.db.DBUtil;
-import hotel.entity.Guest;
 import hotel.entity.Staff;
 import hotel.entity.StaffCategory;
 import java.sql.Connection;

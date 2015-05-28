@@ -3,9 +3,8 @@ package hotel.db.provider;
 import hotel.db.DBUtil;
 import hotel.entity.Guest;
 import hotel.entity.Reservation;
-import hotel.entity.Room;
-import hotel.entity.Service;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -65,12 +64,11 @@ public class GuestProvider {
     public Guest getForId(final int id) {
         Connection connection = DBUtil.getConnection();
         Guest guest = null;
-        String query = "SELECT * FROM guest WHERE id=" + id;
-        Statement statement = null;
-        ResultSet resultSet = null;
+        String query = "SELECT * FROM guest WHERE id = ?";
         try {
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 String name = resultSet.getString("name");
                 String surname = resultSet.getString("surname");
@@ -87,15 +85,11 @@ public class GuestProvider {
     public Guest getForName(final String name) {
         Connection connection = DBUtil.getConnection();
         Guest guest = null;
-        String query = name.matches(".+\\s.+")
-                ? "SELECT * FROM guest WHERE name='" + name.split(" ")[0]
-                                     + "' AND surname='" + name.split(" ")[1] + "'"
-                : "SELECT * FROM guest WHERE name='" + name + "'";
-        Statement statement = null;
-        ResultSet resultSet = null;
         try {
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
+            PreparedStatement statement = name.matches(".+\\s.+")
+                    ? createForFullName(name.split(" ")[0], name.split(" ")[1], connection)
+                    : createForName(name, connection);
+            ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String guestName = resultSet.getString("name");
@@ -110,27 +104,30 @@ public class GuestProvider {
         return guest;
     }
     
+    private PreparedStatement createForName(final String name, final Connection conn) throws SQLException {
+        String query = "SELECT * FROM guest WHERE name = ?";
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, name.trim());
+        return statement;
+    }
+    
+    private PreparedStatement createForFullName(final String name, final String surname, final Connection conn) throws SQLException {
+        String query = "SELECT * FROM guest WHERE name = ? AND surname = ?";
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, name.trim());
+        statement.setString(2, surname.trim());
+        return statement;
+    }
+    
     public List<Guest> getForNameLike(final String name) {
         List<Guest> guests = new ArrayList<>();
         Connection connection = DBUtil.getConnection();
         Guest guest = null;
-        String query = "SELECT * FROM guest WHERE name LIKE '%";
-        if (name.contains(" ")) {
-            String[] split = name.split(" ");
-            query += split[0];
-            if (split.length > 1) {
-                query += "' AND surname LIKE '";
-                query += split[1];
-            }
-        } else {
-            query += name;
-        }
-        query += "%'";
-        Statement statement = null;
-        ResultSet resultSet = null;
         try {
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
+            PreparedStatement statement = name.split(" ").length > 1
+                    ? createForFullNameLike(name.split(" ")[0], name.split(" ")[1], connection)
+                    : createForNameLike(name, connection);
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String guestName = resultSet.getString("name");
@@ -146,14 +143,30 @@ public class GuestProvider {
         return guests;
     }
     
+    private PreparedStatement createForNameLike(final String name, final Connection conn) throws SQLException {
+        String query = "SELECT * FROM guest WHERE name LIKE ?";
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, '%' + name.trim() + '%');
+        return statement;
+    }
+    
+    private PreparedStatement createForFullNameLike(final String name, final String surname, final Connection conn) throws SQLException {
+        String query = "SELECT * FROM guest WHERE name LIKE ? AND surname LIKE ?";
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, '%' + name.trim());
+        statement.setString(2, surname.trim() + '%');
+        return statement;
+    }
+    
     public int saveNew(final Guest guest) {
         Connection connection = DBUtil.getConnection();
         String query = "INSERT INTO guest(name, surname) "
-                + "VALUES('" + guest.getName() + "','" + guest.getSurname() + "')";
-        Statement statement;
+                + "VALUES( ? , ? )";
         try {
-            statement = connection.createStatement();
-            statement.executeUpdate(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, guest.getName());
+            statement.setString(2, guest.getSurname());
+            statement.executeUpdate();
             connection.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -170,11 +183,11 @@ public class GuestProvider {
         reservationProvider.guestRemoved(guest);
         Connection connection = DBUtil.getConnection();
         String query = "DELETE FROM guest "
-                + "WHERE id=" + guest.getId();
-        Statement statement;
+                + "WHERE id = ?";
         try {
-            statement = connection.createStatement();
-            statement.executeUpdate(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, guest.getId());
+            statement.executeUpdate();
             connection.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
