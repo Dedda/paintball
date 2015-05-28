@@ -3,28 +3,92 @@ package hotel.db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
-public abstract class DBUtil {
+public final class DBUtil implements Runnable {
 
-    static {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
+    private Map<Connection, Boolean> connections; // Boolean for indicating availability
+    private final int TARGET_CONNECTION_AMOUNT = 5;
+    
+    private DBUtil() {
+        connections = new HashMap<>();
+        new Thread(this).start();
+    }
+    
+    private void connect() {
+        while (connections.size() < TARGET_CONNECTION_AMOUNT) {
+            connections.put(createConnection(), true);
         }
     }
     
-    public static Connection getConnection() {
+    private Connection createConnection() {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(
                     "jdbc:postgresql://localhost:5432/dbprojekt","projekt", "geheim");
         } catch (SQLException ex) {
             ex.printStackTrace();
+            System.err.println("Can not connect to database! Aborting!");
+            System.exit(1);
             return null;
         }
         return connection;
+    }
+    
+    private Connection useConnection() {
+        Connection connection = null;
+        for (Connection current : connections.keySet()) {
+            if (connections.get(current)) {
+                connection = current;
+                connections.put(current, false);
+                break;
+            }
+        }
+        if (connection == null) {
+            connection = createConnection();
+            connections.put(connection, false);
+        }
+        return connection;
+    }
+    
+    private void cleanUp() {
+        for (Connection connection : connections.keySet()) {
+            if (connections.size() == 5) {
+                break;
+            }
+            if (connections.get(connection)) {
+                connections.remove(connection);
+            }
+        }   
+    }
+    
+    private void returnConn(final Connection connection) {
+        connections.put(connection, true);
+    }
+    
+    @Override
+    public void run() {
+        connect();
+    }
+    
+    private static DBUtil instance;
+    
+    static {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        instance = new DBUtil();
+    }
+    
+    public static Connection getConnection() {
+        return instance.useConnection();
+    }
+    
+    public static void returnConnection(final Connection connection) {
+        instance.returnConn(connection);
     }
     
 }
