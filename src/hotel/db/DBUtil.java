@@ -5,11 +5,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class DBUtil implements Runnable {
 
     private Map<Connection, Boolean> connections; // Boolean for indicating availability
     private final int TARGET_CONNECTION_AMOUNT = 5;
+    private final int CLEANUP_INTERVAL_MILLIS = 5000;
     
     private DBUtil() {
         connections = new HashMap<>();
@@ -33,6 +36,7 @@ public final class DBUtil implements Runnable {
             System.exit(1);
             return null;
         }
+        System.out.println("created connection with " + connections.size() + " already existing.");
         return connection;
     }
     
@@ -53,14 +57,26 @@ public final class DBUtil implements Runnable {
     }
     
     private void cleanUp() {
+        System.out.print("Connection cleanup... ");
+        final int open = connections.size();
+        if (connections.size() <= 5) {
+            System.out.println("Only " + open + " connections open. No cleanup required");
+            return;
+        }
         for (Connection connection : connections.keySet()) {
             if (connections.size() == 5) {
                 break;
             }
             if (connections.get(connection)) {
                 connections.remove(connection);
+                try {
+                    connection.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }   
+        }
+        System.out.println("OK! Closed " + (open - connections.size()) + " connections!");
     }
     
     private void returnConn(final Connection connection) {
@@ -70,6 +86,14 @@ public final class DBUtil implements Runnable {
     @Override
     public void run() {
         connect();
+        while (true) {
+            try {
+                Thread.sleep(CLEANUP_INTERVAL_MILLIS);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+            cleanUp();
+        }
     }
     
     private static DBUtil instance;
