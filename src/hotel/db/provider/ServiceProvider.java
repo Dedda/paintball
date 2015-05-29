@@ -13,6 +13,27 @@ import static hotel.db.DBUtil.*;
 
 public class ServiceProvider {
 
+    public List<Service> getAll() {
+        List<Service> services = new ArrayList<>();
+        Connection connection = getConnection();
+        String query = "SELECT * FROM optional_service";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                int price = resultSet.getInt("price");
+                services.add(new Service(id, name, price));
+            }
+            returnConnection(connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return services;
+    }
+    
     public List<Service> getForReservation(final Reservation reservation) {
         List<Service> services = new ArrayList<>();
         final int reservationId = reservation.getId();

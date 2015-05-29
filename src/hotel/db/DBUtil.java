@@ -5,13 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public final class DBUtil implements Runnable {
 
     private Map<Connection, Boolean> connections; // Boolean for indicating availability
-    private final int TARGET_CONNECTION_AMOUNT = 5;
+    private final int TARGET_CONNECTION_AMOUNT = 1;
     private final int CLEANUP_INTERVAL_MILLIS = 5000;
     
     private DBUtil() {
@@ -46,7 +43,7 @@ public final class DBUtil implements Runnable {
             if (connections.get(current)) {
                 connection = current;
                 connections.put(current, false);
-                break;
+                return connection;
             }
         }
         if (connection == null) {
@@ -59,12 +56,12 @@ public final class DBUtil implements Runnable {
     private void cleanUp() {
         System.out.print("Connection cleanup... ");
         final int open = connections.size();
-        if (connections.size() <= 5) {
+        if (connections.size() <= TARGET_CONNECTION_AMOUNT) {
             System.out.println("Only " + open + " connections open. No cleanup required");
             return;
         }
         for (Connection connection : connections.keySet()) {
-            if (connections.size() == 5) {
+            if (connections.size() == TARGET_CONNECTION_AMOUNT) {
                 break;
             }
             if (connections.get(connection)) {
@@ -92,7 +89,9 @@ public final class DBUtil implements Runnable {
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
-            cleanUp();
+            try {
+                cleanUp();
+            } catch (Exception ex) {} // cleaning exceptions caused by multi threading to avoid death of the thread
         }
     }
     
