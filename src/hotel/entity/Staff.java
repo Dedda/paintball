@@ -13,6 +13,7 @@ public class Staff {
     private Date firing;
 
     public Staff() {
+        
     }
 
     public Staff(int id, StaffCategory category, String name, String surname, Date recruitement, Date firing) {
