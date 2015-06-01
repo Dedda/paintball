@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hotel.gui;
 
 import hotel.db.provider.StaffProvider;
@@ -17,12 +12,9 @@ import javax.swing.JTable;
 public class SalaryFrame extends javax.swing.JFrame {
 
     public SalaryFrame() {        
-        initComponents();        
+        initComponents();
+        yearBox.removeAllItems();   
         for (int i = 1990; i < 2016; i++) {
-            if(i==1990){
-                yearBox.getItemAt(0);
-                
-            }
             yearBox.addItem(i);
         }
         cal = Calendar.getInstance();
@@ -66,7 +58,6 @@ public class SalaryFrame extends javax.swing.JFrame {
             }
         });
 
-        yearBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1990" }));
         yearBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 yearBoxActionPerformed(evt);
@@ -113,7 +104,7 @@ public class SalaryFrame extends javax.swing.JFrame {
                         .addComponent(monthBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(yearBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 318, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 343, Short.MAX_VALUE)
                         .addComponent(preCostLbl)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(costLbl))
@@ -156,12 +147,6 @@ public class SalaryFrame extends javax.swing.JFrame {
                     cal.setTime(s.getFiring());
                     if (compareCal.compareTo(cal) <= 0) {
                         //"Mitarbeiter", "Gehaltsstufe", "Monatslohn", "Vertragsbeginn", "Vertragsende"
-                        mdl.setValueAt(s.getName() + " " + s.getSurname(), mdl.getRowCount(), 0);
-                        mdl.setValueAt(s.getCategory().getId(), mdl.getRowCount(), 1);
-                        mdl.setValueAt(s.getCategory().getSalary(), mdl.getRowCount(), 2);
-                        mdl.setValueAt(s.getRecruitement(), mdl.getRowCount(), 3);
-                        mdl.setValueAt(s.getFiring(), mdl.getRowCount(), 4);
-
                         for (int r = 0; r < salaryTable.getRowCount(); r++) {
                             for (int c = 0; c < salaryTable.getColumnCount(); c++) {
                                 switch (c) {
@@ -197,11 +182,25 @@ public class SalaryFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelBtnActionPerformed
 
     private void yearBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yearBoxActionPerformed
-        for (Staff s : staffList) {
+        // SQL Abfrage für Jahr Monat und Tag des einstelldatum        
+        if(staffList == null){
+            System.out.println("leer");
+        }
+        for (int i=0; i<staffList.size();i++) {
             cal.setTime(s.getRecruitement());
-            if (monthBox.getSelectedIndex() == cal.get(Calendar.MONTH) && (int) yearBox.getSelectedItem() == cal.get(Calendar.YEAR)) {
-
-            }
+            /*
+            test
+            public abstract int getLeastMaximum(int field)
+            Returns the lowest maximum value for the given calendar field of this Calendar instance. 
+            The lowest maximum value is defined as the smallest value returned by getActualMaximum(int) for any possible time value. 
+            The least maximum value depends on calendar system specific parameters of the instance. For example, a Calendar for 
+            the Gregorian calendar system returns 28 for the DAY_OF_MONTH field, because the 28th is the last day of the shortest 
+            month of this calendar, February in a common year.
+            */
+            System.out.println("monthBox getSelectedIndex "+(monthBox.getSelectedIndex()));
+            System.out.println("cal Month "+cal.get(Calendar.MONTH));
+            System.out.println("yearBox getSelectedIndex "+(int) yearBox.getSelectedItem());
+            System.out.println("cal Year "+cal.get(Calendar.YEAR));
         }
     }//GEN-LAST:event_yearBoxActionPerformed
 
@@ -209,6 +208,7 @@ public class SalaryFrame extends javax.swing.JFrame {
     private Calendar compareCal;
     private StaffProvider provider;
     private List<Staff> staffList;
+    private Staff s;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelBtn;
     private javax.swing.JLabel costLbl;
