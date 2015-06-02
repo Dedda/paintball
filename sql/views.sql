@@ -91,3 +91,20 @@ INNER JOIN room_reservation
 ON room_reservation.reservation = reservation.id
 INNER JOIN room
 ON room_reservation.room = room.id;
+
+-- reservations dates
+DROP VIEW IF EXISTS reservation_dates;
+CREATE VIEW reservation_dates AS
+SELECT
+    reservation.start_date, 
+    reservation.end_date, 
+    reservation.id,
+    guest.name as guest_name,
+    guest.surname as guest_surname,
+    room_reservation.room as room_id
+    FROM reservation
+    INNER JOIN guest
+    on guest.id = reservation.guest
+    INNER JOIN room_reservation
+    on reservation.id = room_reservation.reservation;
+    

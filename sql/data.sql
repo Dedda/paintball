@@ -36,7 +36,10 @@ INSERT INTO staff_category(salary, name)
 VALUES(20000, 'Bozz');
 
 INSERT INTO staff_category(salary, name)
-VALUES(50, 'Putze');
+VALUES(800, 'Putze');
+
+INSERT INTO staff_category(salary, name)
+VALUES(1500, 'Receptionist');
 
 -- Staff
 INSERT INTO staff(name, surname, category, recruitement)
