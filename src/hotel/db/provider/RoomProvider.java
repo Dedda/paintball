@@ -41,6 +41,25 @@ public class RoomProvider {
         }
         return rooms;
     }
+    //Jahr Monat RaumID
+    public Room getDates(final int roomId) {
+        Connection connection = getConnection();
+        Room room = null;
+        String query = "SELECT * FROM room_reservation WHERE room_id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, roomId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                
+            }
+            returnConnection(connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return null;
+    }
 
     public Room getForId(final int roomId) {
         Connection connection = getConnection();

@@ -44,6 +44,11 @@ public class MainMenuFrame extends javax.swing.JFrame {
         });
 
         roomsBtn.setText("Zimmer");
+        roomsBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                roomsBtnActionPerformed(evt);
+            }
+        });
 
         paymentBtn.setText("Lohnabrechnung");
         paymentBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -102,6 +107,10 @@ public class MainMenuFrame extends javax.swing.JFrame {
     private void paymentBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paymentBtnActionPerformed
         new SalaryFrame().setVisible(true);
     }//GEN-LAST:event_paymentBtnActionPerformed
+
+    private void roomsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomsBtnActionPerformed
+        new RoomListFrame().setVisible(true);
+    }//GEN-LAST:event_roomsBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton guestsBtn;
