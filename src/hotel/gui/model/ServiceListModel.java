@@ -1,7 +1,9 @@
 package hotel.gui.model;
 
 import hotel.entity.Service;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.swing.AbstractListModel;
 
 public class ServiceListModel extends AbstractListModel<String>{
@@ -14,6 +16,15 @@ public class ServiceListModel extends AbstractListModel<String>{
 
     public void setServices(List<Service> service) {
         this.service = service;
+    }
+    
+    public void setServices(final Map<Service, Integer> service) {
+        this.service = new ArrayList<>();
+        for (Service current : service.keySet()) {
+            for (int i = 0; i < service.get(current); i++) {
+                this.service.add(current);
+            }
+        }
     }
     
     public Service getServiceInLine(final int index) {

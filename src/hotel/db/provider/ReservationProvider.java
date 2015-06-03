@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import static hotel.db.DBUtil.*;
+import java.util.Map;
 import static java.util.stream.Collectors.toList;
 
 public class ReservationProvider {
@@ -258,10 +259,10 @@ public class ReservationProvider {
                 reservation.getId()).stream().parallel().mapToInt(
                     room -> room.calculatePrice(reservation.getDays())).sum();
         ServiceProvider serviceProvider = new ServiceProvider();
-        int servicePrice = 
-            serviceProvider.getForReservation(
-                reservation).stream().parallel().mapToInt(
-                        Service::getPrice).sum();
+        Map<Service, Integer> services = serviceProvider.getForReservation(reservation);
+        List<Integer> servicePrices = new ArrayList<>(services.size());
+        services.keySet().forEach(s -> servicePrices.add(s.getPrice() * services.get(s)));
+        int servicePrice = servicePrices.stream().mapToInt(i -> i).sum();
         return roomPrice + servicePrice;
     }
     

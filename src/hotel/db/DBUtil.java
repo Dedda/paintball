@@ -33,7 +33,6 @@ public final class DBUtil implements Runnable {
             System.exit(1);
             return null;
         }
-        System.out.println("created connection with " + connections.size() + " already existing.");
         return connection;
     }
     
@@ -54,10 +53,8 @@ public final class DBUtil implements Runnable {
     }
     
     private void cleanUp() {
-        System.out.print("Connection cleanup... ");
         final int open = connections.size();
         if (connections.size() <= TARGET_CONNECTION_AMOUNT) {
-            System.out.println("Only " + open + " connections open. No cleanup required");
             return;
         }
         for (Connection connection : connections.keySet()) {

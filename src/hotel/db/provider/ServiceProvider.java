@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static hotel.db.DBUtil.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ServiceProvider {
 
@@ -34,8 +36,8 @@ public class ServiceProvider {
         return services;
     }
     
-    public List<Service> getForReservation(final Reservation reservation) {
-        List<Service> services = new ArrayList<>();
+    public Map<Service, Integer> getForReservation(final Reservation reservation) {
+        Map<Service, Integer> services = new HashMap<>();
         final int reservationId = reservation.getId();
         Connection connection = getConnection();
         String query = "SELECT * FROM services_for_reservation WHERE reservation_id = ?";
@@ -47,7 +49,8 @@ public class ServiceProvider {
                 int id = resultSet.getInt("service_id");
                 String name = resultSet.getString("service_name");
                 int price = resultSet.getInt("service_price");
-                services.add(new Service(id, name, price));
+                int amount = resultSet.getInt("amount");
+                services.put(new Service(id, name, price), amount);
             }
             returnConnection(connection);
         } catch (SQLException ex) {
@@ -55,6 +58,39 @@ public class ServiceProvider {
             return null;
         }
         return services;
+    }
+    
+    public void setForReservation(final Reservation reservation, final Map<Integer, Integer> idsToAmountMap) {
+        removeAllForReservation(reservation.getId());
+        idsToAmountMap.keySet().stream().forEach(id -> saveSingleForReservation(reservation.getId(), id, idsToAmountMap.get(id)));
+    }
+    
+    private void removeAllForReservation(final int reservationId) {
+        Connection connection = getConnection();
+        String query = "DELETE FROM service_reservation WHERE reservation = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, reservationId);
+            statement.executeUpdate();
+            returnConnection(connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void saveSingleForReservation(final int reservationId, final int serviceId, final int amount) {
+        Connection connection = getConnection();
+        String query = "INSERT INTO service_reservation(service, reservation, amount) VALUES(?, ?, ?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, serviceId);
+            statement.setInt(2, reservationId);
+            statement.setInt(3, amount);
+            statement.executeUpdate();
+            returnConnection(connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
     
 }
