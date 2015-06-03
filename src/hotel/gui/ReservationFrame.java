@@ -74,6 +74,13 @@ public class ReservationFrame extends javax.swing.JFrame {
         return idToAmountMap;
     }
     
+    private List<Room> getSelectedRooms() {
+        int[] index = roomsList.getSelectedIndices();
+        RoomListModel model = (RoomListModel) roomsList.getModel();
+        List<Room> selected = Arrays.stream(index).mapToObj(i -> model.getRoomInLine(i)).collect(Collectors.toList());
+        return selected;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -186,8 +193,18 @@ public class ReservationFrame extends javax.swing.JFrame {
         });
 
         addRoomBtn.setText("+");
+        addRoomBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addRoomBtnActionPerformed(evt);
+            }
+        });
 
         removeRoomBtn.setText("-");
+        removeRoomBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeRoomBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -367,6 +384,31 @@ public class ReservationFrame extends javax.swing.JFrame {
         model.setServices(services);
         servicesList2.setModel(model);
     }//GEN-LAST:event_removeServiceBtnActionPerformed
+
+    private void removeRoomBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeRoomBtnActionPerformed
+        List<Room> selected = getSelectedRooms();
+        RoomListModel model = new RoomListModel();
+        List<Room> oldRooms = ((RoomListModel) roomsList.getModel()).getRooms();
+        oldRooms.removeAll(selected);
+        model.setRooms(oldRooms);
+        roomsList.setModel(model);
+    }//GEN-LAST:event_removeRoomBtnActionPerformed
+
+    private void addRoomBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRoomBtnActionPerformed
+        List<Room> rooms = ((RoomListModel) roomsList.getModel()).getRooms();
+        List<Room> allRooms = new RoomProvider().getAll();
+        allRooms.removeAll(rooms);
+        Room[] options = new Room[allRooms.size()];
+        allRooms.toArray(options);
+        Room selected = (Room) JOptionPane.showInputDialog(this, "Raum wählen", "Räume", JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+        if (selected == null) {
+            return;
+        }
+        rooms.add(selected);
+        RoomListModel model = new RoomListModel();
+        model.setRooms(rooms);
+        roomsList.setModel(model);
+    }//GEN-LAST:event_addRoomBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addRoomBtn;
