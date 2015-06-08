@@ -20,13 +20,14 @@ VALUES('Giga', 10000);
 
 -- Rooms
 INSERT INTO room(people, category)
-VALUES(2, 1);
+VALUES(1, 1);
 
 INSERT INTO room(people, category)
-VALUES(300, 3);
+VALUES(2, 2);
 
 INSERT INTO room(people, category)
-VALUES(5, 2);
+VALUES(8, 3);
+
 
 --Staff Categories
 INSERT INTO staff_category(salary, name)
