@@ -109,3 +109,7 @@ SELECT
     INNER JOIN room_reservation
     on reservation.id = room_reservation.reservation;
     
+-- amount of rooms
+DROP VIEW IF EXISTS amount_of_rooms;
+CREATE VIEW amount_of_rooms AS
+SELECT COUNT(id) FROM room;

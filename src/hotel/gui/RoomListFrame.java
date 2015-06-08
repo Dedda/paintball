@@ -1,98 +1,97 @@
 package hotel.gui;
 
 import hotel.entity.Reservation;
+import hotel.entity.Room;
+import java.awt.Color;
+import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.joda.time.LocalDate;
+import static org.joda.time.format.ISODateTimeFormat.date;
 
-/**
- *
+/*
  * @author phil
  */
 public class RoomListFrame extends javax.swing.JFrame {
 
+    private Room room;
     private Calendar cal;
     private Reservation res;
     private int[] month = new int[12];
     private int currentMonth = 0;
     private int currentYear = 2015;
-    /*
-     public class Reservation {
-     private Date start;
-     private Date end;
-     private Guest guest;
-     private int people;
-     */
 
     public RoomListFrame() {
         initComponents();
-        monthLbl.setText("" + 1);
+        monthLbl.setText(getMonth(currentMonth));
         for (int i = 0; i < month.length; i++) {
             month[i] = i;
         }
-        getResDays(currentYear, currentMonth);
+        fillTable(currentMonth, currentYear);
+//        SELECT * FROM amount_of_rooms;
+//        for (int i = 0; i < ; i++) {
+//            roomBox.addItem(room.toString());
+//        }
     }
 
-    public void getResDays(int year, int month) {        
-//        String[] monthNames = new String[12];
-//        String name = monthNames[cal.get(Calendar.MONTH)];
-        
-        int iYear = 1999;
-        int iMonth = Calendar.FEBRUARY;
+    public String getMonth(int month) {
+        return new DateFormatSymbols().getMonths()[month];
+    }
+
+    public int getAmountOfDays() {
+        int iYear = Integer.parseInt(yearLbl.getText());
+        int iMonth = currentMonth;
         int iDay = 1;
-        
-        
-        Calendar mycal = new GregorianCalendar(iYear, iMonth, iDay);
 
-        //Anzahl der Tage des Monats bekommen
-        int daysInMonth = mycal.getActualMaximum(Calendar.DAY_OF_MONTH); // 28
-        System.out.println(daysInMonth);
+        Calendar cal = new GregorianCalendar(iYear, iMonth, iDay);
 
-        // 2015-03-01
-        //String dateString = ""+year+"-"+month+"-";
-        /*
-         public abstract int getLeastMaximum(int field)
-         Returns the lowest maximum value for the given calendar field of this Calendar instance. 
-         The lowest maximum value is defined as the smallest value returned by getActualMaximum(int) for any possible time value. 
-         The least maximum value depends on calendar system specific parameters of the instance. For example, a Calendar for 
-         the Gregorian calendar system returns 28 for the DAY_OF_MONTH field, because the 28th is the last day of the shortest 
-         month of this calendar, February in a common year.
-         */
+        return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+    }
+
+    public void getResDays() {
         String query = "SELECT * FROM reservation_dates WHERE room_id = 1 "
                 + " AND ((start_date >= date '2015-03-01' AND start_date <= date '2015-03-31') "
                 + " OR(end_date >= date '2015-03-01' AND end_date <= date '2015-03-31') "
                 + " OR(start_date < date '2015-03-01' AND end_date > date '2015-03-31'))";
     }
 
-    public void fillTable() {
-        //Obere Row - bspw 01. Jan (also die geraden 0,2,4
-        //Untere Row - Reserviert (rot) + GuestName
-        for (int r = 0; r < roomTable.getRowCount(); r++) {
-            for (int c = 0; c < roomTable.getColumnCount(); c++) {
-                switch (c) {
-//                    case 0:
-//                        roomTable.setValueAt( , r, c);
-//                        break;
-//                    case 1:
-//                        roomTable.setValueAt( , r, c);
-//                        break;
-//                    case 2:
-//                        roomTable.setValueAt( , r, c);
-//                        break;
-//                    case 3:
-//                        roomTable.setValueAt( , r, c);
-//                        break;
-//                    case 4:
-//                        roomTable.setValueAt( , r, c);
-//                        break;
-//                    case 5:
-//                        roomTable.setValueAt( , r, c);
-//                        break;
-//                    case 6:
-//                        roomTable.setValueAt( , r, c);
-//                        break;
-                }
+    public void fillTable(int month, int year) {
+        int day = 1;
+        String date = "" + day + "/" + (month + 1) + "/" + year;
+        String incDate;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Calendar cal = Calendar.getInstance();
+        try {
+            cal.setTime(sdf.parse(date));
+        } catch (ParseException ex) {
+            System.out.println("Date parse Error");
+        }
+
+        int col = 0;
+        int row = 0;
+        int actDay = 0;
+        //Clear Table
+        while (actDay < 34) {
+            incDate = sdf.format(cal.getTime());
+            if (actDay < this.getAmountOfDays()) {
+                roomTable.setValueAt("" + incDate, row, col);
+                roomTable.setValueAt("frei", row + 1, col);
+            } else {
+                //Falls Felder über sind leeren
+                roomTable.setValueAt("", row, col);
+                roomTable.setValueAt("", row + 1, col);
             }
+            col++;
+            if (col > 6) {
+                col = 0;
+                row += 2;
+            }
+            actDay++;
+            cal.add(Calendar.DATE, 1);
         }
     }
 
@@ -198,7 +197,9 @@ public class RoomListFrame extends javax.swing.JFrame {
             currentYear += 1;
             yearLbl.setText("" + currentYear);
         }
-        monthLbl.setText("" + (month[currentMonth]+1));
+        monthLbl.setText(getMonth(currentMonth));
+        getAmountOfDays();
+        fillTable(currentMonth, currentYear);
     }//GEN-LAST:event_nextMonthActionPerformed
 
     private void prevMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevMonthActionPerformed
@@ -208,7 +209,9 @@ public class RoomListFrame extends javax.swing.JFrame {
             currentYear -= 1;
             yearLbl.setText("" + currentYear);
         }
-        monthLbl.setText("" + (month[currentMonth]+1));
+        monthLbl.setText(getMonth(currentMonth));
+        getAmountOfDays();
+        fillTable(currentMonth, currentYear);
     }//GEN-LAST:event_prevMonthActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
