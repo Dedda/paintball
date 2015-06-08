@@ -14,7 +14,6 @@ import hotel.entity.Service;
 import hotel.gui.model.RoomListModel;
 import hotel.gui.model.ServiceListModel;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerNumberModel;
 
 /**
  *
@@ -30,18 +32,26 @@ import javax.swing.JOptionPane;
 public class ReservationFrame extends javax.swing.JFrame {
 
     private final Reservation reservation;
+    private boolean existing;
     
     /**
      * Creates new form ReservationFrame
      */
-    public ReservationFrame(final Reservation reservation) {
+    public ReservationFrame(final Reservation reservation, final boolean existing) {
         this.reservation = reservation;
+        this.existing = existing;
         initComponents();
-        idValueLbl.setText(reservation.getId() + "");
+        if (existing) {
+            idValueLbl.setText(reservation.getId() + "");
+        }
         guestNameLbl.setText(reservation.getGuest().getFullName());
-        peopleNumberLbl.setText(reservation.getPeople() + "");
-        arrivalDateLbl.setText(format(reservation.getStart()));
-        departureDateLbl.setText(format(reservation.getEnd()));
+        SpinnerNumberModel peopleModel = (SpinnerNumberModel) peopleSpinner.getModel();
+        peopleModel.setValue(reservation.getPeople());
+        //peopleNumberLbl.setText(reservation.getPeople() + "");
+        //arrivalDateLbl.setText(format(reservation.getStart()));
+        //departureDateLbl.setText(format(reservation.getEnd()));
+        arrivalSpinner.setEditor(new JSpinner.DateEditor(arrivalSpinner, "dd.MM.yyyy"));
+        departureSpinner.setEditor(new JSpinner.DateEditor(departureSpinner, "dd.MM.yyyy"));
         payedBtn.setEnabled(!reservation.isPayed());
         cancelReservationBtn.setEnabled(!reservation.isCanceled());
         stateTextLbl.setText(reservation.isCanceled() ? "storniert" : (reservation.isPayed() ? "bezahlt" : "offen"));
@@ -97,7 +107,6 @@ public class ReservationFrame extends javax.swing.JFrame {
         guestLbl = new javax.swing.JLabel();
         guestNameLbl = new javax.swing.JLabel();
         peopleLbl = new javax.swing.JLabel();
-        peopleNumberLbl = new javax.swing.JLabel();
         servicesLbl = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         roomsList = new javax.swing.JList();
@@ -106,8 +115,6 @@ public class ReservationFrame extends javax.swing.JFrame {
         roomsLbl = new javax.swing.JLabel();
         arrivalLbl = new javax.swing.JLabel();
         departureLbl = new javax.swing.JLabel();
-        arrivalDateLbl = new javax.swing.JLabel();
-        departureDateLbl = new javax.swing.JLabel();
         cancelBtn = new javax.swing.JButton();
         payedBtn = new javax.swing.JButton();
         cancelReservationBtn = new javax.swing.JButton();
@@ -121,6 +128,9 @@ public class ReservationFrame extends javax.swing.JFrame {
         removeServiceBtn = new javax.swing.JButton();
         addRoomBtn = new javax.swing.JButton();
         removeRoomBtn = new javax.swing.JButton();
+        arrivalSpinner = new javax.swing.JSpinner();
+        departureSpinner = new javax.swing.JSpinner();
+        peopleSpinner = new javax.swing.JSpinner();
 
         jScrollPane1.setViewportView(servicesList);
 
@@ -206,6 +216,17 @@ public class ReservationFrame extends javax.swing.JFrame {
             }
         });
 
+        arrivalSpinner.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), new java.util.Date(), null, java.util.Calendar.DAY_OF_MONTH));
+        arrivalSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                arrivalSpinnerStateChanged(evt);
+            }
+        });
+
+        departureSpinner.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), new java.util.Date(), null, java.util.Calendar.DAY_OF_MONTH));
+
+        peopleSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -225,11 +246,11 @@ public class ReservationFrame extends javax.swing.JFrame {
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                     .addComponent(departureLbl)
                                     .addGap(18, 18, 18)
-                                    .addComponent(departureDateLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(departureSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                     .addComponent(arrivalLbl)
                                     .addGap(18, 18, 18)
-                                    .addComponent(arrivalDateLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(arrivalSpinner))
                                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(addServiceBtn)
@@ -253,7 +274,7 @@ public class ReservationFrame extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 252, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
                                 .addComponent(cancelReservationBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -261,8 +282,8 @@ public class ReservationFrame extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(peopleLbl)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(peopleNumberLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(peopleSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(guestLbl)
                                     .addGap(18, 18, 18)
@@ -279,28 +300,27 @@ public class ReservationFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(headerLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(idLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(idValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(guestLbl)
-                            .addComponent(guestNameLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(peopleNumberLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(peopleLbl, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(arrivalLbl)
-                            .addComponent(arrivalDateLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(departureLbl))
-                    .addComponent(departureDateLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(headerLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(idLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(idValueLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(guestLbl)
+                    .addComponent(guestNameLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(peopleLbl)
+                    .addComponent(peopleSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(arrivalLbl)
+                    .addComponent(arrivalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(departureLbl)
+                    .addComponent(departureSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -352,11 +372,27 @@ public class ReservationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelReservationBtnActionPerformed
 
     private void saveBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveBtnActionPerformed
+        Reservation newReservation = new Reservation();
         ReservationProvider reservationProvider = new ReservationProvider();
-        reservationProvider.merge(reservation);
+        SpinnerNumberModel peopleModel = (SpinnerNumberModel) peopleSpinner.getModel();
+        newReservation.setPeople((int) peopleModel.getNumber());
+        SpinnerDateModel arrivalModel = (SpinnerDateModel) arrivalSpinner.getModel();
+        newReservation.setStart(arrivalModel.getDate());
+        SpinnerDateModel departureModel = (SpinnerDateModel) departureSpinner.getModel();
+        newReservation.setEnd(departureModel.getDate());
+        if (existing) {
+            reservationProvider.merge(reservation);
+        } else {
+            reservationProvider.save(reservation);
+            existing = true;
+        }
+        
         Map<Integer, Integer> serviceIdToAmountMap = getGroupedServiceIds();
         ServiceProvider serviceProvider = new ServiceProvider();
         serviceProvider.setForReservation(reservation, serviceIdToAmountMap);
+        List<Room> rooms = ((RoomListModel) roomsList.getModel()).getRooms();
+        RoomProvider roomProvider = new RoomProvider();
+        roomProvider.setForReservation(reservation, rooms);
     }//GEN-LAST:event_saveBtnActionPerformed
 
     private void addServiceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addServiceBtnActionPerformed
@@ -410,15 +446,19 @@ public class ReservationFrame extends javax.swing.JFrame {
         roomsList.setModel(model);
     }//GEN-LAST:event_addRoomBtnActionPerformed
 
+    private void arrivalSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_arrivalSpinnerStateChanged
+
+    }//GEN-LAST:event_arrivalSpinnerStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addRoomBtn;
     private javax.swing.JButton addServiceBtn;
-    private javax.swing.JLabel arrivalDateLbl;
     private javax.swing.JLabel arrivalLbl;
+    private javax.swing.JSpinner arrivalSpinner;
     private javax.swing.JButton cancelBtn;
     private javax.swing.JButton cancelReservationBtn;
-    private javax.swing.JLabel departureDateLbl;
     private javax.swing.JLabel departureLbl;
+    private javax.swing.JSpinner departureSpinner;
     private javax.swing.JLabel guestLbl;
     private javax.swing.JLabel guestNameLbl;
     private javax.swing.JLabel headerLbl;
@@ -429,7 +469,7 @@ public class ReservationFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton payedBtn;
     private javax.swing.JLabel peopleLbl;
-    private javax.swing.JLabel peopleNumberLbl;
+    private javax.swing.JSpinner peopleSpinner;
     private javax.swing.JLabel priceLbl;
     private javax.swing.JLabel priceValueLbl;
     private javax.swing.JButton removeRoomBtn;

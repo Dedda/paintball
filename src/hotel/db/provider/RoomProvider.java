@@ -1,5 +1,6 @@
 package hotel.db.provider;
 
+import hotel.db.DBUtil;
 import hotel.entity.Reservation;
 import hotel.entity.Room;
 import hotel.entity.RoomCategory;
@@ -155,4 +156,36 @@ public class RoomProvider {
         }
         return rooms;
     }
+    
+    public void setForReservation(final Reservation reservation, final List<Room> rooms) {
+        removeAllFromReservation(reservation.getId());
+        rooms.forEach(room -> addRoomToReservation(reservation.getId(), room.getId()));
+    }
+    
+    private void removeAllFromReservation(final int reservationId) {
+        Connection connection = DBUtil.getConnection();
+        String query = "DELETE FROM room_reservation WHERE reservation = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, reservationId);
+            statement.executeUpdate();
+            returnConnection(connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void addRoomToReservation(final int reservationId, final int roomId) {
+        Connection connection = DBUtil.getConnection();
+        String query = "INSERT INTO room_reservation(reservation, room) VALUES(?, ?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, reservationId);
+            statement.setInt(2, roomId);
+            statement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
 }

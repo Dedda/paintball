@@ -146,7 +146,7 @@ public class ReservationListFrame extends javax.swing.JFrame {
 
     private void openBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openBtnActionPerformed
         Reservation[] selected = getSelected();
-        Arrays.stream(selected).parallel().forEach(res -> new ReservationFrame(res).setVisible(true));
+        Arrays.stream(selected).parallel().forEach(res -> new ReservationFrame(res, true).setVisible(true));
     }//GEN-LAST:event_openBtnActionPerformed
 
     private void refreshBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshBtnActionPerformed
