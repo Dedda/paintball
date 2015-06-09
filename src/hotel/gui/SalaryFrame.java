@@ -20,7 +20,7 @@ import java.util.Date;
 public class SalaryFrame extends javax.swing.JFrame {
 
     /**
-     * Creates new form Lohnabre chnungGUI
+     * Creates new form LohnabrechnungGUI
      */
     public SalaryFrame() {
         initComponents();
