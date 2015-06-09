@@ -1,11 +1,11 @@
 package hotel.db.provider;
 
 import hotel.db.DBUtil;
-import hotel.entity.Guest;
 import hotel.entity.Reservation;
 import hotel.entity.Room;
 import hotel.entity.RoomCategory;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,12 +13,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static hotel.db.DBUtil.*;
+import static java.util.stream.Collectors.toList;
+
 public class RoomProvider {
 
-    private ReservationProvider reservationProvider = new ReservationProvider();
-    
     public List<Room> getAll() {
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         List<Room> rooms = new ArrayList<>();
         String query = "SELECT * FROM rooms_with_category";
         Statement statement = null;
@@ -34,23 +35,41 @@ public class RoomProvider {
                 int price = resultSet.getInt("price");
                 rooms.add(new Room(roomId, people, new RoomCategory(categoryId, categoryName, price)));
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
         }
         return rooms;
     }
+    //Jahr Monat RaumID
+    public Room getDates(final int roomId) {
+        Connection connection = getConnection();
+        Room room = null;
+        String query = "SELECT * FROM room_reservation WHERE room_id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, roomId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                
+            }
+            returnConnection(connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return null;
+    }
 
     public Room getForId(final int roomId) {
-        Connection connection = DBUtil.getConnection();
+        Connection connection = getConnection();
         Room room = null;
-        String query = "SELECT * FROM rooms_with_category WHERE room_id=" + roomId;
-        Statement statement = null;
-        ResultSet resultSet = null;
+        String query = "SELECT * FROM rooms_with_category WHERE room_id = ?";
         try {
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, roomId);
+            ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 int people = resultSet.getInt("people");
                 int categoryId = resultSet.getInt("category_id");
@@ -58,7 +77,7 @@ public class RoomProvider {
                 int price = resultSet.getInt("price");
                 room = new Room(roomId, people, new RoomCategory(categoryId, categoryName, price));
             }
-            connection.close();
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -69,50 +88,47 @@ public class RoomProvider {
     public List<Room> getFree(final Date startDate, final Date endDate) {
         List<Room> allRooms = getAll();
         List<Room> freeRooms = new ArrayList<>();
-        for (Room room : allRooms) {
-            List<Reservation> reservations = getReservationsForRoom(room.getId());
-            if (null == reservations || reservations.size() == 0) {
-                freeRooms.add(room);
-                continue;
+        freeRooms = allRooms.stream().filter(room -> isFree(room, startDate, endDate)).collect(toList());
+        return freeRooms;
+    }
+    
+    public boolean isFree(final Room room, final Date startDate, final Date endDate) {
+        boolean free = true;
+        List<Reservation> reservations = getReservationsForRoom(room.getId());
+        for (Reservation reservation : reservations) {
+            if (reservation.getStart().after(startDate) && reservation.getStart().before(endDate)) {
+                free = false;
+                break;
             }
-            boolean isFree = true;
-            for (Reservation reservation : reservations) {
-                if (reservation.getStart().after(startDate) && reservation.getStart().before(endDate)) {
-                    isFree = false;
-                    break;
-                }
-                if (reservation.getEnd().after(startDate) && reservation.getEnd().before(endDate)) {
-                    isFree = false;
-                    break;
-                }
-                if (reservation.getStart().before(startDate) && reservation.getEnd().after(endDate)) {
-                    isFree = false;
-                    break;
-                }
+            if (reservation.getEnd().after(startDate) && reservation.getEnd().before(endDate)) {
+                free = false;
+                break;
             }
-            if (isFree) {
-                freeRooms.add(room);
+            if (reservation.getStart().before(startDate) && reservation.getEnd().after(endDate)) {
+                free = false;
+                break;
             }
         }
-        return freeRooms;
+        return free;
     }
     
     public List<Reservation> getReservationsForRoom(
             final int roomId) {
-        Connection connection = DBUtil.getConnection();
+        ReservationProvider reservationProvider = new ReservationProvider();
+        Connection connection = getConnection();
         List<Reservation> reservations = new ArrayList<>();
-        String query = "SELECT * FROM reservations_for_room WHERE room_id = " + roomId;
-        Statement statement = null;
-        ResultSet resultSet = null;
+        String query = "SELECT * FROM reservations_for_room WHERE room_id = ?";
         try {
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, roomId);
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int reservationId = resultSet.getInt("reservatino_id");
                 Reservation reservation 
                         = reservationProvider.getForId(reservationId);
                 reservations.add(reservation);
             }
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
@@ -122,23 +138,54 @@ public class RoomProvider {
     
     public List<Room> getForReservation(final int reservationId) {
         List<Room> rooms = new ArrayList<>();
-        Connection connection = DBUtil.getConnection();
-        String query = "SELECT * FROM reservations_for_room WHERE reservation_id=" + reservationId;
-        Statement statement = null;
-        ResultSet resultSet = null;
+        Connection connection = getConnection();
+        String query = "SELECT * FROM reservations_for_room WHERE reservation_id = ?";
         try {
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, reservationId);
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int roomId = resultSet.getInt("room_id");
                 Room room = getForId(roomId);
                 rooms.add(room);
             }
+            returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
             return null;
         }
         return rooms;
+    }
+    
+    public void setForReservation(final Reservation reservation, final List<Room> rooms) {
+        removeAllFromReservation(reservation.getId());
+        rooms.forEach(room -> addRoomToReservation(reservation.getId(), room.getId()));
+    }
+    
+    private void removeAllFromReservation(final int reservationId) {
+        Connection connection = DBUtil.getConnection();
+        String query = "DELETE FROM room_reservation WHERE reservation = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, reservationId);
+            statement.executeUpdate();
+            returnConnection(connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void addRoomToReservation(final int reservationId, final int roomId) {
+        Connection connection = DBUtil.getConnection();
+        String query = "INSERT INTO room_reservation(reservation, room) VALUES(?, ?)";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, reservationId);
+            statement.setInt(2, roomId);
+            statement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
     
 }

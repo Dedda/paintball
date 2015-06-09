@@ -25,9 +25,10 @@ public class GuestFrame extends javax.swing.JFrame {
         this.guest = guest;
         //setTitle("Gast: " + guest.getName() + " " + guest.getSurname());
         nameLbl.setText(nameLbl.getText() + " " + guest.getName() + " " + guest.getSurname());
-        String reservatinoNumberText = reservationNumberLbl.getText()
+        String reservationNumberText = reservationNumberLbl.getText()
                                     + " "
                                     + new ReservationProvider().getForGuest(guest).size();
+        reservationNumberLbl.setText(reservationNumberText);
         //TODO: betrag
         toPayLbl.setText(toPayLbl.getText() + " " + new GuestProvider().toPay(guest));
         setLocationRelativeTo(null);
@@ -70,14 +71,13 @@ public class GuestFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(toPayLbl)
-                            .addComponent(openReservationsBtn))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(openReservationsBtn)
+                        .addGap(0, 69, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(reservationNumberLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nameLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(toPayLbl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(nameLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                            .addComponent(reservationNumberLbl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -98,7 +98,7 @@ public class GuestFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void openReservationsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openReservationsBtnActionPerformed
-        // TODO add your handling code here:
+        new ReservationListFrame(guest).setVisible(true);
     }//GEN-LAST:event_openReservationsBtnActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

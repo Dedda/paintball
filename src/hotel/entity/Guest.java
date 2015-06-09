@@ -42,6 +42,10 @@ public class Guest {
         this.surname = surname;
     }
     
+    public String getFullName() {
+        return name + " " + surname;
+    }
+    
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

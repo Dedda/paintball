@@ -20,13 +20,14 @@ VALUES('Giga', 10000);
 
 -- Rooms
 INSERT INTO room(people, category)
-VALUES(2, 1);
+VALUES(1, 1);
 
 INSERT INTO room(people, category)
-VALUES(300, 3);
+VALUES(2, 2);
 
 INSERT INTO room(people, category)
-VALUES(5, 2);
+VALUES(8, 3);
+
 
 --Staff Categories
 INSERT INTO staff_category(salary, name)
@@ -36,7 +37,10 @@ INSERT INTO staff_category(salary, name)
 VALUES(20000, 'Bozz');
 
 INSERT INTO staff_category(salary, name)
-VALUES(50, 'Putze');
+VALUES(800, 'Putze');
+
+INSERT INTO staff_category(salary, name)
+VALUES(1500, 'Receptionist');
 
 -- Staff
 INSERT INTO staff(name, surname, category, recruitement)
@@ -69,6 +73,9 @@ VALUES(2, 2);
 INSERT INTO staff_room(staff, room)
 VALUES(3, 3);
 
+INSERT INTO staff_room(staff, room)
+VALUES(4, 3);
+
 -- Staff to Services
 
 INSERT INTO staff_service(staff, service)
@@ -97,3 +104,4 @@ VALUES(1, 2);
 
 INSERT INTO service_reservation(service, reservation)
 VALUES(2, 1);
+

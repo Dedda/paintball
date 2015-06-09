@@ -10,8 +10,13 @@ import hotel.db.provider.ReservationProvider;
 import hotel.entity.Guest;
 import hotel.entity.Reservation;
 import hotel.gui.model.GuestListModel;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 import javax.swing.JOptionPane;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -37,12 +42,32 @@ public class GuestListFrame extends javax.swing.JFrame {
         loadGuests();
         setLocationRelativeTo(null);
         reservationBtn.setEnabled(false);
+        searchText.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                searchTextChanged();
+            }
+            public void removeUpdate(DocumentEvent e) {
+                searchTextChanged();
+            }
+            public void changedUpdate(DocumentEvent e) {
+                searchTextChanged();
+            }
+        });
     }
 
     void loadGuests() {
         this.guests = guestProvider.getAll();
         GuestListModel model = new GuestListModel();
         guests.remove(new Guest(0, "Nicht", "Vorhanden"));
+        model.setGuests(guests);
+        guestList.setModel(model);
+    }
+    
+    private void searchTextChanged() {
+        String searchText = this.searchText.getText();
+        List<Guest> guests = guestProvider.getForNameLike(searchText);
+        guests.remove(new Guest(0, "Nicht", "Vorhanden"));
+        GuestListModel model = new GuestListModel();
         model.setGuests(guests);
         guestList.setModel(model);
     }
@@ -117,6 +142,11 @@ public class GuestListFrame extends javax.swing.JFrame {
         toPayLbl.setText("Offener Betrag:");
 
         jButton1.setText("Buchungen anzeigen");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         reservationBtn.setText("Reservieren");
         reservationBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -222,13 +252,11 @@ public class GuestListFrame extends javax.swing.JFrame {
     private void openBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_openBtnActionPerformed
         GuestListModel model = (GuestListModel)guestList.getModel();
         int index[] = guestList.getSelectedIndices();
-        Guest guests[] = new Guest[index.length];
+        List<Guest> guests = new ArrayList<>(index.length);
         for (int i = 0; i < index.length; i++) {
-            guests[i] = model.getGuestInLine(index[i]);
+            guests.add(model.getGuestInLine(index[i]));
         }
-        for (Guest guest : guests) {
-            new GuestFrame(guest).setVisible(true);
-        }
+        guests.stream().parallel().forEach(guest -> new GuestFrame(guest).setVisible(true));
     }//GEN-LAST:event_openBtnActionPerformed
 
     private void guestListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_guestListValueChanged
@@ -259,13 +287,16 @@ public class GuestListFrame extends javax.swing.JFrame {
         reservationFrame.setVisible(true);
     }//GEN-LAST:event_reservationBtnActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Guest[] selected = getSelectedGuests();
+        Arrays.stream(selected).forEach(guest -> new ReservationListFrame(guest).setVisible(true));
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     private Guest[] getSelectedGuests() {
         GuestListModel model = (GuestListModel)guestList.getModel();
         int index[] = guestList.getSelectedIndices();
         Guest guests[] = new Guest[index.length];
-        for (int i = 0; i < index.length; i++) {
-            guests[i] = model.getGuestInLine(index[i]);
-        }
+        IntStream.range(0, index.length).parallel().forEach(i -> guests[i] = model.getGuestInLine(index[i]));
         return guests;
     }
     

@@ -27,16 +27,14 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="toPayLbl" min="-2" max="-2" attributes="0"/>
-                          <Component id="openReservationsBtn" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="openReservationsBtn" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="69" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="reservationNumberLbl" min="-2" pref="154" max="-2" attributes="0"/>
-                          <Component id="nameLbl" min="-2" pref="240" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="toPayLbl" max="32767" attributes="0"/>
+                          <Component id="nameLbl" alignment="0" pref="240" max="32767" attributes="0"/>
+                          <Component id="reservationNumberLbl" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>

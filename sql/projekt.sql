@@ -83,5 +83,6 @@ CREATE TABLE room_reservation (
 CREATE TABLE service_reservation (
     service INTEGER REFERENCES optional_service(id),
     reservation INTEGER REFERENCES reservation(id),
+    amount INTEGER NOT NULL DEFAULT 1,
     PRIMARY KEY (service, reservation)
 );

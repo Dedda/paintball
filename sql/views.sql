@@ -74,7 +74,8 @@ SELECT
     s.id AS service_id,
     s.name AS service_name,
     s.price AS service_price,
-    reservation.id AS reservation_id FROM optional_service s
+    reservation.id AS reservation_id,
+    service_reservation.amount AS amount FROM optional_service s
 INNER JOIN service_reservation
 ON service_reservation.service = s.id
 INNER JOIN reservation
@@ -85,9 +86,30 @@ DROP VIEW IF EXISTS reservations_for_room;
 CREATE VIEW reservations_for_room AS
 SELECT
     reservation.id AS reservation_id,
-    room.id AS room_id;
+    room.id AS room_id
     FROM reservation
 INNER JOIN room_reservation
 ON room_reservation.reservation = reservation.id
 INNER JOIN room
 ON room_reservation.room = room.id;
+
+-- reservations dates
+DROP VIEW IF EXISTS reservation_dates;
+CREATE VIEW reservation_dates AS
+SELECT
+    reservation.start_date, 
+    reservation.end_date, 
+    reservation.id,
+    guest.name as guest_name,
+    guest.surname as guest_surname,
+    room_reservation.room as room_id
+    FROM reservation
+    INNER JOIN guest
+    on guest.id = reservation.guest
+    INNER JOIN room_reservation
+    on reservation.id = room_reservation.reservation;
+    
+-- amount of rooms
+DROP VIEW IF EXISTS amount_of_rooms;
+CREATE VIEW amount_of_rooms AS
+SELECT COUNT(id) FROM room;

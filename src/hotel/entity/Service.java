@@ -39,4 +39,9 @@ public class Service {
         this.price = price;
     }
     
+    @Override
+    public String toString() {
+        return name;
+    }
+    
 }
