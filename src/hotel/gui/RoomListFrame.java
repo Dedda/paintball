@@ -3,10 +3,12 @@ package hotel.gui;
 import hotel.entity.Reservation;
 import hotel.entity.Room;
 import java.awt.Color;
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,7 +54,7 @@ public class RoomListFrame extends javax.swing.JFrame {
         return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
-    public void getResDays() { 
+    public void getResDays() {
         //Gebrauchte Parameter - monthLbl und yearLbl.getText
         //Gebrauchte Parameter - roomBox.selectedIndex
         //Gebrauchte Parameter - tag im Kalender auslesen (per while schleife)
@@ -61,11 +63,11 @@ public class RoomListFrame extends javax.swing.JFrame {
                 + " OR(end_date >= date '2015-03-01' AND end_date <= date '2015-03-31') "
                 + " OR(start_date < date '2015-03-01' AND end_date > date '2015-03-31'))";
         /*
-        SELECT * FROM reservation_dates WHERE room_id = 1
-        AND ((start_date >= date '2015-03-01' AND start_date <= date '2015-03-31')
-        OR(end_date >= date '2015-03-01' AND end_date <= date '2015-03-31')
-        OR(start_date < date '2015-03-01' AND end_date > date '2015-03-31'));
-        */
+         SELECT * FROM reservation_dates WHERE room_id = 1
+         AND ((start_date >= date '2015-03-01' AND start_date <= date '2015-03-31')
+         OR(end_date >= date '2015-03-01' AND end_date <= date '2015-03-31')
+         OR(start_date < date '2015-03-01' AND end_date > date '2015-03-31'));
+         */
     }
 
     public void fillTable(int month, int year) {
@@ -80,28 +82,56 @@ public class RoomListFrame extends javax.swing.JFrame {
             System.out.println("Date parse Error");
         }
 
+        //get FirstDayOfMonth
+        Date firstDayOfMonth = cal.getTime();
+        DateFormat sdf2 = new SimpleDateFormat("EEEEEEEE");
+        //System.out.println("First Day of Month: " + sdf2.format(firstDayOfMonth));
+
         int col = 0;
         int row = 0;
         int actDay = 0;
-        incDate = sdf.format(cal.getTime());
-        System.out.println(incDate);
-        
 
-        //Clear Table
-        while (actDay < 34) {
+        String tag = sdf2.format(firstDayOfMonth);
+        if (tag.equals("Montag")) {
+            col = 0;
+        }
+        if (tag.equals("Dienstag")) {
+            col = 1;
+        }
+        if (tag.equals("Mittwoch")) {
+            col = 2;
+        }
+        if (tag.equals("Donnerstag")) {
+            col = 3;
+        }
+        if (tag.equals("Freitag")) {
+            col = 4;
+        }
+        if (tag.equals("Samstag")) {
+            col = 5;
+        }
+        if (tag.equals("Sonntag")) {
+            col = 6;
+        }
+
+        System.out.println(col);
+        for (int i = 0; i < col; i++) {
+            roomTable.setValueAt("", row, i);
+        }
+        while (actDay < 41 - col) {
             incDate = sdf.format(cal.getTime());
+
             if (actDay < this.getAmountOfDays()) {
                 roomTable.setValueAt("" + incDate, row, col);
-                roomTable.setValueAt("frei", row + 1, col);
             } else {
-                //Falls Felder über sind leeren
+                //Falls Felder über sind clearThat
                 roomTable.setValueAt("", row, col);
-                roomTable.setValueAt("", row + 1, col);
             }
+
             col++;
             if (col > 6) {
                 col = 0;
-                row += 2;
+                row += 1;
             }
             actDay++;
             cal.add(Calendar.DATE, 1);
@@ -121,16 +151,13 @@ public class RoomListFrame extends javax.swing.JFrame {
         roomBox = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMinimumSize(new java.awt.Dimension(800, 305));
+        setMinimumSize(new java.awt.Dimension(800, 350));
         setName("RoomFrame"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(800, 350));
         setResizable(false);
 
         roomTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null},
@@ -142,9 +169,10 @@ public class RoomListFrame extends javax.swing.JFrame {
                 "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"
             }
         ));
+        roomTable.setToolTipText("");
         roomTable.setAlignmentX(1.0F);
         roomTable.setAlignmentY(1.0F);
-        roomTable.setRowHeight(20);
+        roomTable.setRowHeight(40);
         jScrollPane1.setViewportView(roomTable);
 
         yearLbl.setText("2015");
@@ -195,8 +223,8 @@ public class RoomListFrame extends javax.swing.JFrame {
                     .addComponent(nextMonth)
                     .addComponent(roomBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         pack();
