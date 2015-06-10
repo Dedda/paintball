@@ -52,11 +52,20 @@ public class RoomListFrame extends javax.swing.JFrame {
         return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
-    public void getResDays() {
+    public void getResDays() { 
+        //Gebrauchte Parameter - monthLbl und yearLbl.getText
+        //Gebrauchte Parameter - roomBox.selectedIndex
+        //Gebrauchte Parameter - tag im Kalender auslesen (per while schleife)
         String query = "SELECT * FROM reservation_dates WHERE room_id = 1 "
                 + " AND ((start_date >= date '2015-03-01' AND start_date <= date '2015-03-31') "
                 + " OR(end_date >= date '2015-03-01' AND end_date <= date '2015-03-31') "
                 + " OR(start_date < date '2015-03-01' AND end_date > date '2015-03-31'))";
+        /*
+        SELECT * FROM reservation_dates WHERE room_id = 1
+        AND ((start_date >= date '2015-03-01' AND start_date <= date '2015-03-31')
+        OR(end_date >= date '2015-03-01' AND end_date <= date '2015-03-31')
+        OR(start_date < date '2015-03-01' AND end_date > date '2015-03-31'));
+        */
     }
 
     public void fillTable(int month, int year) {
@@ -74,6 +83,10 @@ public class RoomListFrame extends javax.swing.JFrame {
         int col = 0;
         int row = 0;
         int actDay = 0;
+        incDate = sdf.format(cal.getTime());
+        System.out.println(incDate);
+        
+
         //Clear Table
         while (actDay < 34) {
             incDate = sdf.format(cal.getTime());
