@@ -18,7 +18,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.toList;
 
 public class RoomProvider {
-
+    
     public List<Room> getAll() {
         Connection connection = getConnection();
         List<Room> rooms = new ArrayList<>();
