@@ -4,11 +4,13 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/phil/Projekt/paintball/src/hotel/gui/RoomListFrame.java</file>
+            <file>file:/home/phil/Projekt/paintball/sql/view.sql</file>
             <file>file:/home/phil/Projekt/paintball/sql/data.sql</file>
-            <file>file:/home/phil/Projekt/paintball/sql/projekt.sql</file>
-            <file>file:/home/phil/Projekt/paintball/src/hotel/entity/Room.java</file>
+            <file>file:/home/phil/Projekt/paintball/src/hotel/entity/Reservation.java</file>
+            <file>file:/home/phil/Projekt/paintball/src/hotel/gui/AddReservationFrame.java</file>
+            <file>file:/home/phil/Projekt/paintball/src/hotel/gui/model/RoomTableCellRenderer.java</file>
             <file>file:/home/phil/Projekt/paintball/src/hotel/db/provider/RoomProvider.java</file>
-            <file>file:/home/phil/Projekt/paintball/sql/views.sql</file>
+            <file>file:/home/phil/Projekt/paintball/src/hotel/db/provider/ReservationProvider.java</file>
         </group>
     </open-files>
 </project-private>

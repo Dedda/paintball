@@ -4,6 +4,8 @@ import hotel.db.provider.RoomProvider;
 import hotel.entity.Reservation;
 import hotel.entity.Room;
 import hotel.gui.model.RoomTableCellRenderer;
+import java.awt.Color;
+import java.awt.Component;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
@@ -12,6 +14,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * @author phil
@@ -19,25 +23,30 @@ import java.util.List;
 public class RoomListFrame extends javax.swing.JFrame {
 
     private Room room;
+    private RoomProvider roomProvider;
     private Calendar cal;
     private Reservation res;
+    private List<String[]> reservations;
     private RoomTableCellRenderer render;
     private int[] month = new int[12];
     private int currentMonth = 0;
     private int currentYear = 2015;
+    Color colRes = new Color(0xFFE6E6);
+    Color colFree = new Color(0xE5F9F4);
 
     public RoomListFrame() {
         initComponents();
         List<Integer> roomIDs = new RoomProvider().getAllIds();
+
         for (int i = 0; i < roomIDs.size(); i++) {
             roomBox.addItem(roomIDs.get(i));
         }
+
         monthLbl.setText(getMonth(currentMonth));
         for (int i = 0; i < month.length; i++) {
             month[i] = i;
         }
         this.fillTable(currentMonth, currentYear);
-        this.getResForMonth(currentYear, currentMonth, roomBox.getSelectedIndex());
     }
 
     public String getMonth(int month) {
@@ -60,17 +69,53 @@ public class RoomListFrame extends javax.swing.JFrame {
         return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
-    public void getResForMonth(int year, int month, int roomID) {
-        String lastDay = "" + year + "-" + (month + 1) + "-" + this.getAmountOfDays();
-        String firstDay = "" + year + "-" + (month + 1) + "-" + this.getFirstDay();
+    public void setBackgroundColor(Component c, int day) {
+        day=1;
+        currentMonth=1;
+        String dateString = "" + currentYear + "-" + currentMonth + "-" + day;
+        Date resStart=null;
+        Date resEnd=null;
+        Date currentDay=null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        
+        try {
+            currentDay = sdf.parse(dateString);
+        } catch (ParseException ex) {
+            Logger.getLogger(RoomListFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        String query = "SELECT * FROM reservation_dates WHERE room_id = " + roomID + " "
-                + " AND ((start_date >= date '" + firstDay + "' AND start_date <= date '" + lastDay + "') "
-                + " OR(end_date >= date '" + firstDay + "' AND end_date <= date '" + lastDay + "') "
-                + " OR(start_date < date '" + firstDay + "' AND end_date > date '" + lastDay + "'))";
+        for (int i = 0; i < reservations.size(); i++) {
+            String[] row = reservations.get(i);
+            String guestSurname = row[2];
+            try {
+                resStart = sdf.parse(row[0]);
+                resEnd = sdf.parse(row[1]);
+            } catch (ParseException ex) {
+                System.out.println("Date parse error at setBackgroundColor()");
+            }
+        }
+        System.out.println(""+day);
+        System.out.println(""+currentMonth);
+        System.out.println(""+currentDay);
+        System.out.println("Start: "+resStart);
+        System.out.println("End: "+resEnd);
+        if(currentDay.before(resStart)){
+            c.setBackground(colFree);
+        }
+        if(currentDay.after(resStart) && currentDay.before(resEnd)){
+            c.setBackground(colRes);
+        }
+        if(currentDay.after(resEnd)){
+            c.setBackground(colFree);
+        }
     }
 
     public void fillTable(int month, int year) {
+        String lastDay = "" + currentYear + "-" + (currentMonth + 1) + "-" + this.getAmountOfDays();
+        String firstDay = "" + currentYear + "-" + (currentMonth + 1) + "-" + this.getFirstDay();
+        roomProvider = new RoomProvider();
+        this.reservations = roomProvider.getResDays((int) roomBox.getSelectedItem(), firstDay, lastDay);
+
         int day = 1;
         String date = "" + day + "/" + (month + 1) + "/" + year;
         String incDate;
@@ -116,13 +161,20 @@ public class RoomListFrame extends javax.swing.JFrame {
         for (int i = 0; i < col; i++) {
             roomTable.setValueAt("", row, i);
         }
-        
-        render = new RoomTableCellRenderer(roomTable);
+//
+//        render = new RoomTableCellRenderer(roomTable);
+//        
         while (actDay < 41 - col) {
             incDate = sdf.format(cal.getTime());
 
             if (actDay < this.getAmountOfDays()) {
                 roomTable.setValueAt("" + incDate, row, col);
+
+//                System.out.println("setze wert " + incDate + "für Zelle " + row + " : " + col);
+                Component c = roomTable.getDefaultRenderer(roomTable.getColumnClass(col)).getTableCellRendererComponent(roomTable, cal, rootPaneCheckingEnabled, rootPaneCheckingEnabled, row, col);
+//                System.out.println(c);
+//                System.out.println("setze farbe für Zelle " + row + " : " + col);
+                setBackgroundColor(c, actDay);
             } else {
                 //Falls Felder über sind clearThat
                 roomTable.setValueAt("", row, col);
@@ -255,7 +307,6 @@ public class RoomListFrame extends javax.swing.JFrame {
         monthLbl.setText(getMonth(currentMonth));
         this.getAmountOfDays();
         this.fillTable(currentMonth, currentYear);
-        this.getResForMonth(currentYear, currentMonth, roomBox.getSelectedIndex());
     }//GEN-LAST:event_nextMonthActionPerformed
 
     private void prevMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevMonthActionPerformed
@@ -268,7 +319,6 @@ public class RoomListFrame extends javax.swing.JFrame {
         monthLbl.setText(getMonth(currentMonth));
         this.getAmountOfDays();
         this.fillTable(currentMonth, currentYear);
-        this.getResForMonth(currentYear, currentMonth, roomBox.getSelectedIndex());
     }//GEN-LAST:event_prevMonthActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

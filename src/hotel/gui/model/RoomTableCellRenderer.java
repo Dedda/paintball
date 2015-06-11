@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package hotel.gui.model;
 
 import java.awt.Color;
@@ -31,15 +26,13 @@ public class RoomTableCellRenderer {
             public Component getTableCellRendererComponent(JTable table,
                     Object value, boolean isSelected, boolean hasFocus,
                     int row, int col) {
-                System.out.print("Row: "+row);
-                System.out.println(" Col: "+col);
                 
-                
+                System.out.println("rendere Zelle "+row+" : "+col);
 
-                Component c = super.getTableCellRendererComponent(table, value,
-                        isSelected, hasFocus, row, col);
-
-                setBackground(colFree);
+//                Component c = super.getTableCellRendererComponent(table, value,
+//                        isSelected, hasFocus, row, col);
+//
+            
 
                 return this;
             }
