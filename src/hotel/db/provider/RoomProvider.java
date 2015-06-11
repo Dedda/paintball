@@ -44,6 +44,26 @@ public class RoomProvider {
         return rooms;
     }
     
+    public List<Integer> getAllIds() {
+        Connection connection = getConnection();
+        List<Integer> ids = new ArrayList<>();
+        String query = "SELECT id FROM room";
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            while (resultSet.next()) {
+                ids.add(resultSet.getInt("id"));
+            }
+            returnConnection(connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return ids;
+    }
+    
     public Map<Integer, Boolean> getFreeDays(final Room room) {
         Connection connection = getConnection();
         String query = "SELECT * FROM room_reservation WHERE room_id = ?";
