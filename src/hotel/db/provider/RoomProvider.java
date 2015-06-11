@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import static hotel.db.DBUtil.*;
+import java.util.Map;
 import static java.util.stream.Collectors.toList;
 
 public class RoomProvider {
@@ -42,14 +43,13 @@ public class RoomProvider {
         }
         return rooms;
     }
-    //Jahr Monat RaumID
-    public Room getDates(final int roomId) {
+    
+    public Map<Integer, Boolean> getFreeDays(final Room room) {
         Connection connection = getConnection();
-        Room room = null;
         String query = "SELECT * FROM room_reservation WHERE room_id = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, roomId);
+            statement.setInt(1, room.getId());
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 
