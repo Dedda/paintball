@@ -33,15 +33,22 @@ public class RoomListFrame extends javax.swing.JFrame {
         for (int i = 0; i < month.length; i++) {
             month[i] = i;
         }
-        fillTable(currentMonth, currentYear);
-//        SELECT * FROM amount_of_rooms;
-//        for (int i = 0; i < ; i++) {
-//            roomBox.addItem(room.toString());
-//        }
+        this.fillTable(currentMonth, currentYear);
+        this.getResForMonth(currentYear, currentMonth);
     }
 
     public String getMonth(int month) {
         return new DateFormatSymbols().getMonths()[month];
+    }
+
+    public int getFirstDay() {
+        int iYear = Integer.parseInt(yearLbl.getText());
+        int iMonth = currentMonth;
+        int iDay = 1;
+
+        Calendar cal = new GregorianCalendar(iYear, iMonth, iDay);
+
+        return cal.getActualMinimum(Calendar.DAY_OF_MONTH);
     }
 
     public int getAmountOfDays() {
@@ -54,20 +61,19 @@ public class RoomListFrame extends javax.swing.JFrame {
         return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
-    public void getResDays() {
+    public void getResForMonth(int year, int month) {
         //Gebrauchte Parameter - monthLbl und yearLbl.getText
         //Gebrauchte Parameter - roomBox.selectedIndex
         //Gebrauchte Parameter - tag im Kalender auslesen (per while schleife)
+
+        String lastDay = "" + year + "-" + (month+1) + "-" + this.getAmountOfDays();
+        String firstDay = "" + year + "-" + (month+1) + "-" + this.getFirstDay();
+        System.out.println(firstDay);
+        System.out.println(lastDay);
         String query = "SELECT * FROM reservation_dates WHERE room_id = 1 "
-                + " AND ((start_date >= date '2015-03-01' AND start_date <= date '2015-03-31') "
-                + " OR(end_date >= date '2015-03-01' AND end_date <= date '2015-03-31') "
-                + " OR(start_date < date '2015-03-01' AND end_date > date '2015-03-31'))";
-        /*
-         SELECT * FROM reservation_dates WHERE room_id = 1
-         AND ((start_date >= date '2015-03-01' AND start_date <= date '2015-03-31')
-         OR(end_date >= date '2015-03-01' AND end_date <= date '2015-03-31')
-         OR(start_date < date '2015-03-01' AND end_date > date '2015-03-31'));
-         */
+                + " AND ((start_date >= date '" + firstDay + "' AND start_date <= date '" + lastDay + "') "
+                + " OR(end_date >= date '" + firstDay + "' AND end_date <= date '" + lastDay + "') "
+                + " OR(start_date < date '" + firstDay + "' AND end_date > date '" + lastDay + "'))";
     }
 
     public void fillTable(int month, int year) {
@@ -113,8 +119,6 @@ public class RoomListFrame extends javax.swing.JFrame {
         if (tag.equals("Sonntag")) {
             col = 6;
         }
-
-        System.out.println(col);
         for (int i = 0; i < col; i++) {
             roomTable.setValueAt("", row, i);
         }
@@ -239,8 +243,9 @@ public class RoomListFrame extends javax.swing.JFrame {
             yearLbl.setText("" + currentYear);
         }
         monthLbl.setText(getMonth(currentMonth));
-        getAmountOfDays();
-        fillTable(currentMonth, currentYear);
+        this.getAmountOfDays();
+        this.fillTable(currentMonth, currentYear);
+        this.getResForMonth(currentYear, currentMonth);
     }//GEN-LAST:event_nextMonthActionPerformed
 
     private void prevMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevMonthActionPerformed
@@ -251,8 +256,9 @@ public class RoomListFrame extends javax.swing.JFrame {
             yearLbl.setText("" + currentYear);
         }
         monthLbl.setText(getMonth(currentMonth));
-        getAmountOfDays();
-        fillTable(currentMonth, currentYear);
+        this.getAmountOfDays();
+        this.fillTable(currentMonth, currentYear);
+        this.getResForMonth(currentYear, currentMonth);
     }//GEN-LAST:event_prevMonthActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
