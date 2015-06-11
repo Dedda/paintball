@@ -1,8 +1,9 @@
 package hotel.gui;
 
+import hotel.db.provider.RoomProvider;
 import hotel.entity.Reservation;
 import hotel.entity.Room;
-import java.awt.Color;
+import hotel.gui.model.RoomTableCellRenderer;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
@@ -10,10 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.joda.time.LocalDate;
-import static org.joda.time.format.ISODateTimeFormat.date;
+import java.util.List;
 
 /*
  * @author phil
@@ -23,18 +21,23 @@ public class RoomListFrame extends javax.swing.JFrame {
     private Room room;
     private Calendar cal;
     private Reservation res;
+    private RoomTableCellRenderer render;
     private int[] month = new int[12];
     private int currentMonth = 0;
     private int currentYear = 2015;
 
     public RoomListFrame() {
         initComponents();
+        List<Integer> roomIDs = new RoomProvider().getAllIds();
+        for (int i = 0; i < roomIDs.size(); i++) {
+            roomBox.addItem(roomIDs.get(i));
+        }
         monthLbl.setText(getMonth(currentMonth));
         for (int i = 0; i < month.length; i++) {
             month[i] = i;
         }
         this.fillTable(currentMonth, currentYear);
-        this.getResForMonth(currentYear, currentMonth);
+        this.getResForMonth(currentYear, currentMonth, roomBox.getSelectedIndex());
     }
 
     public String getMonth(int month) {
@@ -45,9 +48,7 @@ public class RoomListFrame extends javax.swing.JFrame {
         int iYear = Integer.parseInt(yearLbl.getText());
         int iMonth = currentMonth;
         int iDay = 1;
-
         Calendar cal = new GregorianCalendar(iYear, iMonth, iDay);
-
         return cal.getActualMinimum(Calendar.DAY_OF_MONTH);
     }
 
@@ -55,22 +56,15 @@ public class RoomListFrame extends javax.swing.JFrame {
         int iYear = Integer.parseInt(yearLbl.getText());
         int iMonth = currentMonth;
         int iDay = 1;
-
         Calendar cal = new GregorianCalendar(iYear, iMonth, iDay);
-
         return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
-    public void getResForMonth(int year, int month) {
-        //Gebrauchte Parameter - monthLbl und yearLbl.getText
-        //Gebrauchte Parameter - roomBox.selectedIndex
-        //Gebrauchte Parameter - tag im Kalender auslesen (per while schleife)
+    public void getResForMonth(int year, int month, int roomID) {
+        String lastDay = "" + year + "-" + (month + 1) + "-" + this.getAmountOfDays();
+        String firstDay = "" + year + "-" + (month + 1) + "-" + this.getFirstDay();
 
-        String lastDay = "" + year + "-" + (month+1) + "-" + this.getAmountOfDays();
-        String firstDay = "" + year + "-" + (month+1) + "-" + this.getFirstDay();
-        System.out.println(firstDay);
-        System.out.println(lastDay);
-        String query = "SELECT * FROM reservation_dates WHERE room_id = 1 "
+        String query = "SELECT * FROM reservation_dates WHERE room_id = " + roomID + " "
                 + " AND ((start_date >= date '" + firstDay + "' AND start_date <= date '" + lastDay + "') "
                 + " OR(end_date >= date '" + firstDay + "' AND end_date <= date '" + lastDay + "') "
                 + " OR(start_date < date '" + firstDay + "' AND end_date > date '" + lastDay + "'))";
@@ -122,6 +116,8 @@ public class RoomListFrame extends javax.swing.JFrame {
         for (int i = 0; i < col; i++) {
             roomTable.setValueAt("", row, i);
         }
+        
+        render = new RoomTableCellRenderer(roomTable);
         while (actDay < 41 - col) {
             incDate = sdf.format(cal.getTime());
 
@@ -140,6 +136,7 @@ public class RoomListFrame extends javax.swing.JFrame {
             actDay++;
             cal.add(Calendar.DATE, 1);
         }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -153,11 +150,11 @@ public class RoomListFrame extends javax.swing.JFrame {
         prevMonth = new javax.swing.JButton();
         nextMonth = new javax.swing.JButton();
         roomBox = new javax.swing.JComboBox();
+        roomLbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 350));
         setName("RoomFrame"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(800, 350));
         setResizable(false);
 
         roomTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -172,7 +169,15 @@ public class RoomListFrame extends javax.swing.JFrame {
             new String [] {
                 "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         roomTable.setToolTipText("");
         roomTable.setAlignmentX(1.0F);
         roomTable.setAlignmentY(1.0F);
@@ -195,6 +200,8 @@ public class RoomListFrame extends javax.swing.JFrame {
             }
         });
 
+        roomLbl.setText("Raum:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -211,7 +218,9 @@ public class RoomListFrame extends javax.swing.JFrame {
                         .addComponent(monthLbl)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(yearLbl)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(141, 141, 141)
+                        .addComponent(roomLbl)
+                        .addGap(18, 18, 18)
                         .addComponent(roomBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -225,7 +234,8 @@ public class RoomListFrame extends javax.swing.JFrame {
                     .addComponent(yearLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(prevMonth)
                     .addComponent(nextMonth)
-                    .addComponent(roomBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(roomBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(roomLbl))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(24, Short.MAX_VALUE))
@@ -245,7 +255,7 @@ public class RoomListFrame extends javax.swing.JFrame {
         monthLbl.setText(getMonth(currentMonth));
         this.getAmountOfDays();
         this.fillTable(currentMonth, currentYear);
-        this.getResForMonth(currentYear, currentMonth);
+        this.getResForMonth(currentYear, currentMonth, roomBox.getSelectedIndex());
     }//GEN-LAST:event_nextMonthActionPerformed
 
     private void prevMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevMonthActionPerformed
@@ -258,7 +268,7 @@ public class RoomListFrame extends javax.swing.JFrame {
         monthLbl.setText(getMonth(currentMonth));
         this.getAmountOfDays();
         this.fillTable(currentMonth, currentYear);
-        this.getResForMonth(currentYear, currentMonth);
+        this.getResForMonth(currentYear, currentMonth, roomBox.getSelectedIndex());
     }//GEN-LAST:event_prevMonthActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -267,6 +277,7 @@ public class RoomListFrame extends javax.swing.JFrame {
     private javax.swing.JButton nextMonth;
     private javax.swing.JButton prevMonth;
     private javax.swing.JComboBox roomBox;
+    private javax.swing.JLabel roomLbl;
     private javax.swing.JTable roomTable;
     private javax.swing.JLabel yearLbl;
     // End of variables declaration//GEN-END:variables
