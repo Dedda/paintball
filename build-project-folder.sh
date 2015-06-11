@@ -5,6 +5,14 @@ if [ -z $1 ]; then
     exit
 fi
 
+INSTALL=0
+
+for arg in "$@"; do
+    if [ $arg == "--install" ]; then
+        INSTALL=1
+    fi
+done
+
 PROJECT_FOLDER=$1
 
 if [ -d $PROJECT_FOLDER ]; then
@@ -43,7 +51,16 @@ echo "cleaning up..."
 rm -rf "./dist/"
 rm "$PROJECT_FOLDER/source/build-project-folder.sh"
 
+if [ $INSTALL == 1 ]; then
+    echo "installation triggered"
+    cd "$PROJECT_FOLDER"
+    ./install.sh
+    cd - > /dev/null
+fi
+
+
 cd $PROJECT_FOLDER
 echo -n "project directory created at "
 pwd
+
 cd - > /dev/null
