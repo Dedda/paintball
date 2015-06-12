@@ -4,6 +4,7 @@ import hotel.db.provider.RoomProvider;
 import hotel.entity.Reservation;
 import hotel.entity.Room;
 import hotel.gui.model.RoomTableCellRenderer;
+import hotel.gui.model.myTable;
 import java.awt.Color;
 import java.awt.Component;
 import java.text.DateFormat;
@@ -12,11 +13,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 /*
  * @author phil
@@ -24,6 +29,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class RoomListFrame extends javax.swing.JFrame {
 
     private Room room;
+//    private myTable myTable;
     private Calendar cal;
     private Reservation res;
     private RoomProvider roomProvider;
@@ -37,6 +43,29 @@ public class RoomListFrame extends javax.swing.JFrame {
 
     public RoomListFrame() {
         initComponents();
+
+//        roomTable.getColumnModel().getColumn(0).setCellRenderer(new RoomTableCellRenderer());
+//        roomTable.getColumnModel().getColumn(1).setCellRenderer(new RoomTableCellRenderer());
+//        roomTable.getColumnModel().getColumn(2).setCellRenderer(new RoomTableCellRenderer());
+//        roomTable.getColumnModel().getColumn(3).setCellRenderer(new RoomTableCellRenderer());
+//        roomTable.getColumnModel().getColumn(4).setCellRenderer(new RoomTableCellRenderer());
+//        roomTable.getColumnModel().getColumn(5).setCellRenderer(new RoomTableCellRenderer());
+//        roomTable.getColumnModel().getColumn(6).setCellRenderer(new RoomTableCellRenderer());
+//        roomTable.setDefaultRenderer( Object.class, new DefaultTableCellRenderer() { 
+//            @Override
+//            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) { 
+//                Component component = super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column);
+//                int select = (int)table.getModel().getValueAt(row, column );
+// 
+//                if( select == 1 ) {
+//                    component.setBackground(Color.yellow);
+//                } else {
+//                    component.setBackground(Color.cyan);
+//                } 
+//                return component;
+//            };
+// 
+//        });
         List<Integer> roomIDs = new RoomProvider().getAllIds();
 
         for (int i = 0; i < roomIDs.size(); i++) {
@@ -48,6 +77,49 @@ public class RoomListFrame extends javax.swing.JFrame {
             month[i] = i;
         }
         this.fillTable(currentMonth, currentYear);
+    }
+
+    public String getReservationName(int day, int year, int month) {
+        String dateString = "" + year + "-" + month + "-" + day;
+        Date currentDay = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            currentDay = sdf.parse(dateString);
+        } catch (ParseException ex) {
+            System.out.println("Fehler beim currentDate parsen");
+        }
+
+        for (int i = 0; i < reservations.size(); i++) {
+            String[] row = reservations.get(i);
+            String guestSurname = row[2];
+            Date resStart = null;
+            Date resEnd = null;
+            try {
+                resStart = sdf.parse(row[0]);
+                resEnd = sdf.parse(row[1]);
+            } catch (ParseException ex) {
+                System.out.println("Date parse error at setBackgroundColor()");
+            }
+
+            boolean found = false;
+
+            if (currentDay.before(resStart)) {
+                //flag bleibt auf false
+                System.out.println("CurrD: (" + currentDay + ") Before start (" + resStart + ")");
+
+            } else if (currentDay.after(resEnd)) {
+                //flag bleibt auf false
+            } else {
+                found = true;
+            }
+
+            if (found == true) {
+                //den Namen des Gastes zurückgeben
+                return day + ": " + guestSurname;
+            }
+        }
+        //nichts gefunden
+        return "" + day;
     }
 
     public String getMonth(int month) {
@@ -68,44 +140,6 @@ public class RoomListFrame extends javax.swing.JFrame {
         int iDay = 1;
         Calendar cal = new GregorianCalendar(iYear, iMonth, iDay);
         return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-    }
-
-    public void setBackgroundColor(Component c, int day, int col, javax.swing.JTable table) {
-
-        String dateString = "" + currentYear + "-" + currentMonth + "-" + day;
-        Date resStart;
-        Date resEnd;
-        Date currentDay = null;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-        try {
-            currentDay = sdf.parse(dateString);
-        } catch (ParseException ex) {
-            Logger.getLogger(RoomListFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }        
-        for (int i = 0; i < reservations.size(); i++) {
-            String[] row = reservations.get(i);
-            String guestSurname = row[2];
-            try {
-//                System.out.println("DayDate: " + currentDay);
-                resStart = sdf.parse(row[0]);
-                resEnd = sdf.parse(row[1]);
-//                System.out.println("Start: " + resStart);
-//                System.out.println("End: " + resEnd);               
-                c = c.getComponentAt(roomTable.getLocation());
-                if (currentDay.before(resStart)) {
-                    c.setBackground(colFree);
-                }
-                if (currentDay.after(resStart) && currentDay.before(resEnd) || currentDay.equals(resEnd) || currentDay.equals(resStart)) {
-                    c.setBackground(colRes);
-                }
-                if (currentDay.after(resEnd)) {
-                    c.setBackground(colFree);
-                }
-            } catch (ParseException ex) {
-                System.out.println("Date parse error at setBackgroundColor()");
-            }
-        }
     }
 
     public void fillTable(int month, int year) {
@@ -164,22 +198,17 @@ public class RoomListFrame extends javax.swing.JFrame {
         while (actDay < 41 - col) {
             incDate = sdfDay.format(cal.getTime());
             if (actDay < this.getAmountOfDays()) {
-                roomTable.setValueAt("" + incDate, row, col);
+                String reservationName = this.getReservationName((actDay + 1), currentYear, (currentMonth + 1));
+//                System.out.println(reservationName);
+                roomTable.setValueAt("" + reservationName, row, col);
 
-//                System.out.println("setze wert " + incDate + "für Zelle " + row + " : " + col);
-                Component c = roomTable.getDefaultRenderer(roomTable.getColumnClass(col)).getTableCellRendererComponent(roomTable, cal, rootPaneCheckingEnabled, rootPaneCheckingEnabled, row, col);
-//                System.out.println(c);
-//                System.out.println("setze farbe für Zelle " + row + " : " + col);
-//                this.setBackgroundColor(c, actDay);
-
-                RoomTableCellRenderer rtcr = new RoomTableCellRenderer(col);
-                rtcr.getTableCellRendererComponent(roomTable, roomTable, rootPaneCheckingEnabled, rootPaneCheckingEnabled, row, col);
-                
             } else {
                 //Falls Felder über sind clearThat
                 roomTable.setValueAt("", row, col);
             }
-
+            
+//            roomTable.getColumnModel().getColumn(col).setCellRenderer(new RoomTableCellRenderer());
+            
             col++;
             if (col > 6) {
                 col = 0;
@@ -196,7 +225,7 @@ public class RoomListFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        roomTable = new javax.swing.JTable();
+        roomTable = new myTable();
         monthLbl = new javax.swing.JLabel();
         yearLbl = new javax.swing.JLabel();
         prevMonth = new javax.swing.JButton();
@@ -252,6 +281,12 @@ public class RoomListFrame extends javax.swing.JFrame {
             }
         });
 
+        roomBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                roomBoxActionPerformed(evt);
+            }
+        });
+
         roomLbl.setText("Raum:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -296,9 +331,7 @@ public class RoomListFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
-    private void nextMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextMonthActionPerformed
-        currentMonth += 1;
+    public void actFrame(int month) {
         if (currentMonth > 11) {
             currentMonth = 0;
             currentYear += 1;
@@ -307,19 +340,21 @@ public class RoomListFrame extends javax.swing.JFrame {
         monthLbl.setText(getMonth(currentMonth));
         this.getAmountOfDays();
         this.fillTable(currentMonth, currentYear);
+    }
+
+    private void nextMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextMonthActionPerformed
+        currentMonth += 1;
+        this.actFrame(currentMonth);
     }//GEN-LAST:event_nextMonthActionPerformed
 
     private void prevMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevMonthActionPerformed
         currentMonth -= 1;
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear -= 1;
-            yearLbl.setText("" + currentYear);
-        }
-        monthLbl.setText(getMonth(currentMonth));
-        this.getAmountOfDays();
-        this.fillTable(currentMonth, currentYear);
+        this.actFrame(currentMonth);
     }//GEN-LAST:event_prevMonthActionPerformed
+
+    private void roomBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomBoxActionPerformed
+        this.actFrame(currentMonth);
+    }//GEN-LAST:event_roomBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
@@ -331,4 +366,8 @@ public class RoomListFrame extends javax.swing.JFrame {
     private javax.swing.JTable roomTable;
     private javax.swing.JLabel yearLbl;
     // End of variables declaration//GEN-END:variables
+
+    private Object getColumnModel() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

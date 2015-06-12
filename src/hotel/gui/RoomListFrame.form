@@ -96,6 +96,9 @@
             <Property name="alignmentY" type="float" value="1.0"/>
             <Property name="rowHeight" type="int" value="40"/>
           </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new myTable()"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
@@ -128,6 +131,9 @@
           <StringArray count="0"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="roomBoxActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="roomLbl">
       <Properties>
