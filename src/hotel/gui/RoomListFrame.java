@@ -16,6 +16,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /*
  * @author phil
@@ -23,9 +24,9 @@ import java.util.logging.Logger;
 public class RoomListFrame extends javax.swing.JFrame {
 
     private Room room;
-    private RoomProvider roomProvider;
     private Calendar cal;
     private Reservation res;
+    private RoomProvider roomProvider;
     private List<String[]> reservations;
     private RoomTableCellRenderer render;
     private int[] month = new int[12];
@@ -69,44 +70,41 @@ public class RoomListFrame extends javax.swing.JFrame {
         return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
     }
 
-    public void setBackgroundColor(Component c, int day) {
-        day=1;
-        currentMonth=1;
+    public void setBackgroundColor(Component c, int day, int col, javax.swing.JTable table) {
+
         String dateString = "" + currentYear + "-" + currentMonth + "-" + day;
-        Date resStart=null;
-        Date resEnd=null;
-        Date currentDay=null;
+        Date resStart;
+        Date resEnd;
+        Date currentDay = null;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        
+
         try {
             currentDay = sdf.parse(dateString);
         } catch (ParseException ex) {
             Logger.getLogger(RoomListFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        }        
         for (int i = 0; i < reservations.size(); i++) {
             String[] row = reservations.get(i);
             String guestSurname = row[2];
             try {
+//                System.out.println("DayDate: " + currentDay);
                 resStart = sdf.parse(row[0]);
                 resEnd = sdf.parse(row[1]);
+//                System.out.println("Start: " + resStart);
+//                System.out.println("End: " + resEnd);               
+                c = c.getComponentAt(roomTable.getLocation());
+                if (currentDay.before(resStart)) {
+                    c.setBackground(colFree);
+                }
+                if (currentDay.after(resStart) && currentDay.before(resEnd) || currentDay.equals(resEnd) || currentDay.equals(resStart)) {
+                    c.setBackground(colRes);
+                }
+                if (currentDay.after(resEnd)) {
+                    c.setBackground(colFree);
+                }
             } catch (ParseException ex) {
                 System.out.println("Date parse error at setBackgroundColor()");
             }
-        }
-        System.out.println(""+day);
-        System.out.println(""+currentMonth);
-        System.out.println(""+currentDay);
-        System.out.println("Start: "+resStart);
-        System.out.println("End: "+resEnd);
-        if(currentDay.before(resStart)){
-            c.setBackground(colFree);
-        }
-        if(currentDay.after(resStart) && currentDay.before(resEnd)){
-            c.setBackground(colRes);
-        }
-        if(currentDay.after(resEnd)){
-            c.setBackground(colFree);
         }
     }
 
@@ -161,12 +159,10 @@ public class RoomListFrame extends javax.swing.JFrame {
         for (int i = 0; i < col; i++) {
             roomTable.setValueAt("", row, i);
         }
-//
-//        render = new RoomTableCellRenderer(roomTable);
-//        
-        while (actDay < 41 - col) {
-            incDate = sdf.format(cal.getTime());
+        SimpleDateFormat sdfDay = new SimpleDateFormat("dd");
 
+        while (actDay < 41 - col) {
+            incDate = sdfDay.format(cal.getTime());
             if (actDay < this.getAmountOfDays()) {
                 roomTable.setValueAt("" + incDate, row, col);
 
@@ -174,7 +170,11 @@ public class RoomListFrame extends javax.swing.JFrame {
                 Component c = roomTable.getDefaultRenderer(roomTable.getColumnClass(col)).getTableCellRendererComponent(roomTable, cal, rootPaneCheckingEnabled, rootPaneCheckingEnabled, row, col);
 //                System.out.println(c);
 //                System.out.println("setze farbe für Zelle " + row + " : " + col);
-                setBackgroundColor(c, actDay);
+//                this.setBackgroundColor(c, actDay);
+
+                RoomTableCellRenderer rtcr = new RoomTableCellRenderer(col);
+                rtcr.getTableCellRendererComponent(roomTable, roomTable, rootPaneCheckingEnabled, rootPaneCheckingEnabled, row, col);
+                
             } else {
                 //Falls Felder über sind clearThat
                 roomTable.setValueAt("", row, col);
