@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.joda.time.DateTime;
-
 import static hotel.db.DBUtil.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class StaffProvider {
@@ -46,7 +43,7 @@ public class StaffProvider {
         }
         return staff;
     }
-    
+
     public List<Staff> getAll() {
         Connection connection = getConnection();
         List<Staff> staff = new ArrayList<>();
@@ -75,7 +72,7 @@ public class StaffProvider {
         }
         return staff;
     }
-    
+
     public void remove(final Staff staff) {
         removeDependencies(staff);
         Connection connection = getConnection();
@@ -90,12 +87,12 @@ public class StaffProvider {
         }
         System.out.println("Staff deleted! " + staff.getName() + " " + staff.getSurname());
     }
-    
+
     private void removeDependencies(final Staff staff) {
         removeFromRooms(staff);
         removeFromServices(staff);
     }
-    
+
     private void removeFromRooms(final Staff staff) {
         Connection connection = getConnection();
         String query = "DELETE FROM staff_room WHERE staff = ?";
@@ -108,7 +105,7 @@ public class StaffProvider {
             ex.printStackTrace();
         }
     }
-    
+
     private void removeFromServices(final Staff staff) {
         Connection connection = getConnection();
         String query = "DELETE FROM staff_service WHERE staff = ?";
@@ -121,7 +118,7 @@ public class StaffProvider {
             ex.printStackTrace();
         }
     }
-    
+
     public void removeTooOld() {
         org.joda.time.DateTime dateTime = new DateTime(new Date().getTime());
         dateTime = dateTime.minusYears(3);

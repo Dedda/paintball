@@ -33,6 +33,7 @@ public class RoomListFrame extends javax.swing.JFrame {
 
     public RoomListFrame() {
         initComponents();
+        setTitle("Zimmerübersicht");
         //Alle roomIDs abfragen und speichern
         List<Integer> roomIDs = new RoomProvider().getAllIds();
         //roomBox die Zimmer geben
@@ -221,6 +222,7 @@ public class RoomListFrame extends javax.swing.JFrame {
         setName("RoomFrame"); // NOI18N
         setResizable(false);
 
+        roomTable.setName("RoomTable");
         roomTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null},

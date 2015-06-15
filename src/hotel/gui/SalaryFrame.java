@@ -2,12 +2,15 @@ package hotel.gui;
 
 import hotel.db.provider.StaffProvider;
 import hotel.entity.Staff;
-import java.util.ArrayList;
+import hotel.gui.model.myTable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
-import javax.swing.table.TableModel;
 import java.util.Date;
-import javax.swing.JTable;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.TableModel;
 
 public class SalaryFrame extends javax.swing.JFrame {
 
@@ -15,19 +18,15 @@ public class SalaryFrame extends javax.swing.JFrame {
     private Calendar compareCal;
     private StaffProvider provider;
     private List<Staff> staffList;
-    //private Staff s;
 
     public SalaryFrame() {
+        this.provider = new StaffProvider();
+        this.staffList = provider.getAll();
         initComponents();
-        yearBox.removeAllItems();
+        monthBox.setSelectedIndex(0);
         for (int i = 1990; i < 2016; i++) {
-            yearBox.addItem(i);
+            this.yearBox.addItem("" + i);
         }
-        cal = Calendar.getInstance();
-        compareCal = Calendar.getInstance();
-        provider = new StaffProvider();
-        staffList = provider.getAll();
-
         setTitle("Lohnabrechnung");
         setLocationRelativeTo(null);
     }
@@ -42,7 +41,7 @@ public class SalaryFrame extends javax.swing.JFrame {
         cancelBtn = new javax.swing.JButton();
         yearBox = new javax.swing.JComboBox();
         jScrollPane2 = new javax.swing.JScrollPane();
-        salaryTable = new javax.swing.JTable();
+        salaryTable = new myTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -90,12 +89,19 @@ public class SalaryFrame extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
-        salaryTable.setName(""); // NOI18N
+        salaryTable.setName("SalaryTable");
         jScrollPane2.setViewportView(salaryTable);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -139,43 +145,55 @@ public class SalaryFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void monthBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_monthBoxActionPerformed
-        TableModel mdl = salaryTable.getModel();
+        for (int i = 0; i < staffList.size(); i++) {
 
-        for (Staff s : staffList) {
-            cal.setTime(s.getRecruitement());
-            compareCal.set(Calendar.YEAR, Integer.parseInt(yearBox.getSelectedItem().toString()));
-            compareCal.set(Calendar.MONTH, monthBox.getSelectedIndex());
+            //Variablen für den Table initalisieren
+            int col = 0;
+            int row = 0;
 
-            if (compareCal.compareTo(cal) >= 0) {
+            Date rec = null;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                rec = sdf.parse("" + staffList.get(i).getRecruitement());
+            } catch (ParseException ex) {
+                System.out.println("Error at parsing recDate");
+            }
+
+            Date fir = null;
+            //Prüfen ob der Mitarbeiter gefeuert wurde
+            if (staffList.get(i).getFiring() != null) {
                 try {
-                    cal.setTime(s.getFiring());
-                    if (compareCal.compareTo(cal) <= 0) {
-                        //"Mitarbeiter", "Gehaltsstufe", "Monatslohn", "Vertragsbeginn", "Vertragsende"
-                        for (int r = 0; r < salaryTable.getRowCount(); r++) {
-                            for (int c = 0; c < salaryTable.getColumnCount(); c++) {
-                                switch (c) {
-                                    case 0:
-                                        salaryTable.setValueAt(s.getName() + " " + s.getSurname(), r, c);
-                                        break;
-                                    case 1:
-                                        salaryTable.setValueAt(s.getCategory().getId(), r, c);
-                                        break;
-                                    case 2:
-                                        salaryTable.setValueAt(s.getCategory().getSalary(), r, c);
-                                        break;
-                                    case 3:
-                                        salaryTable.setValueAt(s.getRecruitement(), r, c);
-                                        break;
-                                    case 4:
-                                        salaryTable.setValueAt(s.getFiring(), r, c);
-                                        break;
-                                }
-                            }
-                        }
+                    fir = sdf.parse("" + staffList.get(i).getFiring());
+                } catch (ParseException ex) {
+                    System.out.println("Error at parsing firingDate");
+                }
+            }
 
-                    }
-                } catch (Exception e) {
-                    //e.printStackTrace();
+            while (row < staffList.size()) {
+                //Name
+                salaryTable.setValueAt("" + staffList.get(row).getName() + " " + staffList.get(i).getSurname(), row, col);
+                col++;
+                //Gehaltsstufe
+                salaryTable.setValueAt(""+staffList.get(row).getCategory().getName(), row, col);
+                col++;
+                //Lohn                
+                salaryTable.setValueAt(""+staffList.get(row).getCategory().getSalary(), row, col);
+                col++;
+                //Vertragsbeginn
+                salaryTable.setValueAt("" + staffList.get(row).getRecruitement(), row, col);
+                col++;
+                //Vertragsende
+                if (staffList.get(row).getFiring() != null) {
+                    salaryTable.setValueAt("" + staffList.get(row).getFiring(), row, col);
+                } else {
+                    salaryTable.setValueAt("-", row, col);
+                }
+                col++;
+
+                // in die nächste Zeile springen
+                if (col >= 5) {
+                    col = 0;
+                    row += 1;
                 }
             }
         }
@@ -186,19 +204,7 @@ public class SalaryFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cancelBtnActionPerformed
 
     private void yearBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_yearBoxActionPerformed
-        // SQL Abfrage für Jahr Monat und Tag des einstelldatum
-        yearBox.setSelectedIndex(0);
-        if (staffList == null) {
-            System.out.println("leer");
-            //LEER !!!
-        }
-        for (Staff s : staffList) {
-            cal.setTime(s.getRecruitement());
-            System.out.println("monthBox getSelectedIndex " + (monthBox.getSelectedIndex()));
-            System.out.println("cal Month " + cal.get(Calendar.MONTH));
-            System.out.println("yearBox getSelectedIndex " + (int) yearBox.getSelectedItem());
-            System.out.println("cal Year " + cal.get(Calendar.YEAR));
-        }
+
     }//GEN-LAST:event_yearBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
