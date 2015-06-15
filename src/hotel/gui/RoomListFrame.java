@@ -3,25 +3,16 @@ package hotel.gui;
 import hotel.db.provider.RoomProvider;
 import hotel.entity.Reservation;
 import hotel.entity.Room;
-import hotel.gui.model.RoomTableCellRenderer;
 import hotel.gui.model.myTable;
 import java.awt.Color;
-import java.awt.Component;
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 
 /*
  * @author phil
@@ -34,7 +25,6 @@ public class RoomListFrame extends javax.swing.JFrame {
     private Reservation res;
     private RoomProvider roomProvider;
     private List<String[]> reservations;
-    private RoomTableCellRenderer render;
     private int[] month = new int[12];
     private int currentMonth = 0;
     private int currentYear = 2015;
@@ -43,52 +33,32 @@ public class RoomListFrame extends javax.swing.JFrame {
 
     public RoomListFrame() {
         initComponents();
-
-//        roomTable.getColumnModel().getColumn(0).setCellRenderer(new RoomTableCellRenderer());
-//        roomTable.getColumnModel().getColumn(1).setCellRenderer(new RoomTableCellRenderer());
-//        roomTable.getColumnModel().getColumn(2).setCellRenderer(new RoomTableCellRenderer());
-//        roomTable.getColumnModel().getColumn(3).setCellRenderer(new RoomTableCellRenderer());
-//        roomTable.getColumnModel().getColumn(4).setCellRenderer(new RoomTableCellRenderer());
-//        roomTable.getColumnModel().getColumn(5).setCellRenderer(new RoomTableCellRenderer());
-//        roomTable.getColumnModel().getColumn(6).setCellRenderer(new RoomTableCellRenderer());
-//        roomTable.setDefaultRenderer( Object.class, new DefaultTableCellRenderer() { 
-//            @Override
-//            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) { 
-//                Component component = super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column);
-//                int select = (int)table.getModel().getValueAt(row, column );
-// 
-//                if( select == 1 ) {
-//                    component.setBackground(Color.yellow);
-//                } else {
-//                    component.setBackground(Color.cyan);
-//                } 
-//                return component;
-//            };
-// 
-//        });
+        //Alle roomIDs abfragen und speichern
         List<Integer> roomIDs = new RoomProvider().getAllIds();
-
+        //roomBox die Zimmer geben
         for (int i = 0; i < roomIDs.size(); i++) {
             roomBox.addItem(roomIDs.get(i));
         }
-
+        // Dem label den ersten Monatsnamen geben
         monthLbl.setText(getMonth(currentMonth));
         for (int i = 0; i < month.length; i++) {
             month[i] = i;
         }
+        // Den Table das erste mal aufbauen
         this.fillTable(currentMonth, currentYear);
     }
 
     public String getReservationName(int day, int year, int month) {
         String dateString = "" + year + "-" + month + "-" + day;
         Date currentDay = null;
+        // Gebraucht um String in ein Datum umzuwandeln
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             currentDay = sdf.parse(dateString);
         } catch (ParseException ex) {
-            System.out.println("Fehler beim currentDate parsen");
+            System.out.println("Error at parsing the currentDate");
         }
-
+        
         for (int i = 0; i < reservations.size(); i++) {
             String[] row = reservations.get(i);
             String guestSurname = row[2];
@@ -98,14 +68,13 @@ public class RoomListFrame extends javax.swing.JFrame {
                 resStart = sdf.parse(row[0]);
                 resEnd = sdf.parse(row[1]);
             } catch (ParseException ex) {
-                System.out.println("Date parse error at setBackgroundColor()");
+                System.out.println("Date parse error at getReservationName");
             }
 
             boolean found = false;
 
             if (currentDay.before(resStart)) {
                 //flag bleibt auf false
-                System.out.println("CurrD: (" + currentDay + ") Before start (" + resStart + ")");
 
             } else if (currentDay.after(resEnd)) {
                 //flag bleibt auf false
@@ -123,6 +92,7 @@ public class RoomListFrame extends javax.swing.JFrame {
     }
 
     public String getMonth(int month) {
+        // Den namen des Monats ermitteln
         return new DateFormatSymbols().getMonths()[month];
     }
 
@@ -130,6 +100,7 @@ public class RoomListFrame extends javax.swing.JFrame {
         int iYear = Integer.parseInt(yearLbl.getText());
         int iMonth = currentMonth;
         int iDay = 1;
+        // Den ersten tag des Monats ermitteln
         Calendar cal = new GregorianCalendar(iYear, iMonth, iDay);
         return cal.getActualMinimum(Calendar.DAY_OF_MONTH);
     }
@@ -143,12 +114,15 @@ public class RoomListFrame extends javax.swing.JFrame {
     }
 
     public void fillTable(int month, int year) {
+        // String bauen mit dem Daten für den ersten und den letzten tag im Monat
         String lastDay = "" + currentYear + "-" + (currentMonth + 1) + "-" + this.getAmountOfDays();
         String firstDay = "" + currentYear + "-" + (currentMonth + 1) + "-" + this.getFirstDay();
         roomProvider = new RoomProvider();
+        // Reservierte Tage aus der Datenbank abfragen mit den Daten aus dem GUI
         this.reservations = roomProvider.getResDays((int) roomBox.getSelectedItem(), firstDay, lastDay);
-
+        
         int day = 1;
+        // Datums-String bauen
         String date = "" + day + "/" + (month + 1) + "/" + year;
         String incDate;
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -159,15 +133,18 @@ public class RoomListFrame extends javax.swing.JFrame {
             System.out.println("Date parse Error");
         }
 
-        //get FirstDayOfMonth
+        /*
+        Dateobjekt mit Calendar erzeugen um mit SimpleDateFormat den NAMEN
+        des ersten Tages in Monat ermitteln zu können
+        */
         Date firstDayOfMonth = cal.getTime();
+        // Das sdf 'EEEEEEEE' wird benötigt um den Namen des Wochentags zu "parsen"
         DateFormat sdf2 = new SimpleDateFormat("EEEEEEEE");
-        //System.out.println("First Day of Month: " + sdf2.format(firstDayOfMonth));
-
+        //Variablen für den Table initalisieren
         int col = 0;
         int row = 0;
         int actDay = 0;
-
+        //Prüfen ab welcher "col" der Monat beginnt durch den Namen des wochentags
         String tag = sdf2.format(firstDayOfMonth);
         if (tag.equals("Montag")) {
             col = 0;
@@ -190,16 +167,23 @@ public class RoomListFrame extends javax.swing.JFrame {
         if (tag.equals("Sonntag")) {
             col = 6;
         }
+        //Die Felder vor dem 1. Tag leeren
         for (int i = 0; i < col; i++) {
             roomTable.setValueAt("", row, i);
         }
+        // wird benötigt um den Tag in einer 2-stelligen Zahl darzustellen
         SimpleDateFormat sdfDay = new SimpleDateFormat("dd");
-
+        // 6 Zeilen * 7 Felder = 42
+        // - col da die erste zeile nicht voll genutzt wird
         while (actDay < 41 - col) {
+            // Den tag als 2 stellige zahl 
             incDate = sdfDay.format(cal.getTime());
-            if (actDay < this.getAmountOfDays()) {
+            //actDay (=1) < Anzahl der Tage
+            if (actDay < this.getAmountOfDays(
+            )) {
+                // Tag und Nachname (Falls gefunden) der Person die Reserviert hat in die variable schreiben
                 String reservationName = this.getReservationName((actDay + 1), currentYear, (currentMonth + 1));
-//                System.out.println(reservationName);
+                // Tag und Nachname (Falls gefunden) in die Tabellenzelle schreiben
                 roomTable.setValueAt("" + reservationName, row, col);
 
             } else {
@@ -207,15 +191,14 @@ public class RoomListFrame extends javax.swing.JFrame {
                 roomTable.setValueAt("", row, col);
             }
             
-//            roomTable.getColumnModel().getColumn(col).setCellRenderer(new RoomTableCellRenderer());
-            
             col++;
+            // Wenn col = 6 dann auch in die nächste Zeile springen
             if (col > 6) {
                 col = 0;
                 row += 1;
             }
+            // +1 Tag
             actDay++;
-            cal.add(Calendar.DATE, 1);
         }
 
     }
@@ -331,29 +314,40 @@ public class RoomListFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public void actFrame(int month) {
+    public void actFrame() {
+        /*
+        Wenn der Monat 11 (0-11 = 12) ist auf 0 setzen und ein Jahr hochzählen
+        und die Labels aktualisieren
+        
+        Wenn der Monat <0 auf 12 setzen und ein Jahr abziehen
+        und die Labels aktualisieren
+        */
         if (currentMonth > 11) {
             currentMonth = 0;
             currentYear += 1;
             yearLbl.setText("" + currentYear);
+        }else if( currentMonth < 0){
+            currentMonth = 11;
+            currentYear -= 1;
+            yearLbl.setText("" + currentYear);            
         }
         monthLbl.setText(getMonth(currentMonth));
-        this.getAmountOfDays();
+        // Table füllen mit dem neuen Monats-Daten
         this.fillTable(currentMonth, currentYear);
     }
 
     private void nextMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextMonthActionPerformed
         currentMonth += 1;
-        this.actFrame(currentMonth);
+        this.actFrame();
     }//GEN-LAST:event_nextMonthActionPerformed
 
     private void prevMonthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prevMonthActionPerformed
         currentMonth -= 1;
-        this.actFrame(currentMonth);
+        this.actFrame();
     }//GEN-LAST:event_prevMonthActionPerformed
 
     private void roomBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roomBoxActionPerformed
-        this.actFrame(currentMonth);
+        this.actFrame();
     }//GEN-LAST:event_roomBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
