@@ -1,0 +1,55 @@
+@startuml
+
+class hotel.gui.ReservationFrame {
+    - reservation : Reservation
+    - existing : boolean
+    - addRoomBtn : JButton
+    - addServiceBtn : JButton
+    - cancelBtn : JButton
+    - cancelReservationBtn : JButton
+    - payedBtn : JButton
+    - removeRoomBtn : JButton
+    - removeServiceBtn : JButton
+    - saveBtnBtn : JButton
+    - arrivalLbl : JLabel
+    - departureLbl : JLabel
+    - guestsLbl : JLabel
+    - guestNameLbl : JLabel
+    - headerLbl : JLabel
+    - idLbl : JLabel
+    - idValueLbl : JLabel
+    - peopleLbl : JLabel
+    - priceLbl : JLabel
+    - priceValueLbl : JLabel
+    - roomsLbl : JLabel
+    - servicesLbl : JLabel
+    - stateLbl : JLabel
+    - stateTextLbl : JLabel
+    - arrivalSpinner : JSpinner
+    - departureSpinner : JSpinner
+    - jScrollPan1 : JScrollPane
+    - jScrollPan2 : JScrollPane
+    - jScrollPan3 : JScrollPane
+    - roomsList : JList
+    - servicesList : JList
+    - servicesList2 : JList
+    + ReservationFrame(Reservation, existing)
+    - format(Date) : String
+    - getSelectedServices() : List<Service>
+    - getGroupServiceIds() : Map<Integer, Integer>
+    - getSelectedRooms() : List<Room>
+    - initComponents() : void
+    - cancelBtnActionPerformed(ActionEvent) : void
+    - payedBtnActionPerformed(ActionEvent) : void
+    - cancelReservationBtnActionPerformed(ActionEvent) : void
+    - saveBtnActionPerformed(ActionEvent) : void
+    - addServiceBtnActionPerformed(ActionEvent) : void
+    - removeServiceBtnActionPerformed(ActionEvent) : void
+    - removeRoomBtnActionPerformed(ActionEvent) : void
+    - addRoomBtnActionPerformed(ActionEvent) : void
+    - arrivalSpinnerStateChanged(ChangeEvent) : void
+}
+
+javax.swing.JFrame <|-- hotel.gui.ReservationFrame
+
+@enduml

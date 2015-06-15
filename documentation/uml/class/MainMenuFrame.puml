@@ -1,0 +1,18 @@
+@startuml
+
+class hotel.gui.MainMenuFrame {
+    - guestsBtn : JButton
+    - paymentBtn : JButton
+    - roomsBtn : JButton
+    - staffBtn : JButton
+    + MainMenuFrame()
+    - initComponents() : void
+    - staffBtnActionPerformed(ActionEvent) : void
+    - guestsBtnActionPerformed(ActionEvent) : void
+    - paymentBtnActionPerformed(ActionEvent) : void
+    - roomsBtnActionPerformed(ActionEvent) : void
+}
+
+javax.swing.JFrame <|-- hotel.gui.MainMenuFrame
+
+@enduml

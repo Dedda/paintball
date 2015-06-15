@@ -24,6 +24,16 @@
 !include SalaryTableCellRenderer.puml
 !include ServiceListModel.puml
 !include StaffTableCellRenderer.puml
+!include AddGuestFrame.puml
+!include AddReservationFrame.puml
+!include GuestFrame.puml
+!include GuestListFrame.puml
+!include MainMenuFrame.puml
+!include ReservationFrame.puml
+!include RoomListFrame.puml
+!include SalaryFrame.puml
+!include StaffListFrame.puml
+!include Main.puml
 
 hotel.db.provider.GuestProvider -- hotel.db.DBUtil : "gets connection"
 hotel.db.provider.ReservationProvider -- hotel.db.DBUtil : "gets connection"

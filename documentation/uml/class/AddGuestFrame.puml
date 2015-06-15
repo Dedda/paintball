@@ -1,0 +1,17 @@
+@startuml
+
+class hotel.gui.AddGuestFrame {
+    - provider : GuestProvider
+    - guestListFrame : GuestListFrame
+    - headerLbl : JLabel
+    - nameText : JTextField
+    - saveBtn : JButton
+    + AddGuestFrame(GuestListFrame)
+    + checkName(String) : boolean
+    + saveBtnActionPerformed(ActionEvent) : void
+    - initComponents() : void
+}
+
+javax.swing.JFrame <|-- hotel.gui.AddGuestFrame
+
+@enduml

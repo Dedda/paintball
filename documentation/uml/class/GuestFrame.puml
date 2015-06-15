@@ -1,0 +1,16 @@
+@startuml
+
+class hotel.gui.GuestFrame {
+    - guest : Guest
+    - nameLbl : JLabel
+    - openReservationsBtn : JButton
+    - reservationNumberLbl : JLabel
+    - toPayLbl : JLabel
+    + GuestFrame(Guest)
+    - initComponents() : void
+    - openReservationsBtnActionPerformed(AvtionEvent) : void
+}
+
+javax.swing.JFrame <|-- hotel.gui.GuestFrame
+
+@enduml

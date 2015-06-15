@@ -1,0 +1,41 @@
+@startuml
+
+class hotel.gui.GuestListFrame {
+    + {static} RESERVATIONS_LBL_TEXT : String
+    + {static} TO_PAY_LBL_TEXT : String
+    - guests : List<Guest>
+    - guestProvider : GuestProvider
+    - reservationProvider : ReservationProvider
+    - addGuestBtn : JButton
+    - guestList : JList
+    - jButton1 : JButton
+    - jScrollPane1 : JScrollPane
+    - openBtn : JButton
+    - refreshBtn : JButton
+    - removeBtn : JButton
+    - reservationsBtn : JButton
+    - reservationsLbl : Jlabel
+    - searchLbl : Jlabel
+    - searchText : JTextField
+    - toPayLbl : JLabel
+    + GuestListFrame()
+    + getGuestProvider() : GuestProvider
+    + setGuestProvider(GuestProvider) : void
+    + getReservationProvider() : ReservationProvider
+    + setReservationProvider(ReservationProvider) : void
+    loadGuests() : void
+    - searchTextChanged() : void
+    - addGuestBtnActionPerformed(ActionEvent) : void
+    - refreshBtnActionPerformed(ActionEvent) : void
+    - removeBtnActionPerformed(ActionEvent) : void
+    - openBtnActionPerformed(ActionEvent) : void
+    - guestListValueChanged(ListSelectionEvent) : void
+    - reservationBtnActionPerformed(ActionEvent) : void
+    - jButton1ActionPerformed(ActionEvent) : void
+    - getSelectedGuests() : Guest[]
+    - initComponents() : void
+}
+
+javax.swing.JFrame <|-- hotel.gui.GuestListFrame
+
+@enduml

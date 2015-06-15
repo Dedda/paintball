@@ -1,0 +1,46 @@
+@startuml
+
+class hotel.gui.AddReservationFrame {
+    - roomProvider : RoomProvider
+    - serviceProvider : ServiceProvider
+    - guest : Guest
+    - addRoom : JButton
+    - addServiceBtn : JButton
+    - additionalInfoLbl : JLabel
+    - arrivalLbl : JLabel
+    - arrivalSpinner : JSpinner
+    - availableServicesList : JList
+    - cancelBtn : JButton
+    - departureLbl : JLabel
+    - departureSpinner: JSpinner
+    - infoArea : JTextArea
+    - jPanel1 : JPanel
+    - jScrollPane1 = JScrollPane
+    - jScrollPane2 = JScrollPane
+    - jScrollPane3 = JScrollPane
+    - jScrollPane4 = JScrollPane
+    - nameLbl : JLabel
+    - nameTextLbl : JLabel
+    - payedBox : JCheckBox
+    - peopleLbl : JLabel
+    - peopleSpinner : JSpinner
+    - removeRoom : JButton
+    - removeServiceBtn : JButton
+    - roomBox : JComboBox
+    - roomInfoBtn : JButton
+    - roomsLbl : JLabel
+    - saveBtn : JButton
+    - selectedRoomList : JList
+    - selectedServicesList : JList
+    + AddReservationFrame(Guest)
+    - getStartDate() : Date
+    - getEndDate() : Date
+    - loadRooms() : void
+    - inputUpdated() : void
+    - buildReservation() : Reservation
+    - initComponents() : void
+}
+
+javax.swing.JFrame <|-- hotel.gui.AddReservationFrame
+
+@enduml
