@@ -1,0 +1,7 @@
+@startuml
+
+class hotel.db.provider.ReservationProvider {
+
+}
+
+@enduml

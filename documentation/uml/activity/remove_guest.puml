@@ -1,0 +1,10 @@
+@startuml
+(*)  --> "check id"
+If "id is 1" then
+--> [Yes] (*)
+else
+--> "update reservations of guest\nto use the <b>Nicht Vorhanden</b> guest"
+Endif
+--> "remove guest"
+-->(*)
+@enduml

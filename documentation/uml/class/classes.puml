@@ -1,0 +1,7 @@
+@startuml
+!include DBUtil.puml
+!include GuestProvider.puml
+!include ReservationProvider.puml
+
+hotel.db.provider.GuestProvider -- hotel.db.DBUtil : "gets connection"
+@enduml

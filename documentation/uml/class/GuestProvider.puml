@@ -1,0 +1,19 @@
+@startuml
+
+class hotel.db.provider.GuestProvider {
+    - roomProvider : RoomProvider
+    + getAll() : List<Guest>
+    + getCurrents() : List<Guest>
+    + getForId(int) : Guest
+    + getForName(String) : Guest
+    + getForNameLike(String) : List<Guest>
+    + saveNew(Guest) : int
+    + remove(Guest) : void
+    + toPay(Guest) : int
+    - createForName(String, Connection) : PreparedStatement
+    - createForFullName(String, String, Connection) : PreparedStatement
+    - createForNameLike(String, Connection) : PreparedStatement
+    - createForFullNameLike(String, String, Connection) : PreparedStatement
+}
+
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+
+interface java.lang.Runnable {
+}
+
+class hotel.db.DBUtil {
+    - {static} instance : DBUtil
+    - connections : Map<Connection, Boolean>
+    - TARGET_CONNECTION_AMOUNT : int
+    - CLEANUP_INTERVAL_MILLIS : int
+    - DBUtil()
+    - connect() : void
+    - createConnection() : Connection
+    - useConnection() : Connection
+    - cleanUp() : void
+    - returnConnection(Connection) : void
+    + run() : void
+    + {static} getConnection() : Connection
+    + {static} returnConnection(Connection) : void
+}
+
+hotel.db.DBUtil ..|> java.lang.Runnable
+
+@enduml
