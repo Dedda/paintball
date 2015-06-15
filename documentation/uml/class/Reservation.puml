@@ -1,0 +1,38 @@
+@startuml
+
+class hotel.entity.Reservation {
+    - id : int
+    - start : Date
+    - end : Date
+    - guest : Guest
+    - people : int
+    - rooms : List<Integer>
+    - additionalInfo : String
+    - payed : Date
+    - canceled : Date
+    + Reservation()
+    + Reservation(int, Date, Date, Guest, int, List<Integer> String, Date, Date)
+    + getId() : int
+    + setId(int) :void
+    + getStart() : Date
+    + setStart(Date) : void
+    + getEnd() : Date
+    + setEnd(Date) : void
+    + getGuest() : Guest
+    + setGuest(Guest) : void
+    + getAdditionalInformation() : String
+    + setAdditionalInformation(String) : void
+    + getPayed() : Date
+    + setPayed(Date) : void
+    + getCanceled() : Date
+    + setCanceled(Date) : void
+    + getDays() : int
+    + getPeople() : int
+    + setPeople(int) : void
+    + getRooms() : List<Integer>
+    + setRooms(List<Integer>) : void
+    + isPayed() : boolean
+    + isCanceled() : boolean
+}
+
+@enduml

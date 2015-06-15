@@ -1,0 +1,13 @@
+@startuml
+
+class hotel.db.provider.StaffProvider {
+    + getForId(int) : Staff
+    + getAll() : List<Staff>
+    + remove(Staff) : void
+    + removeTooOld() : void
+    - removeDependencies(Staff) : void
+    - removeFromRooms(Staff) : void
+    - removeFromServices(Staff) :void
+}
+
+@enduml

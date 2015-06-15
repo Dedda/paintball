@@ -1,0 +1,18 @@
+@startuml
+
+class hotel.entity.StaffCategory {
+    - id : int
+    - salary : int
+    - name : String
+    + StaffCategory()
+    + StaffCategory(int, int, String)
+    + getId() : int
+    + setId(int) : void
+    + getSalary() : int
+    + setSalary(int) : void
+    + getName() : String
+    + setName(String) : void
+    + equals(Object) : boolean
+}
+
+@enduml

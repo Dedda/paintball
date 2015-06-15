@@ -1,7 +1,18 @@
 @startuml
 
 class hotel.db.provider.ReservationProvider {
-
+    - guestProvider : GuestProvider
+    + getAll() : List<Reservation>
+    + getForId(int) : Reservation
+    + getForGuest(Guest) : List<Reservation>
+    + getOpenForGuest(Guest) : List<Reservation>
+    + guestRemoved(Guest) : void
+    + save(Reservation) : int
+    + merge(Reservation) : boolean
+    + getTotal(Reservation) : int
+    - updateRoomAssociations(Reservation) : boolean
+    - clearRooms(Reservation) : boolean
+    - toIds(List<Room) : List<Integer>
 }
 
 @enduml

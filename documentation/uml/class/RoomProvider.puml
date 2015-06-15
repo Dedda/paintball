@@ -1,0 +1,18 @@
+@startuml
+
+class hotel.db.provider.RoomProvider {
+    + getResDays(int, String, String) : List<String[]>
+    + getAll() : List<Room>
+    + getAllIds() : List<Integer>
+    + getFreeDays(Room) : Map<Integer, Boolean>
+    + getForId(int) : Room
+    + getFree(Date, Date) : List<Room>
+    + isFree(Room, Date, Date) : boolean
+    + getReservationsForRoom(int) : List<Reservation>
+    + getForReservation(int) : List<Room>
+    + setForReservation(Reservation, List<Room>) : void
+    - removeAllFromReservation(int) : void
+    - addRoomToReservation(int, int) : void
+}
+
+@enduml

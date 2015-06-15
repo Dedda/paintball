@@ -1,0 +1,18 @@
+@startuml
+
+class hotel.entity.RoomCategory {
+    - id : int
+    - name : String
+    - price : int
+    + RoomCategory()
+    + RoomCategory(int, String, int)
+    + getId() : int
+    + setId(int) : void
+    + getName() : String
+    + setName(String) : void
+    + getPrice() : int
+    + setPrice(int) : void
+    + equals(Object) : boolean
+}
+
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+
+class hotel.entity.Guest {
+    - id : int
+    - name : String
+    - surname : String
+    + Guest()
+    + Guest(int, String, String)
+    + getId() : int
+    + setId(int) : void
+    + getName() : String
+    + setName(String) : void
+    + getSurname() : String
+    + setSurname(String) : void
+    + getFullName() : String
+    + equals(Object) : boolean
+    + toString() : String
+}
+
+@enduml

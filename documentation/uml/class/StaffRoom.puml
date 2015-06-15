@@ -1,0 +1,12 @@
+@startuml
+
+class hotel.entity.StaffRoom {
+    - staff : int
+    - room : int
+    + getStaff() : int
+    + setStaff(int) : void
+    + getRoom() : int
+    + setRoom(int) : void
+}
+
+@enduml

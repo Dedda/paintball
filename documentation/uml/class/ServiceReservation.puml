@@ -1,0 +1,11 @@
+@startuml
+
+class hotel.entity.ServiceReservation {
+    - service : int
+    + getService() : int
+    + setService(int) : void
+    + getReservation() : int
+    + setReservation(int) : void
+}
+
+@enduml

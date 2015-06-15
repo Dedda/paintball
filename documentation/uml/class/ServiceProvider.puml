@@ -1,0 +1,11 @@
+@startuml
+
+class hotel.db.provider.ServiceProvider {
+    + getAll() : List<Service>
+    + getForReservation(Reservation) : Map<Service, Integer>
+    + setForReservation(Reservation, Map<Integer, Integer>) : void
+    - removeAllForReservation(int) : void
+    - saveSingleForReservation(int, int, int) : void
+}
+
+@enduml

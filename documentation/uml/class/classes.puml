@@ -2,6 +2,28 @@
 !include DBUtil.puml
 !include GuestProvider.puml
 !include ReservationProvider.puml
+!include RoomProvider.puml
+!include ServiceProvider.puml
+!include StaffProvider.puml
+!include Guest.puml
+!include Reservation.puml
+!include Room.puml
+!include RoomCategory.puml
+!include Service.puml
+!include ServiceReservation.puml
+!include Staff.puml
+!include StaffCategory.puml
+!include StaffRoom.puml
+!include StaffService.puml
 
 hotel.db.provider.GuestProvider -- hotel.db.DBUtil : "gets connection"
+hotel.db.provider.ReservationProvider -- hotel.db.DBUtil : "gets connection"
+hotel.db.provider.RoomProvider -- hotel.db.DBUtil : "gets connection"
+hotel.db.provider.ServiceProvider -- hotel.db.DBUtil : "gets connection"
+hotel.db.provider.StaffProvider -- hotel.db.DBUtil : "gets connection"
+hotel.entity.Guest -- hotel.db.provider.GuestProvider : "handles"
+hotel.entity.Reservation -- hotel.db.provider.ReservationProvider : "handles"
+hotel.entity.Room -- hotel.db.provider.RoomProvider : "handles"
+hotel.entity.Service -- hotel.db.provider.ServiceProvider : "handles"
+hotel.entity.Staff -- hotel.db.provider.StaffProvider : "handles"
 @enduml
