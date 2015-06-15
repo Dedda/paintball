@@ -57,7 +57,7 @@ chmod +x    "$PROJECT_FOLDER/install.sh"
 cp -r       "./documentation"           "$PROJECT_FOLDER/dok"
 rm -f       $PROJECT_FOLDER/dok/erm/*.png &> /dev/null
 rm -f       $PROJECT_FOLDER/dok/uml/class/*.png &> /dev/null
-echo "generating deiagrams from puml"
+echo "generating diagrams from puml"
 java -jar   $PROJECT_FOLDER/distribution/lib/plantuml.jar $PROJECT_FOLDER/dok/erm/**.puml
 java -jar   $PROJECT_FOLDER/distribution/lib/plantuml.jar $PROJECT_FOLDER/dok/uml/class/**.puml
 cp          ./documentation/index.html  "$PROJECT_FOLDER/dok/"

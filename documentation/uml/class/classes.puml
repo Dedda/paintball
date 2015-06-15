@@ -30,19 +30,30 @@
 !include GuestListFrame.puml
 !include MainMenuFrame.puml
 !include ReservationFrame.puml
+!include ReservationListFrame.puml
 !include RoomListFrame.puml
 !include SalaryFrame.puml
 !include StaffListFrame.puml
 !include Main.puml
 
-hotel.db.provider.GuestProvider -- hotel.db.DBUtil : "gets connection"
-hotel.db.provider.ReservationProvider -- hotel.db.DBUtil : "gets connection"
-hotel.db.provider.RoomProvider -- hotel.db.DBUtil : "gets connection"
-hotel.db.provider.ServiceProvider -- hotel.db.DBUtil : "gets connection"
-hotel.db.provider.StaffProvider -- hotel.db.DBUtil : "gets connection"
-hotel.entity.Guest -- hotel.db.provider.GuestProvider : "handles"
-hotel.entity.Reservation -- hotel.db.provider.ReservationProvider : "handles"
-hotel.entity.Room -- hotel.db.provider.RoomProvider : "handles"
-hotel.entity.Service -- hotel.db.provider.ServiceProvider : "handles"
-hotel.entity.Staff -- hotel.db.provider.StaffProvider : "handles"
+hotel.db.provider.GuestProvider --> hotel.db.DBUtil : "gets connection"
+hotel.db.provider.ReservationProvider --> hotel.db.DBUtil : "gets connection"
+hotel.db.provider.RoomProvider --> hotel.db.DBUtil : "gets connection"
+hotel.db.provider.ServiceProvider --> hotel.db.DBUtil : "gets connection"
+hotel.db.provider.StaffProvider --> hotel.db.DBUtil : "gets connection"
+hotel.entity.Guest <-- hotel.db.provider.GuestProvider : "handles"
+hotel.entity.Reservation <-- hotel.db.provider.ReservationProvider : "handles"
+hotel.entity.Room <-- hotel.db.provider.RoomProvider : "handles"
+hotel.entity.Service <-- hotel.db.provider.ServiceProvider : "handles"
+hotel.entity.Staff <-- hotel.db.provider.StaffProvider : "handles"
+hotel.main.Main --> hotel.gui.MainMenuFrame : "opens"
+hotel.gui.MainMenuFrame --> hotel.gui.GuestListFrame : "opens"
+hotel.gui.MainMenuFrame --> hotel.gui.RoomListFrame : "opens"
+hotel.gui.MainMenuFrame --> hotel.gui.SalaryFrame : "opens"
+hotel.gui.MainMenuFrame --> hotel.gui.StaffListFrame : "opens"
+hotel.gui.GuestListFrame --> hotel.gui.AddGuestFrame : "opens"
+hotel.gui.GuestListFrame --> hotel.gui.GuestFrame : "opens"
+hotel.gui.GuestListFrame --> hotel.gui.ReservationListFrame : "opens"
+hotel.gui.GuestListFrame --> hotel.gui.AddReservationFrame : "opens"
+hotel.gui.ReservationListFrame --> hotel.gui.ReservationFrame : "opens"
 @enduml
