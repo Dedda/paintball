@@ -17,17 +17,19 @@ public class SalaryFrame extends javax.swing.JFrame {
     private Calendar compareCal;
     private StaffProvider provider;
     private List<Staff> staffList;
-    private int[] month = new int[12];
     private DefaultTableModel model;
+    private int[] month = new int[12];
 
     public SalaryFrame() {
         this.provider = new StaffProvider();
         this.staffList = provider.getAll();
         initComponents();
         model = (DefaultTableModel) salaryTable.getModel();
+
         for (int i = 1990; i < 2016; i++) {
             this.yearBox.addItem("" + i);
         }
+
         for (int i = 0; i < month.length; i++) {
             month[i] = i;
             this.monthBox.addItem(getMonth(month[i]));
@@ -54,45 +56,40 @@ public class SalaryFrame extends javax.swing.JFrame {
         Date fir = null;
         Date actDate = null;
         Double cost = 0.0;
+        //Date in yyyy-MM-dd weil dies dem SQL entspricht
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        for (int i = 0; i < staffList.size(); i++) {
-            //Prüfen ob der Mitarbeiter gefeuert wurde
-            if (staffList.get(i).getFiring() != null) {
-                try {
-                    fir = sdf.parse("" + staffList.get(i).getFiring());
-                } catch (ParseException ex) {
-                    System.out.println("Error at parsing firingDate");
-                }
-            }
-        }
-
+        //Table leeren
         for (int r = 0; r < salaryTable.getRowCount(); r++) {
             for (int c = 0; c < salaryTable.getColumnCount(); c++) {
                 salaryTable.setValueAt("", r, c);
             }
         }
-
-        String actDateText = "" + yearBox.getSelectedItem() + "-" + (monthBox.getSelectedIndex() + 1) + "-01";
+        //actDate String bauen
+        String actDateString = "" + yearBox.getSelectedItem() + "-" + (monthBox.getSelectedIndex() + 1) + "-01";
+        //actDate Typ Date erstellen
         try {
-            actDate = sdf.parse(actDateText);
+            actDate = sdf.parse(actDateString);
         } catch (ParseException ex) {
             System.out.println("Error at parsing actDate");
         }
 
         for (int i = 0; i < staffList.size(); i++) {
+            //recDate Typ Date erstellen für jeden schleifendurchlauf mit jedem Mitarbeiter
             try {
                 recDate = sdf.parse("" + staffList.get(i).getRecruitement());
             } catch (ParseException ex) {
                 System.out.println("Error at parsing recDate");
             }
 
+            //Zeilen hinzufügen wenn anzahl der Zeilen des Tables weniger als die Länger der Mitarbeiterliste ist
+            //Es macht eine Row zu viel - Nice to have fix
+            if (salaryTable.getRowCount() < staffList.size() && (staffList.get(i).getRecruitement().before(actDate) || staffList.get(i).getRecruitement().equals(actDate))) {
+                model.addRow(new Object[]{null, null, null, null, null});
+            }
+            
+            //nur Mitarbeiter anzeigen die vor oder ab dem aktuellen Datum da waren
             if (staffList.get(i).getRecruitement().before(actDate) || staffList.get(i).getRecruitement().equals(actDate)) {
-                //Es macht eine Row zu viel - Nice to have fix
-                if (salaryTable.getRowCount()< staffList.size() && (staffList.get(i).getRecruitement().before(actDate) || staffList.get(i).getRecruitement().equals(actDate))) {
-                    //System.out.println(staffList.size());
-                    model.addRow(new Object[]{null, null, null, null, null});
-                }
                 //Name
                 salaryTable.setValueAt("" + staffList.get(i).getName() + " " + staffList.get(i).getSurname(), row, col);
                 col++;
@@ -101,6 +98,7 @@ public class SalaryFrame extends javax.swing.JFrame {
                 col++;
                 //Lohn                
                 salaryTable.setValueAt("" + staffList.get(i).getCategory().getSalary() + " €", row, col);
+                //double parse
                 cost += staffList.get(i).getCategory().getSalary() * 100 / 100;
                 costLbl.setText("" + cost + " €");
                 col++;
@@ -136,6 +134,8 @@ public class SalaryFrame extends javax.swing.JFrame {
         salaryTable = new myTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(700, 500));
+        setPreferredSize(new java.awt.Dimension(700, 500));
 
         monthBox.setToolTipText("");
         monthBox.addActionListener(new java.awt.event.ActionListener() {
@@ -166,7 +166,7 @@ public class SalaryFrame extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Mitarbeiter", "Gehaltsstufe", "Monatslohn", "Vertragsbeginn", "Vertragsende"
+                "Mitarbeiter", "Tätigkeit", "Monatslohn", "Vertragsbeginn", "Vertragsende"
             }
         ) {
             Class[] types = new Class [] {
@@ -199,7 +199,7 @@ public class SalaryFrame extends javax.swing.JFrame {
                         .addComponent(monthBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(yearBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 402, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 499, Short.MAX_VALUE)
                         .addComponent(preCostLbl)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(costLbl))
