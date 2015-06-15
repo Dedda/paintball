@@ -1,0 +1,28 @@
+@startuml
+
+class hotel.gui.SalaryFrame {
+    - cal : Calendar
+    - compareCal : Calendar
+    - provider : StaffProvider
+    - staffList List<Staff>
+    - model : DefaultTableModel
+    - month : int[]
+    - cancelBtn : JButton
+    - costLbl : JLabel
+    - preCostLbl : JLabel
+    - jScrollPane2 : JScrollPane
+    - monthBox : JComboBox
+    - yearBox : JComboBox
+    - salaryTable : JTable
+    + SalaryFrame()
+    + getMonth(int) : String
+    + actFrame() : void
+    - initComponents() : void
+    - monthBoxActionPerformed(ActionEvent) : void
+    - cancelBtnActionPerformed(ActionEvent) : void
+    - yearBoxActionPerformed(ActionEvent) : void
+}
+
+javax.swing.JFrame <|-- hotel.gui.SalaryFrame
+
+@enduml

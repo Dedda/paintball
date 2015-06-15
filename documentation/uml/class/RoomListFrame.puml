@@ -1,0 +1,36 @@
+@startuml
+
+class hotel.gui.RoomListFrame {
+    - room : Room
+    - cal : Calendar
+    - res : Reservation
+    - roomProvider : RoomProvider
+    - reservations : List<String[]>
+    - month : int[]
+    - currentMonth : int
+    - currentYear : int
+    colRes : Color
+    colFree : Color
+    + RoomListFrame()
+    + getReservationName(int, int, int) : String
+    + getMonth(int) : String
+    + getFirstDay() : int
+    + getAmountOfDays() : int
+    + fillTable(int, int) : void
+    + actFrame() : void
+    - nextMonthActionPerformed(ActionEvent) : void
+    - prevMonthActionPerformed(ActionEvent) : void
+    - roomBoxActionPerformed(ActionEvent) : void
+    - jScrollPane1 : JScrollPane
+    - monthLbl : JLabel
+    - roomLbl : JLabel
+    - yearLbl : JLabel
+    - nextMonth : JButton
+    - prevMonth : JButton
+    - roomBox : JComboBox
+    - roomTable : JTable
+}
+
+javax.swing.JFrame <|-- hotel.gui.RoomListFrame
+
+@enduml

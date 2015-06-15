@@ -1,0 +1,19 @@
+@startuml
+
+class hotel.gui.StaffListFrame {
+    - provider : StaffProvider
+    - staffList : List<Staff>
+    - model : DefaultTableModel
+    - deleteStaff : JButton
+    - editStaff : JButton
+    - newStaff : JButton
+    - jScrollPane1 : JScrollPane
+    - staffTable : JTable
+    + StaffListFrame()
+    + actFrame() : void
+    - initComponents() : void
+}
+
+javax.swing.JFrame <|-- hotel.gui.StaffListFrame
+
+@enduml

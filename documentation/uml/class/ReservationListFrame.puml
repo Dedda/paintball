@@ -1,0 +1,21 @@
+@startuml
+
+class hotel.gui.ReservationListFrame {
+    - guest : Guest
+    - guestLbl : JLabel
+    - guestNameLbl : JLabel
+    - jScrollpane1 : JScrollPane
+    - openBtn : JButton
+    - refreshBtn : JButton
+    - reservationTable : JTable
+    + ReservationListFrame(Guest)
+    - initComponents() : void
+    - fillTable() : void
+    - getSelected() : Reservation[]
+    - openBtnActionPerformed(ActionEvent) : void
+    - refreshBtnActionPerformed(ActionEvent) : void
+}
+
+javax.swing.JFrame <|-- hotel.gui.ReservationListFrame
+
+@enduml
