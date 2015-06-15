@@ -1,0 +1,91 @@
+@startuml
+!define table(x) class x << (T,#FFAAAA) >>
+!define primary_key(x) <u>x</u>
+hide methods
+hide stereotypes
+
+table(guest) {
+    primary_key(id)
+    name
+    surname
+}
+
+table(room) {
+    primary_key(id)
+    people
+    category
+}
+
+table(room_category) {
+    primary_key(id)
+    name
+    price
+}
+
+table(reservation) {
+    primary_key(id)
+    additional_info
+    reservation_group
+    guest
+    people
+    start_date
+    end_date
+    canceled
+    payed
+}
+
+table(optional_service) {
+    primary_key(id)
+    name
+    price
+}
+
+table(staff) {
+    primary_key(id)
+    name
+    surname
+    category
+    recruitement
+    firing
+}
+
+table(room_reservation) {
+    primary_key(room)
+    primary_key(reservation)
+}
+
+table(service_reservation) {
+    primary_key(service)
+    primary_key(reservation)
+    amount
+}
+
+table(staff_catefory) {
+    primary_key(id)
+    salary
+    name
+}
+
+table(staff_room) {
+    primary_key(staff)
+    primary_key(room)
+}
+
+table(staff_service) {
+    primary_key(staff)
+    primary_key(service)
+}
+
+reservation "n" -- "1" guest
+reservation "1" -- "n" service_reservation
+reservation "1" -- "n" room_reservation
+room "1" -- "n" room_reservation
+optional_service "1" -- "n" service_reservation
+staff "1" -- "n" staff_room
+staff "1" -- "n" staff_service
+room "1" -- "n" staff_room
+optional_service "1" -- "n" staff_service
+staff "n" -- "1" staff_catefory
+room "n" -- "1" room_category
+
+@enduml
