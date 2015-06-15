@@ -5,15 +5,25 @@ if [ -z $1 ]; then
     exit
 fi
 
+PROJECT_FOLDER=$1
 INSTALL=0
+DESKTOP_LINK=0
+DESKTOP_LINK_NAME=""
+shift
 
-for arg in "$@"; do
-    if [ $arg == "--install" ]; then
+while [ "$1" != "" ]; do
+    if [ "$1" = "--install" ]; then
         INSTALL=1
+        shift
+        continue
+    elif [ "$1" = "--desktop-link" ]; then
+        DESKTOP_LINK=1
+        shift
+        DESKTOP_LINK_NAME=$1
+        shift
+        continue
     fi
 done
-
-PROJECT_FOLDER=$1
 
 if [ -d $PROJECT_FOLDER ]; then
     echo "removing existing project folder"
@@ -30,9 +40,15 @@ mkdir "$PROJECT_FOLDER/source"
 echo "copying project folder to $PROJECT_FOLDER/source..."
 cp -r ./* "$PROJECT_FOLDER/source/"
 
+cd $PROJECT_FOLDER
+ABSOLUTE_PROJECT_PATH=$(pwd)
+cd - > /dev/null
+
 echo "compiling and generating javadoc..."
 ant jar javadoc > /dev/null
 cp "./dist/paintball.jar" "$PROJECT_FOLDER/distribution/"
+echo -e "#!/usr/bin/env bash\njava -jar $ABSOLUTE_PROJECT_PATH/distribution/paintball.jar" > $PROJECT_FOLDER/distribution/paintball.sh
+chmod +x $PROJECT_FOLDER/distribution/paintball.sh
 
 echo "copying libs and sql scripts..."
 cp -r       "./lib"                     "$PROJECT_FOLDER/distribution/"
@@ -60,8 +76,10 @@ if [ $INSTALL == 1 ]; then
     cd - > /dev/null
 fi
 
+if [ $DESKTOP_LINK == 1 ]; then
+    echo "create link on desktop"
+    cd ~/Desktop
+    ln -fs "$ABSOLUTE_PROJECT_PATH/distribution/paintball.sh" "./$DESKTOP_LINK_NAME"
+fi
 
-cd $PROJECT_FOLDER
-echo "project directory created at $(pwd)"
-
-cd - > /dev/null
+echo "project directory created at $ABSOLUTE_PROJECT_PATH"
