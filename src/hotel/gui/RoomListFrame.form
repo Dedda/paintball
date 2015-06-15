@@ -98,6 +98,7 @@
           </Properties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new myTable()"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="roomTable.setName(&quot;RoomTable&quot;);"/>
           </AuxValues>
         </Component>
       </SubComponents>

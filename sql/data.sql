@@ -53,7 +53,7 @@ INSERT INTO staff(name, surname, category, recruitement, firing)
 VALUES('Hassan', 'Assi', 3, '1990-01-01', '2010-01-01');
 
 INSERT INTO staff(name, surname, category, recruitement)
-VALUES('Mustafa', 'Kanacke', 3, '1990-01-01');
+VALUES('Mustafa', 'Karkan', 3, '1990-01-01');
 
 -- Optional Services
 INSERT INTO optional_service(name, price)
