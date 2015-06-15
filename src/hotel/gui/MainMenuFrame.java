@@ -97,7 +97,7 @@ public class MainMenuFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void staffBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_staffBtnActionPerformed
-        // TODO add your handling code here:
+        new StaffListFrame().setVisible(true);
     }//GEN-LAST:event_staffBtnActionPerformed
 
     private void guestsBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guestsBtnActionPerformed

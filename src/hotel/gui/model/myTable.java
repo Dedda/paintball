@@ -15,11 +15,15 @@ public class myTable extends JTable {
         switch (getName()) {
             case "RoomTable":
                 rtcl = new RoomTableCellRenderer();
-//                System.out.println("beim Raum");
+//                System.out.println("Raum");
                 break;
             case "SalaryTable":
                 rtcl = new SalaryTableCellRenderer();
-//                System.out.println("beim Mitarbeiter");
+//                System.out.println("Lohnabrechnung");
+                break;
+            case "StaffTable":
+                rtcl = new StaffTableCellRenderer();
+//                System.out.println("Mitarbeiter");
                 break;
             default:
                 rtcl = new DefaultTableCellRenderer();

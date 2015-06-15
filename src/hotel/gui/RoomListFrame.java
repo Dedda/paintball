@@ -34,6 +34,7 @@ public class RoomListFrame extends javax.swing.JFrame {
     public RoomListFrame() {
         initComponents();
         setTitle("Zimmerübersicht");
+        setLocationRelativeTo(null);
         //Alle roomIDs abfragen und speichern
         List<Integer> roomIDs = new RoomProvider().getAllIds();
         //roomBox die Zimmer geben
