@@ -283,7 +283,10 @@ public class GuestListFrame extends javax.swing.JFrame {
 
     private void reservationBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationBtnActionPerformed
         Guest selectedGuest = getSelectedGuests()[0];
-        AddReservationFrame reservationFrame = new AddReservationFrame(selectedGuest);
+        Reservation reservation = new Reservation();
+        reservation.setGuest(selectedGuest);
+        //AddReservationFrame reservationFrame = new AddReservationFrame(selectedGuest);
+        ReservationFrame reservationFrame = new ReservationFrame(reservation, false);
         reservationFrame.setVisible(true);
     }//GEN-LAST:event_reservationBtnActionPerformed
 

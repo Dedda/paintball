@@ -217,6 +217,7 @@ public class ReservationFrame extends javax.swing.JFrame {
         });
 
         arrivalSpinner.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), new java.util.Date(), null, java.util.Calendar.DAY_OF_MONTH));
+        arrivalSpinner.setEditor(new javax.swing.JSpinner.DateEditor(arrivalSpinner, "dd.MM.yyyy"));
         arrivalSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 arrivalSpinnerStateChanged(evt);
@@ -224,6 +225,7 @@ public class ReservationFrame extends javax.swing.JFrame {
         });
 
         departureSpinner.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), new java.util.Date(), null, java.util.Calendar.DAY_OF_MONTH));
+        departureSpinner.setEditor(new javax.swing.JSpinner.DateEditor(departureSpinner, "dd.MM.yyyy"));
 
         peopleSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
 
@@ -274,7 +276,7 @@ public class ReservationFrame extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 227, Short.MAX_VALUE)
                                 .addComponent(cancelReservationBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -447,7 +449,7 @@ public class ReservationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addRoomBtnActionPerformed
 
     private void arrivalSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_arrivalSpinnerStateChanged
-
+        System.out.println(evt.toString());
     }//GEN-LAST:event_arrivalSpinnerStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
