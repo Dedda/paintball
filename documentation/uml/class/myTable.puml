@@ -1,0 +1,9 @@
+@startuml
+
+class hotel.gui.model.myTable {
+    + getCellRenderer(int, int) : TableCellRenderer
+}
+
+javax.swing.JTable <|-- hotel.gui.model.myTable
+
+@enduml

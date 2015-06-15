@@ -1,0 +1,14 @@
+@startuml
+
+class hotel.gui.model.RoomListModel {
+    - room : List<Room>
+    + getRooms() : List<Room>
+    + setRooms(List<Room>) : void
+    + getRoomInLine(int) : Room
+    + getSize() : int
+    + getElementAt(int) : String
+}
+
+javax.swing.AbstractListModel <|-- hotel.gui.model.RoomListModel
+
+@enduml

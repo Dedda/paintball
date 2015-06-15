@@ -1,0 +1,17 @@
+@startuml
+
+interface javax.swing.ComboBoxModel
+
+class hotel.gui.model.RoomComboBoxModel {
+    - rooms : List<Room>
+    - selected : int
+    + getSize() : int
+    + getElementAt(int) : Room
+    + setSelectedItem(Object) : void
+    + getSelectedItem() : Room
+    + setRooms(List<Room>) : void
+}
+
+javax.swing.ComboBoxModel <|.. hotel.gui.model.RoomComboBoxModel
+
+@enduml

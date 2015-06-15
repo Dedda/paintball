@@ -15,6 +15,15 @@
 !include StaffCategory.puml
 !include StaffRoom.puml
 !include StaffService.puml
+!include GuestListModel.puml
+!include myTable.puml
+!include ReservationTableModel.puml
+!include RoomComboBoxModel.puml
+!include RoomListModel.puml
+!include RoomTableCellRenderer.puml
+!include SalaryTableCellRenderer.puml
+!include ServiceListModel.puml
+!include StaffTableCellRenderer.puml
 
 hotel.db.provider.GuestProvider -- hotel.db.DBUtil : "gets connection"
 hotel.db.provider.ReservationProvider -- hotel.db.DBUtil : "gets connection"

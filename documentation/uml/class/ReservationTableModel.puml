@@ -1,0 +1,22 @@
+@startuml
+
+class hotel.gui.model.ReservationTableModel {
+    - reservations : List<Reservation>
+    + getReservations() : List<Reservation>
+    + setReservations(List<Reservation>) : void
+    + getReservationInLine(int) : Reservation
+    + getRowCount() : int
+    + getColumnCount() : int
+    + isCellEditable(int, int) : boolean
+    + getColumnName(int) : String
+    + getValueAt(int, int) : Object
+    + getColumnClass(int) : Class
+    - getArrival(int) : String
+    - getDeparture(int) : String
+    - getPrice(int) : int
+    - format(Date) : String
+}
+
+javax.swing.table.AbstractTableModel <|-- hotel.gui.model.ReservationTableModel
+
+@enduml

@@ -1,0 +1,12 @@
+@startuml
+
+class hotel.gui.model.RoomTableCellRenderer {
+    colRes : Color
+    colResWe : Color
+    colFree : Color
+    colFreeWe : Color
+    + getTableCellRendererComponent(JTable, Object, boolean, boolean, int, int) : Component
+}
+
+javax.swing.table.DefaultTableCellRenderer <|-- hotel.gui.model.RoomTableCellRenderer
+@enduml

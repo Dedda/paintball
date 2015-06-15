@@ -1,0 +1,10 @@
+@startuml
+
+class hotel.gui.model.SalaryTableCellRenderer {
+    colOdd : Color
+    + getTableCellRendererComponent(JTable, Object, boolean, boolean, int, int) : Component
+}
+
+javax.swing.table.DefaultTableCellRenderer <|-- hotel.gui.model.SalaryTableCellRenderer
+
+@enduml

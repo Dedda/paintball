@@ -1,0 +1,15 @@
+@startuml
+
+class hotel.gui.model.ServiceListModel {
+    - service : List<Service>
+    + getServices() : List<Service>
+    + setServices(List<Service>) : void
+    + setServices(Map<Service, Integer>) : void
+    + getServiceInLine(int) : Service
+    + getSize() : int
+    + getElementAt(int) : String
+}
+
+javax.swing.AbstractListModel <|-- hotel.gui.model.ServiceListModel
+
+@enduml
