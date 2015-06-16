@@ -3,20 +3,20 @@ INSERT INTO guest(name, surname)
 VALUES('Nicht', 'Vorhanden');
 
 INSERT INTO guest(name, surname)
-VALUES('Hans', 'Zimmer');
+VALUES('Rudi', 'Wow');
 
 INSERT INTO guest(name, surname)
-VALUES('Horst', 'Klein');
+VALUES('Hannelore', 'Musterfrau');
 
 -- Room Categories
 INSERT INTO room_category(name, price)
-VALUES('Basic', 500);
+VALUES('Luxus', 500);
 
 INSERT INTO room_category(name, price)
-VALUES('Luxus', 2000);
+VALUES('Deluxe', 2000);
 
 INSERT INTO room_category(name, price)
-VALUES('Giga', 10000);
+VALUES('Ultra Giga Premium Suite', 10000);
 
 -- Rooms
 INSERT INTO room(people, category)
@@ -34,13 +34,13 @@ INSERT INTO staff_category(salary, name)
 VALUES(0, 'Nicht Vorhanden');
 
 INSERT INTO staff_category(salary, name)
-VALUES(20000, 'Bozz');
+VALUES(20000, 'Chef');
 
 INSERT INTO staff_category(salary, name)
-VALUES(800, 'Putze');
+VALUES(800, 'Koch');
 
 INSERT INTO staff_category(salary, name)
-VALUES(1500, 'Receptionist');
+VALUES(1500, 'Chefkoch');
 
 -- Staff
 INSERT INTO staff(name, surname, category, recruitement)
@@ -50,14 +50,14 @@ INSERT INTO staff(name, surname, category, recruitement)
 VALUES('Herbert', 'Herbertsen', 2, '1961-06-16');
 
 INSERT INTO staff(name, surname, category, recruitement, firing)
-VALUES('Hassan', 'Assi', 3, '1990-01-01', '2010-01-01');
+VALUES('Gertrude', 'Majer', 3, '1990-01-01', '2010-01-01');
 
 INSERT INTO staff(name, surname, category, recruitement)
-VALUES('Mustafa', 'Karkan', 3, '1990-01-01');
+VALUES('Roswitha', 'Metzger', 3, '1990-01-01');
 
 -- Optional Services
 INSERT INTO optional_service(name, price)
-VALUES('Bootstour', 45);
+VALUES('Happy End', 45);
 
 INSERT INTO optional_service(name, price)
 VALUES('Massage', 20);
@@ -87,7 +87,7 @@ VALUES(3, 2);
 -- Reservations
 
 INSERT INTO reservation(additional_info, reservation_group, guest, people, start_date, end_date)
-VALUES('', 1, 3, 12, '2015-01-01', '2015-12-31');
+VALUES('Spiegel bitte von rechts nach links wischen.', 1, 3, 12, '2015-01-01', '2015-12-31');
 
 INSERT INTO reservation(additional_info, reservation_group, guest, people, start_date, end_date)
 VALUES('', 2, 2, 3, '2015-03-02', '2015-06-01');
