@@ -180,7 +180,10 @@ public class StaffListFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_newStaffActionPerformed
 
     private void editStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editStaffActionPerformed
-
+        for(int i=0; i < staffTable.getSelectedRowCount(); i++) {
+            System.out.println(staffList.get(staffTable.getSelectedRows()[i]) == null);
+            new AddStaffFrame(this, staffList.get(staffTable.getSelectedRows()[i])).setVisible(true);
+        }
 
     }//GEN-LAST:event_editStaffActionPerformed
 
@@ -188,7 +191,6 @@ public class StaffListFrame extends javax.swing.JFrame {
 
         for (int i = 0; i < staffTable.getSelectedRowCount(); i++) {
             provider.remove(staffList.get(staffTable.getSelectedRows()[i]));
-            staffList = provider.getAll();
             actFrame();
         }
     }//GEN-LAST:event_deleteStaffActionPerformed

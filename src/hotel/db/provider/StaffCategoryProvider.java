@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 import org.joda.time.DateTime;
 import static hotel.db.DBUtil.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class StaffCategoryProvider {
@@ -37,5 +39,24 @@ public class StaffCategoryProvider {
             return null;
         }
         return staffCategory;
+    }
+    
+    public StaffCategory getByName(String name) {
+        Connection connection = getConnection();
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM staff_category WHERE name = '" + name + "'");
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()) {
+                int cat_id = resultSet.getInt("id");
+                int cat_salary = resultSet.getInt("salary");
+                String cat_name = resultSet.getString("name");
+                return new StaffCategory(cat_id, cat_salary, cat_name);
+            }
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            
+        }
+        return null;
     }
 }

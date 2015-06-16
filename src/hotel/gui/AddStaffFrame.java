@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,6 +20,7 @@ public class AddStaffFrame extends javax.swing.JFrame {
     private StaffCategoryProvider staff_category;
     private StaffProvider staffProvider;
     private StaffListFrame slf;
+    private Staff staff;
 
     public AddStaffFrame(StaffListFrame slf) {
         this.slf = slf;
@@ -33,11 +35,35 @@ public class AddStaffFrame extends javax.swing.JFrame {
 
     }
 
+    public AddStaffFrame(StaffListFrame slf, Staff staff) {
+        this.slf = slf;
+        this.staff = staff;
+        initComponents();
+        this.nameTextfield.setText(staff.getName());
+        this.surnameTextfield.setText(staff.getSurname());
+
+        this.recruitementTextfield.setText(staff.getRecruitement().toString());
+        staff_category = new StaffCategoryProvider();
+        categoryList = staff_category.getAll();
+        for (int i = 0; i < categoryList.size(); i++) {
+            categoryBox.addItem(categoryList.get(i).getName());
+        }
+        this.categoryBox.setSelectedIndex(staff.getCategory().getId() - 1);
+        this.setTitle("Neuer Mitarbeiter");
+        setLocationRelativeTo(null);
+
+    }
+
     public void addStaff() {
+        if (staff != null) {
+            return;
+        }
+
         String name;
         String surname;
         String category;
         Date recruitement = null;
+        Date firing = null;
         // Gebraucht um String in ein Datum umzuwandeln
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -51,7 +77,12 @@ public class AddStaffFrame extends javax.swing.JFrame {
         } catch (ParseException ex) {
             System.out.println("Error at parsing the recruitement for new staff");
         }
-        Staff staff = new Staff();
+        try {
+            firing = sdf.parse(firingTextfield.getText()); //recruitementTextfield -> Date als String
+        } catch (ParseException ex) {
+            System.out.println("Error at parsing the recruitement for new staff");
+        }
+        staff = new Staff();
         for (int i = 0; i < categoryList.size(); i++) {
             if (categoryList.get(i).getName().equals(category)) {
                 staff.setCategory(categoryList.get(i));
@@ -60,7 +91,32 @@ public class AddStaffFrame extends javax.swing.JFrame {
         staff.setName(name);
         staff.setSurname(surname);
         staff.setRecruitement(recruitement);
+        staff.setFiring(firing);
         new StaffProvider().saveNew(staff);
+    }
+
+    public void updateStaff() {
+        if (staff != null) {
+            staff.setName(nameTextfield.getText());
+            staff.setSurname(surnameTextfield.getText());
+            staff.setCategory(staff_category.getByName(categoryBox.getSelectedItem().toString()));
+            
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            
+        try {
+            staff.setRecruitement(sdf.parse(recruitementTextfield.getText())); //recruitementTextfield -> Date als String
+        } catch (ParseException ex) {
+            System.out.println("Error at parsing the recruitement for updating staff");
+            JOptionPane.showMessageDialog(this, "Error at parsing the recruitement for updating staff");
+        }
+        try {
+            staff.setFiring(sdf.parse(firingTextfield.getText())); //recruitementTextfield -> Date als String
+        } catch (ParseException ex) {
+            System.out.println("Error at parsing the firing for updating staff");
+            JOptionPane.showMessageDialog(this, "Error at parsing the firing for updating staff: YYYY-MM-DD");
+        }
+            new StaffProvider().updateStaff(staff);
+        }
     }
 
     public boolean checkName(final String name, final String surname) {
@@ -94,10 +150,12 @@ public class AddStaffFrame extends javax.swing.JFrame {
         categoryBox = new javax.swing.JComboBox();
         cancelButton = new javax.swing.JButton();
         saveButton = new javax.swing.JButton();
+        firingLbl = new javax.swing.JLabel();
+        firingTextfield = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(190, 300));
-        setPreferredSize(new java.awt.Dimension(190, 300));
+        setSize(new java.awt.Dimension(190, 300));
 
         nameLbl.setText("Name:");
 
@@ -123,6 +181,8 @@ public class AddStaffFrame extends javax.swing.JFrame {
             }
         });
 
+        firingLbl.setText("Entlassungsdatum:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -130,10 +190,6 @@ public class AddStaffFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(recruitementLbl)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(recruitementTextfield))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(surnameLbl)
@@ -148,7 +204,15 @@ public class AddStaffFrame extends javax.swing.JFrame {
                         .addGap(0, 124, Short.MAX_VALUE)
                         .addComponent(saveButton)
                         .addGap(18, 18, 18)
-                        .addComponent(cancelButton)))
+                        .addComponent(cancelButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(recruitementLbl)
+                            .addComponent(firingLbl))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(recruitementTextfield)
+                            .addComponent(firingTextfield))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -170,7 +234,11 @@ public class AddStaffFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(recruitementLbl)
                     .addComponent(recruitementTextfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(firingLbl)
+                    .addComponent(firingTextfield, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelButton)
                     .addComponent(saveButton))
@@ -181,6 +249,7 @@ public class AddStaffFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        updateStaff();
         addStaff();
         slf.actFrame();
         dispose();
@@ -194,6 +263,8 @@ public class AddStaffFrame extends javax.swing.JFrame {
     private javax.swing.JButton cancelButton;
     private javax.swing.JComboBox categoryBox;
     private javax.swing.JLabel categoryLbl;
+    private javax.swing.JLabel firingLbl;
+    private javax.swing.JTextField firingTextfield;
     private javax.swing.JLabel nameLbl;
     private javax.swing.JTextField nameTextfield;
     private javax.swing.JLabel recruitementLbl;

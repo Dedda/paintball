@@ -146,14 +146,15 @@ public class StaffProvider {
     
     public void saveNew(final Staff staff) {
         Connection connection = getConnection();
-        String query = "INSERT INTO staff(name, surname, category, recruitement) "
-                + "VALUES( ? , ?, ?, ? )";
+        String query = "INSERT INTO staff(name, surname, category, recruitement, firing) "
+                + "VALUES( ? , ?, ?, ?, ? )";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, staff.getName());
             statement.setString(2, staff.getSurname());
             statement.setInt(3, staff.getCategory().getId());
             statement.setDate(4, new java.sql.Date(staff.getRecruitement().getTime()));
+            statement.setDate(5, staff.getFiring() == null ? null : new java.sql.Date(staff.getFiring().getTime()));
             statement.executeUpdate();
             returnConnection(connection);
         } catch (SQLException ex) {
@@ -182,5 +183,32 @@ public class StaffProvider {
             return null;
         }
         return staff;
+    }
+    
+    public void updateStaff(Staff staff) {
+        Connection connection = getConnection();
+        
+        try {
+            PreparedStatement statement = connection.prepareStatement("UPDATE staff SET"
+                + " name = ?"
+                + ", surname = ?"
+                + ", category = ?"
+                + ", recruitement = ?"
+                + ", firing = ?"
+                + " WHERE id = ?");
+            
+            statement.setString(1, staff.getName());
+            statement.setString(2, staff.getSurname());
+            statement.setInt(3, staff.getCategory().getId());
+            statement.setDate(4, new java.sql.Date(staff.getRecruitement().getTime()));
+            System.out.println(staff.getFiring() == null);
+            statement.setDate(5, staff.getFiring() == null ? null : new java.sql.Date(staff.getFiring().getTime()));
+            statement.setInt(6, staff.getId());
+            statement.executeUpdate();
+            returnConnection(connection);
+            
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 }
