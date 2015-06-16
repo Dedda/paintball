@@ -60,6 +60,7 @@ rm -f       $PROJECT_FOLDER/dok/uml/class/*.png &> /dev/null
 echo "generating diagrams from puml"
 java -jar   $PROJECT_FOLDER/distribution/lib/plantuml.jar $PROJECT_FOLDER/dok/erm/**.puml
 java -jar   $PROJECT_FOLDER/distribution/lib/plantuml.jar $PROJECT_FOLDER/dok/uml/class/**.puml
+java -jar   $PROJECT_FOLDER/distribution/lib/plantuml.jar $PROJECT_FOLDER/dok/uml/activity/**.puml
 cp          ./documentation/index.html  "$PROJECT_FOLDER/dok/"
 cp -r       "./dist/javadoc"            "$PROJECT_FOLDER/dok/"
 cp          "./README.md"               "$PROJECT_FOLDER/dok/"
