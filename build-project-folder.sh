@@ -46,6 +46,9 @@ fi
 if [ -d ./dist/ ]; then
     rm -rf ./dist/
 fi
+if [ -d ./build/ ]; then
+    rm -rf ./build/
+fi
 
 mkdir $PROJECT_FOLDER
 mkdir $PROJECT_FOLDER/distribution
