@@ -2,7 +2,6 @@
 
 ## Anforderungen
 
-
 - Hotelgäste können Reservierungen vornehmen
 - Hotelgäste können einchecken, dabei wird, wenn vorhanden, aus einer
 Reservierung eine Buchung. Ansonsten wird das Zimmer direkt ausgewählt und gebucht.
@@ -17,6 +16,18 @@ Mitarbeiter, deren Gehaltsstufe, den Monatslohn pro Mitarbeiter und die gesamten
 (Ihr hab die Wahl) verändert werden können (Familienname, Adresse etc)
 - bei Programmstart prüft das Programm auf Mitarbeiter die vor mehr als drei Jahren
 entlassen wurden und löscht deren Daten aus der Datenbank
+
+## Projektordner erstellen
+
+### Zum rendern der UML-Diagramme muss [Graphviz](http://www.graphviz.org/) installiert sein!
+
+./build-projec-folder.sh \[Zielordner\]
+
+Weitere Optionen:
+
+--install                   Installiert die Datenbank in postgresql
+
+--desktop-link \[Linkname\] Erstellt eine Verknüpfung auf dem Desktop
 
 ## Kontakt
 
