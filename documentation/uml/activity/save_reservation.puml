@@ -1,0 +1,15 @@
+@startuml
+(*)  --> "create new reservation"
+--> "fill with information from frame"
+--> If "reservation exists"
+    -->[Yes] "update row with new data"
+    --> "clear associations with rooms"
+    --> "create associations with rooms"
+else
+    -->[No] "insert new row with reservation data"
+    --> "create associations with rooms"
+Endif
+--> "remove asociations with services"
+--> "create associations with services"
+-->(*)
+@enduml

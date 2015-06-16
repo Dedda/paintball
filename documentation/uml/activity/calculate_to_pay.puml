@@ -1,0 +1,8 @@
+@startuml
+(*)  --> "get selected guests"
+-->[for all guests] get open reservations
+-->[for all reservations] get total price reservations
+-->[reduce] add prices per guest
+-->[reduce] add prices of all guests
+-->(*)
+@enduml
