@@ -65,7 +65,6 @@ CREATE TABLE staff_service (
 CREATE TABLE reservation (
     id SERIAL PRIMARY KEY,
     additional_info TEXT,
-    reservation_group INTEGER NOT NULL,
     guest INTEGER REFERENCES guest(id) NOT NULL,
     people INTEGER NOT NULL,
     start_date DATE NOT NULL,
