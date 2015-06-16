@@ -39,6 +39,27 @@ public class ServiceProvider {
         return services;
     }
     
+    public Service getForId(final int id) {
+        Service service = null;
+        Connection connection = getConnection();
+        String query = "SELECT * FROM optional_service WHERE id = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String name = resultSet.getString("name");
+                int price = resultSet.getInt("price");
+                service = new Service(id, name, price);
+            }
+            returnConnection(connection);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return service;
+    }
+    
     public Map<Service, Integer> getForReservation(final Reservation reservation) {
         Map<Service, Integer> services = new HashMap<>();
         final int reservationId = reservation.getId();

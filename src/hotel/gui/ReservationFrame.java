@@ -29,6 +29,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.JodaTimePermission;
 
 /**
@@ -105,6 +107,20 @@ public class ReservationFrame extends javax.swing.JFrame {
     private List<Integer> getRooms() {
         RoomListModel model = (RoomListModel) roomsList.getModel();
         return model.getRooms().stream().map(Room::getId).collect(Collectors.toList());
+    }
+    
+    private int getDays() {
+        return Days.daysBetween(new DateTime(getArrival().getTime()), new DateTime(getDeparture().getTime())).getDays();
+    }
+    
+    private void calculatePrice() {
+        int price = 0;
+        RoomProvider roomProvider = new RoomProvider();
+        price += getRooms().stream().mapToInt(id -> roomProvider.getForId(id).getCategory().getPrice()).sum() * getDays();
+        final Map<Integer, Integer> services = getGroupedServiceIds();
+        ServiceProvider serviceProvider = new ServiceProvider();
+        price += getGroupedServiceIds().keySet().stream().mapToInt(id -> serviceProvider.getForId(id).getPrice() * services.get(id)).sum();
+        priceValueLbl.setText(price + " Euro");
     }
     
     /**
@@ -437,6 +453,7 @@ public class ReservationFrame extends javax.swing.JFrame {
         services.add(selected);
         model.setServices(services);
         servicesList2.setModel(model);
+        calculatePrice();
     }//GEN-LAST:event_addServiceBtnActionPerformed
 
     private void removeServiceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeServiceBtnActionPerformed
@@ -448,6 +465,7 @@ public class ReservationFrame extends javax.swing.JFrame {
         ServiceListModel model = new ServiceListModel();
         model.setServices(services);
         servicesList2.setModel(model);
+        calculatePrice();
     }//GEN-LAST:event_removeServiceBtnActionPerformed
 
     private void removeRoomBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeRoomBtnActionPerformed
@@ -457,6 +475,7 @@ public class ReservationFrame extends javax.swing.JFrame {
         oldRooms.removeAll(selected);
         model.setRooms(oldRooms);
         roomsList.setModel(model);
+        calculatePrice();
     }//GEN-LAST:event_removeRoomBtnActionPerformed
 
     private void addRoomBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRoomBtnActionPerformed
@@ -478,6 +497,7 @@ public class ReservationFrame extends javax.swing.JFrame {
         RoomListModel model = new RoomListModel();
         model.setRooms(rooms);
         roomsList.setModel(model);
+        calculatePrice();
     }//GEN-LAST:event_addRoomBtnActionPerformed
 
     private void arrivalSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_arrivalSpinnerStateChanged
@@ -489,6 +509,7 @@ public class ReservationFrame extends javax.swing.JFrame {
         if (arrival.after(new Date(getDeparture().getTime() - ONE_DAY))) {
             departureSpinner.setValue(minDep);
         }
+        calculatePrice();
     }//GEN-LAST:event_arrivalSpinnerStateChanged
 
     private void departureSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_departureSpinnerStateChanged
@@ -497,6 +518,7 @@ public class ReservationFrame extends javax.swing.JFrame {
         if (departure.before(min)) {
             departureSpinner.setValue(min);
         }
+        calculatePrice();
     }//GEN-LAST:event_departureSpinnerStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
