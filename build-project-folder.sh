@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
 
-if [ -z $1 ]; then
-    echo "no path given!"
+function usage {
+    echo "Usage:"
+    echo "./build-project-folder.sh [installation path]"
+    echo ""
+    echo "triggers:"
+    echo "--install                      installs the database"
+    echo "--desktop-link [link name]     creates a soft link on"
+    echo "                               the desktop with the given name"
     exit
+}
+
+if [ -z $1 ]; then
+    usage
 fi
 
 PROJECT_FOLDER=$1
@@ -19,6 +29,9 @@ while [ "$1" != "" ]; do
     elif [ "$1" = "--desktop-link" ]; then
         DESKTOP_LINK=1
         shift
+        if [ "$1" = "" ]; then
+            usage
+        fi
         DESKTOP_LINK_NAME=$1
         shift
         continue

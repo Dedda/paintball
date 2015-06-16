@@ -21,6 +21,8 @@ entlassen wurden und löscht deren Daten aus der Datenbank
 
 ### Zum rendern der UML-Diagramme muss [Graphviz](http://www.graphviz.org/) installiert sein!
 
+### Zum erstellen einiger Dokumente als PDF müssen alle LibreOffice-Anwendungen geschlossen sein!
+
 ./build-projec-folder.sh \[Zielordner\]
 
 Weitere Optionen:
