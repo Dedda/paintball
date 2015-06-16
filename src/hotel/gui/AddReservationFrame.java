@@ -18,7 +18,7 @@ import javax.swing.SpinnerNumberModel;
 
 /**
  *
- * @author schaefal, dedda
+ * @author schaefal, stephan
  */
 public class AddReservationFrame extends javax.swing.JFrame {
 

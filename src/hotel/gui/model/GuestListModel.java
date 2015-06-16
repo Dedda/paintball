@@ -4,6 +4,9 @@ import hotel.entity.Guest;
 import java.util.List;
 import javax.swing.AbstractListModel;
 
+/**
+ * @author stephan
+ */
 public class GuestListModel extends AbstractListModel<String>{
 
     private List<Guest> guests;

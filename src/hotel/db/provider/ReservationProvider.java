@@ -17,6 +17,9 @@ import static hotel.db.DBUtil.*;
 import java.util.Map;
 import static java.util.stream.Collectors.toList;
 
+/**
+ * @author stephan
+ */
 public class ReservationProvider {
 
     private GuestProvider guestProvider = new GuestProvider();

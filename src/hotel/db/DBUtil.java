@@ -5,6 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
+/**
+ * @author stephan
+ */
 public final class DBUtil implements Runnable {
 
     private Map<Connection, Boolean> connections; // Boolean for indicating availability

@@ -32,8 +32,7 @@ import javax.swing.SpinnerNumberModel;
 import org.joda.time.JodaTimePermission;
 
 /**
- *
- * @author sgoeppentin
+ * @author stephan
  */
 public class ReservationFrame extends javax.swing.JFrame {
 

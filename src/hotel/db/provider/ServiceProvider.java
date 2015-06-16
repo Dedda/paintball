@@ -13,6 +13,9 @@ import static hotel.db.DBUtil.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author stephan
+ */
 public class ServiceProvider {
 
     public List<Service> getAll() {

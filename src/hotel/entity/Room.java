@@ -1,7 +1,8 @@
 package hotel.entity;
 
-import java.util.Objects;
-
+/**
+ * @author stephan
+ */
 public class Room {
     
     private int id;

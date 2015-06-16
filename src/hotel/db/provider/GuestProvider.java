@@ -12,6 +12,9 @@ import java.util.List;
 
 import static hotel.db.DBUtil.*;
 
+/**
+ * @author stephan
+ */
 public class GuestProvider {
 
     RoomProvider roomProvider = new RoomProvider();

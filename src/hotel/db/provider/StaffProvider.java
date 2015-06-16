@@ -14,6 +14,9 @@ import org.joda.time.DateTime;
 import static hotel.db.DBUtil.*;
 import java.util.stream.Collectors;
 
+/**
+ * @author stephan
+ */
 public class StaffProvider {
 
     public Staff getForId(final int staffId) {

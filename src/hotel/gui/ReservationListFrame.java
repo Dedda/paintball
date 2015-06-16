@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 /**
- *
- * @author sgoeppentin
+ * @author stephan
  */
 public class ReservationListFrame extends javax.swing.JFrame {
 

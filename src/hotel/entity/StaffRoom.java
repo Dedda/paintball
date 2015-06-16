@@ -1,5 +1,8 @@
 package hotel.entity;
 
+/**
+ * @author stephan
+ */
 public class StaffRoom {
 
     private int staff;

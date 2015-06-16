@@ -1,5 +1,8 @@
 package hotel.entity;
 
+/**
+ * @author stephan
+ */
 public class RoomCategory {
     
     private int id;

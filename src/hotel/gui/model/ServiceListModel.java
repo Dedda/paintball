@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.AbstractListModel;
 
+/**
+ * @author stephan
+ */
 public class ServiceListModel extends AbstractListModel<String>{
 
     private List<Service> service;

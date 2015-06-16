@@ -10,8 +10,7 @@ import hotel.db.provider.ReservationProvider;
 import hotel.entity.Guest;
 
 /**
- *
- * @author dedda
+ * @author stephan
  */
 public class GuestFrame extends javax.swing.JFrame {
 

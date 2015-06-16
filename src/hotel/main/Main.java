@@ -4,6 +4,9 @@ import hotel.db.provider.StaffProvider;
 import hotel.gui.MainMenuFrame;
 import java.util.ArrayList;
 
+/**
+ * @author stephan
+ */
 public class Main {
     public static void main(String[] args) {
         new StaffProvider().removeTooOld();

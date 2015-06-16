@@ -6,6 +6,9 @@ import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.event.ListDataListener;
 
+/**
+ * @author stephan
+ */
 public class RoomComboBoxModel extends AbstractListModel<Room> implements ComboBoxModel<Room>{
 
     private List<Room> rooms;

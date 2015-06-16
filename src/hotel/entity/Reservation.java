@@ -1,12 +1,13 @@
 package hotel.entity;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+/**
+ * @author stephan
+ */
 public class Reservation {
 
     private int id;

@@ -6,8 +6,7 @@
 package hotel.gui;
 
 /**
- *
- * @author dedda
+ * @author stephan
  */
 public class MainMenuFrame extends javax.swing.JFrame {
 

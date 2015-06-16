@@ -2,6 +2,9 @@ package hotel.entity;
 
 import java.util.Objects;
 
+/**
+ * @author stephan
+ */
 public class StaffCategory {
 
     private int id;

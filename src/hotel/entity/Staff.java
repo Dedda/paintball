@@ -3,6 +3,9 @@ package hotel.entity;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * @author stephan
+ */
 public class Staff {
 
     private int id;

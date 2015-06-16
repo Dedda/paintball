@@ -8,7 +8,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * @author sgoeppentin
+ * @author stephan
  */
 public class ReservationTableModel extends AbstractTableModel {
 

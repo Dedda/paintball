@@ -19,8 +19,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /**
- *
- * @author dedda
+ * @author stephan
  */
 public class GuestListFrame extends javax.swing.JFrame {
 
