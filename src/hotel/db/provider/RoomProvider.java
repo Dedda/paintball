@@ -20,6 +20,7 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * @author stephan
+ * Method getResDays, getAllIds by phil
  */
 public class RoomProvider {
 

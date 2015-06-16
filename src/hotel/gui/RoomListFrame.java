@@ -15,7 +15,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 /*
- * @author phil
+ * @author phil 
+ * complete class by phil
  */
 public class RoomListFrame extends javax.swing.JFrame {
 

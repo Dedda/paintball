@@ -1,6 +1,5 @@
 package hotel.db.provider;
 
-import hotel.entity.Staff;
 import hotel.entity.StaffCategory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,14 +7,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import org.joda.time.DateTime;
 import static hotel.db.DBUtil.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
+/**
+ * @author Phil
+ * by Alex Phil 16.06
+ */
 public class StaffCategoryProvider {
 
     public List<StaffCategory> getAll() {

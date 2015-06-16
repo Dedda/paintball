@@ -11,8 +11,8 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 /**
- *
  * @author phil
+ * created by Alex Phil 16.06
  */
 public class AddStaffFrame extends javax.swing.JFrame {
 

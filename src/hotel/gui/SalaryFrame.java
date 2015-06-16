@@ -11,6 +11,10 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 
+/*
+ * @author phil 
+ * completed by Alex Phil 16.06
+ */
 public class SalaryFrame extends javax.swing.JFrame {
 
     private Calendar cal;
@@ -26,7 +30,7 @@ public class SalaryFrame extends javax.swing.JFrame {
         initComponents();
         model = (DefaultTableModel) salaryTable.getModel();
 
-        for (int i = 1990; i < 2016; i++) {
+        for (int i = 1990; i < 2051; i++) {
             this.yearBox.addItem("" + i);
         }
 
@@ -74,7 +78,7 @@ public class SalaryFrame extends javax.swing.JFrame {
             System.out.println("Error at parsing actDate");
         }
 
-        for (int i = 0; i < staffList.size(); i++) {
+        for (int i = 1; i < staffList.size(); i++) {
             //recDate Typ Date erstellen für jeden schleifendurchlauf mit jedem Mitarbeiter
             try {
                 recDate = sdf.parse("" + staffList.get(i).getRecruitement());
@@ -87,7 +91,7 @@ public class SalaryFrame extends javax.swing.JFrame {
             if (salaryTable.getRowCount() < staffList.size() && (staffList.get(i).getRecruitement().before(actDate) || staffList.get(i).getRecruitement().equals(actDate))) {
                 model.addRow(new Object[]{null, null, null, null, null});
             }
-            
+
             //nur Mitarbeiter anzeigen die vor oder ab dem aktuellen Datum da waren
             if (staffList.get(i).getRecruitement().before(actDate) || staffList.get(i).getRecruitement().equals(actDate)) {
                 //Name

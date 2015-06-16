@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author stephan
+ *  Method saveNew, getForName, updateStaff by Alex Phil 16.06
  */
 public class StaffProvider {
 

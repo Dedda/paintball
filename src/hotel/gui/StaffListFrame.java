@@ -3,14 +3,12 @@ package hotel.gui;
 import hotel.db.provider.StaffProvider;
 import hotel.entity.Staff;
 import hotel.gui.model.myTable;
-import java.util.Arrays;
 import java.util.List;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
- *
  * @author phil
+ * completed by Alex Phil 16.06
  */
 public class StaffListFrame extends javax.swing.JFrame {
 
@@ -41,19 +39,9 @@ public class StaffListFrame extends javax.swing.JFrame {
             }
         }
 
-        for (int i = 0; i < staffList.size(); i++) {
+        for (int i = 1; i < staffList.size(); i++) {
 
             //Zeilen hinzufügen wenn anzahl der Zeilen des Tables weniger als die Länger der Mitarbeiterliste ist
-//            if (staffTable.getRowCount() < staffList.size()) {
-/*                model.set(new Object[]{
-                    "" + staffList.get(i).getName(),
-                    "" + staffList.get(i).getSurname(),
-                    "" + staffList.get(i).getCategory().getName(),
-                    "" + staffList.get(i).getCategory().getSalary(),
-                    "" + staffList.get(i).getRecruitement(), "" + staffList.get(i).getFiring()
-                });
-//            }
-*/
             if (staffTable.getRowCount() < staffList.size()) {
                 model.addRow(new Object[]{null,null,null,null,null,null});
             } else if (staffTable.getRowCount() > staffList.size()) {
