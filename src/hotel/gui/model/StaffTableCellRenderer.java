@@ -19,6 +19,7 @@ public class StaffTableCellRenderer extends DefaultTableCellRenderer {
         if(row%2==1){
             setBackground(colOdd);
         }
+        
         return comp;
     }
 

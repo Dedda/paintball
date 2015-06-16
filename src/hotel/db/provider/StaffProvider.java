@@ -140,4 +140,44 @@ public class StaffProvider {
         List<Staff> staffToRemove = idsToRemove.stream().map(id -> getForId(id)).collect(Collectors.toList());
         staffToRemove.stream().forEach(staff -> remove(staff));
     }
+    
+    public void saveNew(final Staff staff) {
+        Connection connection = getConnection();
+        String query = "INSERT INTO staff(name, surname, category, recruitement) "
+                + "VALUES( ? , ?, ?, ? )";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, staff.getName());
+            statement.setString(2, staff.getSurname());
+            statement.setInt(3, staff.getCategory().getId());
+            statement.setDate(4, new java.sql.Date(staff.getRecruitement().getTime()));
+            statement.executeUpdate();
+            returnConnection(connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public Staff getForName(final String name, final String surname) {
+        Connection connection = getConnection();
+        Staff staff = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT name, surname FROM staff WHERE name = '" + name + "' AND surname = '" + surname + "'");
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String staffName = resultSet.getString("name");
+                String staffSurname = resultSet.getString("surname");
+                staff = new Staff();
+                staff.setId(id);
+                staff.setName(staffName);
+                staff.setSurname(staffSurname);
+            }
+            returnConnection(connection);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return staff;
+    }
 }
