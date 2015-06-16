@@ -5,11 +5,8 @@
  */
 package hotel.gui;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import hotel.db.provider.GuestProvider;
 import hotel.entity.Guest;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 

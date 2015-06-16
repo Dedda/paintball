@@ -3,7 +3,9 @@ package hotel.gui;
 import hotel.db.provider.StaffProvider;
 import hotel.entity.Staff;
 import hotel.gui.model.myTable;
+import java.util.Arrays;
 import java.util.List;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,16 +20,17 @@ public class StaffListFrame extends javax.swing.JFrame {
 
     public StaffListFrame() {
         this.provider = new StaffProvider();
-        this.staffList = provider.getAll();
         initComponents();
-        model = (DefaultTableModel) staffTable.getModel();
 
         setTitle("Mitarbeiterübersicht");
         setLocationRelativeTo(null);
+        model = (DefaultTableModel) staffTable.getModel();
         this.actFrame();
     }
 
     public void actFrame() {
+        this.staffList = provider.getAll();
+
         int col = 0;
         int row = 0;
         double cost = 0.0;
@@ -38,43 +41,52 @@ public class StaffListFrame extends javax.swing.JFrame {
             }
         }
 
-        for (int i = 0; i < staffList.size(); i++) {//Zeilen hinzufügen wenn anzahl der Zeilen des Tables weniger als die Länger der Mitarbeiterliste ist
-            //Es macht eine Row zu viel - Nice to have fix
-            if (staffTable.getRowCount() <= staffList.size()) {
-                //System.out.println(staffList.size());
-                model.addRow(new Object[]{null, null, null, null, null, null});
-                System.out.println("neue zeile");
+        for (int i = 0; i < staffList.size(); i++) {
+
+            //Zeilen hinzufügen wenn anzahl der Zeilen des Tables weniger als die Länger der Mitarbeiterliste ist
+//            if (staffTable.getRowCount() < staffList.size()) {
+/*                model.set(new Object[]{
+                    "" + staffList.get(i).getName(),
+                    "" + staffList.get(i).getSurname(),
+                    "" + staffList.get(i).getCategory().getName(),
+                    "" + staffList.get(i).getCategory().getSalary(),
+                    "" + staffList.get(i).getRecruitement(), "" + staffList.get(i).getFiring()
+                });
+//            }
+*/
+            if (staffTable.getRowCount() < staffList.size()) {
+                model.addRow(new Object[]{null,null,null,null,null,null});
+            } else if (staffTable.getRowCount() > staffList.size()) {
+                for(int j=0; j < staffTable.getSelectedRowCount(); j ++) {
+                    model.removeRow(staffTable.getSelectedRows()[j]);
+                }
             }
             
-            //Vorname
-            staffTable.setValueAt("" + staffList.get(i).getName(), row, col);
-            col++;
-            //Nachname
-            staffTable.setValueAt("" + staffList.get(i).getSurname(), row, col);
-            col++;
-            //Gehaltsstufe
-            staffTable.setValueAt("" + staffList.get(i).getCategory().getName(), row, col);
-            col++;
-            //Lohn                
-            staffTable.setValueAt("" + staffList.get(i).getCategory().getSalary() + " €", row, col);
-            col++;
-            //Vertragsbeginn
-            staffTable.setValueAt("" + staffList.get(i).getRecruitement(), row, col);
-            col++;
-            //Vertragsende
-            if (staffList.get(i).getFiring() != null) {
-                staffTable.setValueAt("" + staffList.get(i).getFiring(), row, col);
-            } else {
-                staffTable.setValueAt("-", row, col);
-            }
-            col++;
-            // in die nächste Zeile springen
-            if (col >= 6) {
-                col = 0;
-                row += 1;
-            }
+             //Vorname
+             model.setValueAt("" + staffList.get(i).getName(), row, col);
+             col++;
+             //Nachname
+             model.setValueAt("" + staffList.get(i).getSurname(), row, col);
+             col++;
+             //Gehaltsstufe
+             model.setValueAt("" + staffList.get(i).getCategory().getName(), row, col);
+             col++;
+             //Lohn                
+             model.setValueAt("" + staffList.get(i).getCategory().getSalary() + " €", row, col);
+             col++;
+             //Vertragsbeginn
+             model.setValueAt("" + staffList.get(i).getRecruitement(), row, col);
+             col++;
+             //Gefeuert
+             model.setValueAt("" + staffList.get(i).getFiring(), row, col);
+             col++;
+             //in die nächste Zeile springen
+             if (col >= 6) {
+             col = 0;
+             row += 1;
+             }
         }
-
+        model.fireTableDataChanged();
     }
 
     @SuppressWarnings("unchecked")
@@ -87,7 +99,7 @@ public class StaffListFrame extends javax.swing.JFrame {
         editStaff = new javax.swing.JButton();
         deleteStaff = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(950, 350));
         setPreferredSize(new java.awt.Dimension(950, 350));
 
@@ -99,14 +111,37 @@ public class StaffListFrame extends javax.swing.JFrame {
             new String [] {
                 "Vorname", "Nachname", "Gehaltsstufe", "Lohn", "Vertragsbeginn", "Vertragsende"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(staffTable);
 
         newStaff.setText("Neuen Mitarbeiter anlegen");
+        newStaff.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newStaffActionPerformed(evt);
+            }
+        });
 
         editStaff.setText("Mitarbeiter bearbeiten");
+        editStaff.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editStaffActionPerformed(evt);
+            }
+        });
 
         deleteStaff.setText("Mitarbeiter löschen");
+        deleteStaff.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteStaffActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -139,6 +174,24 @@ public class StaffListFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void newStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newStaffActionPerformed
+        new AddStaffFrame(this).setVisible(true);
+    }//GEN-LAST:event_newStaffActionPerformed
+
+    private void editStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editStaffActionPerformed
+
+
+    }//GEN-LAST:event_editStaffActionPerformed
+
+    private void deleteStaffActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteStaffActionPerformed
+
+        for (int i = 0; i < staffTable.getSelectedRowCount(); i++) {
+            provider.remove(staffList.get(staffTable.getSelectedRows()[i]));
+            staffList = provider.getAll();
+            actFrame();
+        }
+    }//GEN-LAST:event_deleteStaffActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteStaff;
