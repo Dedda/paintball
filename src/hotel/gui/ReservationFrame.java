@@ -8,22 +8,28 @@ package hotel.gui;
 import hotel.db.provider.ReservationProvider;
 import hotel.db.provider.RoomProvider;
 import hotel.db.provider.ServiceProvider;
+import hotel.entity.Guest;
 import hotel.entity.Reservation;
 import hotel.entity.Room;
 import hotel.entity.Service;
 import hotel.gui.model.RoomListModel;
 import hotel.gui.model.ServiceListModel;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
+import org.joda.time.JodaTimePermission;
 
 /**
  *
@@ -31,27 +37,24 @@ import javax.swing.SpinnerNumberModel;
  */
 public class ReservationFrame extends javax.swing.JFrame {
 
+    public static final int ONE_DAY = 1000*60*60*24;
     private final Reservation reservation;
     private boolean existing;
+    private Guest guest;
     
     /**
      * Creates new form ReservationFrame
      */
-    public ReservationFrame(final Reservation reservation, final boolean existing) {
+    public ReservationFrame(final Reservation reservation, final boolean existing, final Guest guest) {
         this.reservation = reservation;
         this.existing = existing;
+        this.guest = guest;
         initComponents();
         if (existing) {
             idValueLbl.setText(reservation.getId() + "");
+            peopleSpinner.setValue(reservation.getPeople());
         }
         guestNameLbl.setText(reservation.getGuest().getFullName());
-        SpinnerNumberModel peopleModel = (SpinnerNumberModel) peopleSpinner.getModel();
-        peopleModel.setValue(reservation.getPeople());
-        //peopleNumberLbl.setText(reservation.getPeople() + "");
-        //arrivalDateLbl.setText(format(reservation.getStart()));
-        //departureDateLbl.setText(format(reservation.getEnd()));
-        arrivalSpinner.setEditor(new JSpinner.DateEditor(arrivalSpinner, "dd.MM.yyyy"));
-        departureSpinner.setEditor(new JSpinner.DateEditor(departureSpinner, "dd.MM.yyyy"));
         payedBtn.setEnabled(!reservation.isPayed());
         cancelReservationBtn.setEnabled(!reservation.isCanceled());
         stateTextLbl.setText(reservation.isCanceled() ? "storniert" : (reservation.isPayed() ? "bezahlt" : "offen"));
@@ -65,6 +68,7 @@ public class ReservationFrame extends javax.swing.JFrame {
         roomsList.setModel(roomListModel);
         int price = new ReservationProvider().getTotal(reservation);
         priceValueLbl.setText(price + " Euro");
+        departureSpinner.setValue(new Date(getArrival().getTime() + ONE_DAY));
     }
 
     private String format(final Date date) {
@@ -89,6 +93,19 @@ public class ReservationFrame extends javax.swing.JFrame {
         RoomListModel model = (RoomListModel) roomsList.getModel();
         List<Room> selected = Arrays.stream(index).mapToObj(i -> model.getRoomInLine(i)).collect(Collectors.toList());
         return selected;
+    }
+    
+    private Date getArrival() {
+        return (Date) arrivalSpinner.getValue();
+    }
+    
+    private Date getDeparture() {
+        return (Date) departureSpinner.getValue();
+    }
+    
+    private List<Integer> getRooms() {
+        RoomListModel model = (RoomListModel) roomsList.getModel();
+        return model.getRooms().stream().map(Room::getId).collect(Collectors.toList());
     }
     
     /**
@@ -216,7 +233,7 @@ public class ReservationFrame extends javax.swing.JFrame {
             }
         });
 
-        arrivalSpinner.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), new java.util.Date(), null, java.util.Calendar.DAY_OF_MONTH));
+        arrivalSpinner.setModel(new javax.swing.SpinnerDateModel());
         arrivalSpinner.setEditor(new javax.swing.JSpinner.DateEditor(arrivalSpinner, "dd.MM.yyyy"));
         arrivalSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -224,8 +241,13 @@ public class ReservationFrame extends javax.swing.JFrame {
             }
         });
 
-        departureSpinner.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(), new java.util.Date(), null, java.util.Calendar.DAY_OF_MONTH));
+        departureSpinner.setModel(new javax.swing.SpinnerDateModel());
         departureSpinner.setEditor(new javax.swing.JSpinner.DateEditor(departureSpinner, "dd.MM.yyyy"));
+        departureSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                departureSpinnerStateChanged(evt);
+            }
+        });
 
         peopleSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
 
@@ -276,7 +298,7 @@ public class ReservationFrame extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 227, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(cancelReservationBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -295,7 +317,7 @@ public class ReservationFrame extends javax.swing.JFrame {
                                     .addComponent(stateLbl)
                                     .addGap(18, 18, 18)
                                     .addComponent(stateTextLbl, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 489, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -382,19 +404,25 @@ public class ReservationFrame extends javax.swing.JFrame {
         newReservation.setStart(arrivalModel.getDate());
         SpinnerDateModel departureModel = (SpinnerDateModel) departureSpinner.getModel();
         newReservation.setEnd(departureModel.getDate());
+        newReservation.setGuest(guest);
+        newReservation.setRooms(getRooms());
         if (existing) {
-            reservationProvider.merge(reservation);
+            newReservation.setId(reservation.getId());
+        }
+        if (existing) {
+            reservationProvider.merge(newReservation);
         } else {
-            reservationProvider.save(reservation);
+            int id = reservationProvider.save(newReservation);
+            reservation.setId(id);
             existing = true;
         }
         
         Map<Integer, Integer> serviceIdToAmountMap = getGroupedServiceIds();
         ServiceProvider serviceProvider = new ServiceProvider();
         serviceProvider.setForReservation(reservation, serviceIdToAmountMap);
-        List<Room> rooms = ((RoomListModel) roomsList.getModel()).getRooms();
-        RoomProvider roomProvider = new RoomProvider();
-        roomProvider.setForReservation(reservation, rooms);
+//        List<Room> rooms = ((RoomListModel) roomsList.getModel()).getRooms();
+//        RoomProvider roomProvider = new RoomProvider();
+//        roomProvider.setForReservation(reservation, rooms);
     }//GEN-LAST:event_saveBtnActionPerformed
 
     private void addServiceBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addServiceBtnActionPerformed
@@ -434,10 +462,15 @@ public class ReservationFrame extends javax.swing.JFrame {
 
     private void addRoomBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRoomBtnActionPerformed
         List<Room> rooms = ((RoomListModel) roomsList.getModel()).getRooms();
-        List<Room> allRooms = new RoomProvider().getAll();
-        allRooms.removeAll(rooms);
+        RoomProvider roomProvider = new RoomProvider();
+        List<Room> allRooms = roomProvider.getAll();
+        allRooms.removeAll(rooms);        
+        allRooms = allRooms.stream().filter(r -> roomProvider.isFree(r, getArrival(), getDeparture())).collect(Collectors.toList());
         Room[] options = new Room[allRooms.size()];
         allRooms.toArray(options);
+        if (options.length == 0) {
+            return;
+        }
         Room selected = (Room) JOptionPane.showInputDialog(this, "Raum wählen", "Räume", JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
         if (selected == null) {
             return;
@@ -449,8 +482,23 @@ public class ReservationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addRoomBtnActionPerformed
 
     private void arrivalSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_arrivalSpinnerStateChanged
-        System.out.println(evt.toString());
+        Date arrival = getArrival();
+        if (arrival.before(new Date())) {
+            arrivalSpinner.setValue(new Date());
+        }
+        Date minDep = new Date(arrival.getTime() + ONE_DAY);
+        if (arrival.after(new Date(getDeparture().getTime() - ONE_DAY))) {
+            departureSpinner.setValue(minDep);
+        }
     }//GEN-LAST:event_arrivalSpinnerStateChanged
+
+    private void departureSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_departureSpinnerStateChanged
+        Date departure = getDeparture();
+        Date min = new Date(getArrival().getTime() + ONE_DAY);
+        if (departure.before(min)) {
+            departureSpinner.setValue(min);
+        }
+    }//GEN-LAST:event_departureSpinnerStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addRoomBtn;

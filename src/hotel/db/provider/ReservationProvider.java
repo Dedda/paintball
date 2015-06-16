@@ -60,20 +60,22 @@ public class ReservationProvider {
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery(query);
+            ResultSet resultSet = statement.executeQuery();
             reservation = new Reservation();
             reservation.setId(id);
-            reservation.setAdditionalInfo(
+            if (resultSet.next()) {
+                reservation.setAdditionalInfo(
                     resultSet.getString("additional_info"));
-            reservation.setCanceled(
-                    resultSet.getDate("canceled"));
-            reservation.setEnd(resultSet.getDate("end_date"));
-            reservation.setGuest(
+                reservation.setCanceled(
+                        resultSet.getDate("canceled"));
+                reservation.setEnd(resultSet.getDate("end_date"));
+                reservation.setGuest(
                     guestProvider.getForId(
                         resultSet.getInt("guest")));
-            reservation.setPayed(
-                    resultSet.getDate("payed"));
-            reservation.setStart(resultSet.getDate("start_date"));
+                reservation.setPayed(
+                        resultSet.getDate("payed"));
+                reservation.setStart(resultSet.getDate("start_date"));
+            }
             returnConnection(connection);
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -159,7 +161,7 @@ public class ReservationProvider {
         String query = "INSERT INTO reservation(additional_info, guest, people, start_date, end_date) "
                 + "VALUES(?, ?, ?, ?, ?)";
         try {
-            PreparedStatement statement = connection.prepareStatement(query, ResultSet.TYPE_FORWARD_ONLY, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, reservation.getAdditionalInfo());
             statement.setInt(2, reservation.getGuest().getId());
             statement.setInt(3, reservation.getPeople());
@@ -168,7 +170,7 @@ public class ReservationProvider {
             statement.executeUpdate();
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                reservation.setId(generatedKeys.getInt("id"));
+                reservation.setId((int) generatedKeys.getLong(1));
             }
             returnConnection(connection);
         } catch (SQLException ex) {

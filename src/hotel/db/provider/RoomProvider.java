@@ -177,7 +177,7 @@ public class RoomProvider {
             statement.setInt(1, roomId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                int reservationId = resultSet.getInt("reservatino_id");
+                int reservationId = resultSet.getInt("reservation_id");
                 Reservation reservation
                         = reservationProvider.getForId(reservationId);
                 reservations.add(reservation);

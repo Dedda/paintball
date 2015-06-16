@@ -286,7 +286,7 @@ public class GuestListFrame extends javax.swing.JFrame {
         Reservation reservation = new Reservation();
         reservation.setGuest(selectedGuest);
         //AddReservationFrame reservationFrame = new AddReservationFrame(selectedGuest);
-        ReservationFrame reservationFrame = new ReservationFrame(reservation, false);
+        ReservationFrame reservationFrame = new ReservationFrame(reservation, false, selectedGuest);
         reservationFrame.setVisible(true);
     }//GEN-LAST:event_reservationBtnActionPerformed
 
